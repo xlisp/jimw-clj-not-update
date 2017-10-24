@@ -4,7 +4,9 @@
     [clojure.java.jdbc :as jdbc]
     [conman.core :as conman]
     [jimw-clj.config :refer [env]]
-    [mount.core :refer [defstate]])
+    [mount.core :refer [defstate]]
+    [honeysql.core :as sql]
+    [honeysql.helpers :as h])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -69,3 +71,46 @@
   (sql-value [value] (to-pg-json value))
   IPersistentVector
   (sql-value [value] (to-pg-json value)))
+
+(def conn {:dbtype "postgresql"
+           :dbname "blackberry"
+           :host "127.0.0.1"
+           :user "jim"
+           :password "123456"})
+
+;; .e.g : (jconn conn (-> (h/select :*) (h/from :navs)))
+(defn jconn [conn sqlmap]
+  (jdbc/query conn (sql/format sqlmap)))
+
+(defn jconn1 [conn sqlmap]
+  (first (jdbc/query conn (sql/format sqlmap))))
+
+;; (first-nav {:db conn :past-id 13})
+(defn first-nav [{:keys [db past-id]}]
+  (jconn1 conn
+          (-> (h/select :*)
+              (h/from :navs)
+              (h/where [:= :past_id past-id])
+              (h/order-by [:updated_at :desc])
+              (h/limit 1))))
+
+;; (get-nav-by-past-id {:db conn :past-id 13 :parid 279})
+(defn get-nav-by-past-id [{:keys [db parid past-id]}]
+  (jconn conn
+         (-> (h/select :*)
+             (h/from :navs)
+             (h/where
+              [:and
+               [:= :past_id past-id]
+               [:= :parid parid]]))))
+
+#_((tree (:id (first-nav {:db conn :past-id 13})))
+   (fn [id]
+     (get-nav-by-past-id {:db conn :past-id 13 :parid id})))
+(def tree
+  (fn [id]
+    (fn [par]
+      (map
+       (fn [idd]
+         ((tree (idd :id)) par))
+       (par id)))))
