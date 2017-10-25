@@ -36,7 +36,9 @@
                  [honeysql "0.9.1"]
                  [cheshire "5.8.0"]
                  [ring/ring-json "0.4.0"]
-                 [com.taoensso/timbre "4.10.0"]]
+                 [com.taoensso/timbre "4.10.0"]
+                 [cljsjs/marked "0.3.5-0"]
+                 [cljs-http "0.1.43"]]
 
   :min-lein-version "2.0.0"
 

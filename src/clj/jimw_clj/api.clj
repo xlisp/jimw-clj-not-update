@@ -18,8 +18,7 @@
 (defn get-blogs
   [{{:keys [q limit offset]
      :or   {limit 10 offset 0 q ""}} :params}]
-  (ok (db/search-blogs {:db db/*db* :q q :limit limit :offset offset})))
+  (ok (db/search-blogs {:db db/*db* :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
 
 (defroutes api-routes
   (GET "/blogs" [] get-blogs))
-  
