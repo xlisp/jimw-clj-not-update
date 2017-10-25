@@ -9,8 +9,16 @@
             [jimw-clj.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]]
             [cljs-http.client :as http]
-            [cljsjs.marked])
+            [cljsjs.marked]
+            [cljsjs.highlight]
+            [cljsjs.highlight.langs.clojure]
+            [cljsjs.highlight.langs.ruby]
+            [cljsjs.highlight.langs.java])
   (:import goog.History))
+
+(.setOptions js/marked
+             #js {:highlight (fn [code]
+                               (.-value (.highlightAuto js/hljs code)))})
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -61,8 +69,8 @@
    [:div.row>div.col-sm-12
     [:h1 name]
     [:div {:dangerouslySetInnerHTML
-           {:__html (md->html content)}}]
-    [:hr {:align "center" :width "600" :color "#987cb9" :size "1"}]]])
+           {:__html (js/marked content)}}]
+    [:hr {:align "center" :width "50" :color "#987cb9" :size "1"}]]])
 
 (defn home-page []
   [:div.container

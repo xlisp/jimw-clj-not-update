@@ -123,7 +123,7 @@
              (h/from :blogs)
              (h/limit limit)
              (h/offset offset)
-             (h/order-by :id)
+             (h/order-by [:updated_at :desc])
              (h/where (when (seq q)
                         [:or [:like :name (str "%" q "%")]
                          [:like :content (str "%" q "%")]])))))
