@@ -33,7 +33,10 @@
                  [ring/ring-defaults "0.3.0"]
                  [secretary "1.2.3"]
                  [selmer "1.10.7"]
-                 [honeysql "0.9.1"]]
+                 [honeysql "0.9.1"]
+                 [cheshire "5.8.0"]
+                 [ring/ring-json "0.4.0"]
+                 [com.taoensso/timbre "4.10.0"]]
 
   :min-lein-version "2.0.0"
 

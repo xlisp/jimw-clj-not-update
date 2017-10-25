@@ -18,8 +18,9 @@
             PreparedStatement]))
 
 (defstate ^:dynamic *db*
-           :start (conman/connect! {:jdbc-url (env :database-url)})
-           :stop (conman/disconnect! *db*))
+  :start (conman/connect! {:jdbc-url #_(env :database-url)
+                           "postgresql://jim:123456@127.0.0.1:5432/blackberry"})
+  :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/queries.sql")
 
@@ -72,13 +73,13 @@
   IPersistentVector
   (sql-value [value] (to-pg-json value)))
 
-(def conn {:dbtype "postgresql"
+#_(def conn {:dbtype "postgresql"
            :dbname "blackberry"
            :host "127.0.0.1"
            :user "jim"
            :password "123456"})
 
-;; .e.g : (jconn conn (-> (h/select :*) (h/from :navs)))
+;; .e.g : (jconn *db* (-> (h/select :*) (h/from :navs)))
 (defn jconn [conn sqlmap]
   (jdbc/query conn (sql/format sqlmap)))
 
@@ -87,7 +88,7 @@
 
 ;; (first-nav {:db conn :past-id 13})
 (defn first-nav [{:keys [db past-id]}]
-  (jconn1 conn
+  (jconn1 db
           (-> (h/select :*)
               (h/from :navs)
               (h/where [:= :past_id past-id])
@@ -96,7 +97,7 @@
 
 ;; (get-nav-by-past-id {:db conn :past-id 13 :parid 279})
 (defn get-nav-by-past-id [{:keys [db parid past-id]}]
-  (jconn conn
+  (jconn db
          (-> (h/select :*)
              (h/from :navs)
              (h/where
@@ -114,3 +115,15 @@
        (fn [idd]
          ((tree (idd :id)) par))
        (par id)))))
+
+;; (search-blogs {:db *db* :q "s"})
+(defn search-blogs [{:keys [db limit offset q]}]
+  (jconn db
+         (-> (h/select :*)
+             (h/from :blogs)
+             (h/limit limit)
+             (h/offset offset)
+             (h/order-by :id)
+             (h/where (when (seq q)
+                        [:or [:like :name (str "%" q "%")]
+                         [:like :content (str "%" q "%")]])))))
