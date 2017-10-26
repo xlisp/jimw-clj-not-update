@@ -76,8 +76,13 @@ pre {
 #app {
     word-break: break-all;
     /*overflow-x: hidden; 强制砍掉不适应屏幕的*/
+    /*background-color: #f6f6f5;*/
 }
 
 img {
     width: 100%;
+}
+
+body {
+    background: #e5e5e5;
 }
