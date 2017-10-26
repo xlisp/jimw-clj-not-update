@@ -27,6 +27,7 @@ To start a web server for the application, run:
 * 复习前端css,不仅实用,而且要漂亮,有创作的兴趣
 * 结合更多的机器学习算法来提高文章的质量,关联规则,文章自动分类等,把机器学习算法用出去到现实生活当中
 * cljs图形化使得更MMA化,甚至能摆脱Google的使用
+* 把jimw和todos-tree整合得很好,可以作为todos类型的文章使用
 
 ## License
 
