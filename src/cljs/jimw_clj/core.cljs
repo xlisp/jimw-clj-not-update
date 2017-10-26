@@ -70,7 +70,7 @@
     [:h1 name]
     [:div {:dangerouslySetInnerHTML
            {:__html (js/marked content)}}]
-    [:hr {:align "center" :width "50" :color "#987cb9" :size "1"}]]])
+    [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]])
 
 (defn home-page []
   [:div.container
