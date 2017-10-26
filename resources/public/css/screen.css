@@ -72,3 +72,7 @@ pre {
     color: #fff !important;
     background: #222 !important;
 }
+
+#app {
+    overflow-x: hidden;
+}
