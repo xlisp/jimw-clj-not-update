@@ -74,5 +74,10 @@ pre {
 }
 
 #app {
-    overflow-x: hidden;
+    word-break: break-all;
+    /*overflow-x: hidden; 强制砍掉不适应屏幕的*/
+}
+
+img {
+    width: 100%;
 }
