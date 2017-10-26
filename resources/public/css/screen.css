@@ -67,3 +67,8 @@ body {
     }
 }
 
+pre {
+    display: block !important;
+    color: #fff !important;
+    background: #222 !important;
+}
