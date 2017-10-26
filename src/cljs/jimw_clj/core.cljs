@@ -22,6 +22,12 @@
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
+(defn is-page-end []
+  (<=
+   (- (.. js/document -documentElement -scrollHeight)
+      (.. js/document -documentElement -scrollTop)) 414))
+
+(defonce page-offset (r/atom 1))
 (defonce blog-list (r/atom (sorted-map)))
 
 (defn get-blog-list
@@ -35,8 +41,23 @@
           (op-fn data)))))
 
 (defonce blog-list-init
-  (get-blog-list "" 0
+  (get-blog-list "" @page-offset
                  (fn [data] (reset! blog-list (zipmap (map :id data) data)))))
+
+(def swap-blog-list
+  (fn [data]
+    (->
+     (map (fn [li]
+            (do
+              (swap! blog-list assoc (:id li)
+                     {:name (:name li) :content (:content li)})
+              (:id li))) data) str prn)))
+(set!
+ js/window.onscroll
+ #(if (is-page-end)
+    (do
+      (swap! page-offset inc)
+      (get-blog-list "" @page-offset swap-blog-list))))
 
 (defn nav-link [uri title page collapsed?]
   [:li.nav-item
