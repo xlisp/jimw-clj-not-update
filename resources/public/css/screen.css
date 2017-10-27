@@ -86,3 +86,19 @@ img {
 body {
     background: #e5e5e5;
 }
+
+#app li.editing {
+    border-bottom: none;
+    padding: 0;
+}
+
+#app li.editing .edit {
+    display: block;
+    width: 506px;
+    padding: 13px 17px 12px 17px;
+    margin: 0 0 0 43px;
+}
+
+#app li.editing .view {
+    display: none;
+}

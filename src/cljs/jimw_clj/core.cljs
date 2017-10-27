@@ -59,7 +59,7 @@
      (map (fn [li]
             (do
               (swap! blog-list assoc (:id li)
-                     {:name (:name li) :content (:content li)})
+                     {:id (:id li) :name (:name li) :content (:content li)})
               (:id li))) data) str prn)))
 
 (defonce blog-list-init
