@@ -29,6 +29,10 @@ To start a web server for the application, run:
 * cljs图形化使得更MMA化,甚至能摆脱Google的使用
 * 把jimw和todos-tree整合得很好,可以作为todos类型的文章使用
 
+## 以实现一个优秀研究为工具目的: 量子力学研究工具诞生了MMA => 机器学习算法(.e.g:维特比算法)学习工具诞生了JIMW
+* 数据流的λ化, 其他语言实现的算法的λ 化
+* 数据流流向, 算法GIF演示
+
 ## License
 
 Copyright © 2017 FIXME
