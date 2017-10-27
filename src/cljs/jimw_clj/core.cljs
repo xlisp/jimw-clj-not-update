@@ -100,20 +100,58 @@
     [:div.col-md-12
      [:img {:src (str js/context "/img/warning_clojure.png")}]]]])
 
-(defn md-render [name content]
-  [:div.container
-   [:div.row>div.col-sm-12
-    [:h1 name]
-    [:div {:dangerouslySetInnerHTML
-           {:__html (js/marked content)}}]
-    [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]])
+(defn blog-name-input-par [{:keys [id name on-save on-stop]}]
+  (let [val (r/atom name)
+        stop #(do (reset! val "")
+                  (if on-stop (on-stop)))
+        save #(let [v (-> @val str clojure.string/trim)]
+                (if-not (empty? v) (on-save v))
+                (stop))]
+    (fn [{:keys [id class placeholder]}]
+      [:input.input-par {:type "text" :value @val
+                         :id id :class class :placeholder placeholder
+                         :on-blur save
+                         :on-change #(reset! val (-> % .-target .-value))
+                         :on-key-down #(case (.-which %)
+                                         13 (save)
+                                         27 (stop)
+                                         nil)}])))
+
+(def blog-name-edit (with-meta blog-name-input-par
+                      {:component-did-mount #(.focus (r/dom-node %))}))
+
+(defn blog-name-save [id name] (swap! blog-list assoc-in [id :name] name))
+
+(defn blog-name-item []
+  (let [editing (r/atom false)]
+    (fn [{:keys [id name]}]
+      [:li {:class (str (if @editing "editing"))}
+       [:div.view
+        [:h1
+         [:label {:on-double-click #(reset! editing true)} name]]]
+       (when @editing
+         [blog-name-edit {:class "edit"
+                          :on-save  #(blog-name-save id %)
+                          :name name
+                          :on-stop #(reset! editing false)}])])))
+
+(defn md-render [id name content]
+  (let [editing (r/atom false)]
+    [:div.container
+     [:div.row>div.col-sm-12
+      [blog-name-item {:id id :name name}]
+      [:div {:dangerouslySetInnerHTML
+             {:__html (js/marked content)}}]
+      [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
   [:div.container
    (for [blog @blog-list]
-     (md-render
-      (:name (last blog))
-      (:content (last blog))))])
+     [:div
+      (md-render
+       (:id (last blog))
+       (:name (last blog))
+       (:content (last blog)))])])
 
 (def pages
   {:home #'home-page
