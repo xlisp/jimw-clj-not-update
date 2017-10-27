@@ -25,7 +25,8 @@
 (defn is-page-end []
   (<=
    (- (.. js/document -documentElement -scrollHeight)
-      (.. js/document -documentElement -scrollTop)) 414))
+      (.. js/document -documentElement -scrollTop))
+   (.. js/document -documentElement -offsetHeight)))
 
 (defonce page-offset (r/atom 1))
 (defonce blog-list (r/atom (sorted-map)))
