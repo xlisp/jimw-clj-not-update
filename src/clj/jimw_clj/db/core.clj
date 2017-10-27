@@ -6,7 +6,8 @@
     [jimw-clj.config :refer [env]]
     [mount.core :refer [defstate]]
     [honeysql.core :as sql]
-    [honeysql.helpers :as h])
+    [honeysql.helpers :as h]
+    [taoensso.timbre :refer [error debug info]])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -81,7 +82,9 @@
 
 ;; .e.g : (jconn *db* (-> (h/select :*) (h/from :navs)))
 (defn jconn [conn sqlmap]
-  (jdbc/query conn (sql/format sqlmap)))
+  (let [sql-str (sql/format sqlmap)]
+    (info (str "SQL: " sql-str))
+    (jdbc/query conn sql-str)))
 
 (defn jconn1 [conn sqlmap]
   (first (jdbc/query conn (sql/format sqlmap))))
@@ -123,7 +126,7 @@
              (h/from :blogs)
              (h/limit limit)
              (h/offset offset)
-             (h/order-by [:updated_at :desc])
+             (h/order-by [:id :desc])
              (h/where (when (seq q)
                         [:or [:like :name (str "%" q "%")]
                          [:like :content (str "%" q "%")]])))))

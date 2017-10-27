@@ -40,8 +40,8 @@
    (+ (ss-top) (o-height) 60)
    (s-height)))
 
-(defonce page-offset (r/atom 1))
-(defonce blog-list (r/atom (sorted-map)))
+(defonce page-offset (r/atom 0))
+(defonce blog-list (r/atom (sorted-map-by >)))
 
 (defn get-blog-list
   [q offset op-fn]
@@ -49,13 +49,9 @@
             (<!
              (http/get (api-root "/blogs")
                        {:with-credentials? false
-                        :query-params {:q q :limit 10 :offset offset}}))]
+                        :query-params {:q q :limit 10 :offset (* offset 10)}}))]
         (let [data (:body response)]
           (op-fn data)))))
-
-(defonce blog-list-init
-  (get-blog-list "" @page-offset
-                 (fn [data] (reset! blog-list (zipmap (map :id data) data)))))
 
 (def swap-blog-list
   (fn [data]
@@ -65,6 +61,10 @@
               (swap! blog-list assoc (:id li)
                      {:name (:name li) :content (:content li)})
               (:id li))) data) str prn)))
+
+(defonce blog-list-init
+  (get-blog-list "" @page-offset
+                 (fn [data] (swap-blog-list data))))
 
 (set!
  js/window.onscroll
