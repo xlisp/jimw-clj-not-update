@@ -21,12 +21,24 @@
                                (.-value (.highlightAuto js/hljs code)))})
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
+(defn s-height [] (.. js/document -body -scrollHeight))
+
+(defn s-top [] (.. js/document -body -scrollTop))
+(defn sd-top [] (.. js/document -documentElement -scrollTop))
+(defn ss-top [] (.. js/window -pageYOffset))
+
+(defn o-height [] (.. js/document -body -offsetHeight))
 
 (defn is-page-end []
   (<=
-   (- (.. js/document -documentElement -scrollHeight)
-      (.. js/document -documentElement -scrollTop))
-   (.. js/document -documentElement -offsetHeight)))
+   (- (s-height)
+      (ss-top) #_(s-top))
+   (o-height)))
+
+(defn is-page-end-m-pc []
+  (>=
+   (+ (ss-top) (o-height) 60)
+   (s-height)))
 
 (defonce page-offset (r/atom 1))
 (defonce blog-list (r/atom (sorted-map)))
@@ -53,12 +65,14 @@
               (swap! blog-list assoc (:id li)
                      {:name (:name li) :content (:content li)})
               (:id li))) data) str prn)))
+
 (set!
  js/window.onscroll
- #(if (is-page-end)
+ #(if (is-page-end-m-pc)
     (do
       (swap! page-offset inc)
-      (get-blog-list "" @page-offset swap-blog-list))))
+      (get-blog-list "" @page-offset swap-blog-list))
+    nil))
 
 (defn nav-link [uri title page collapsed?]
   [:li.nav-item
