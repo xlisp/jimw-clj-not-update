@@ -139,10 +139,12 @@
                         [:or [:like :name (str "%" q "%")]
                          [:like :content (str "%" q "%")]])))))
 
-;; (update-blogs {:db *db* :id 5000 :name "1111" :content "333"})
-(defn update-blogs [{:keys [db id name content]}]
+;; (update-blog {:db *db* :id 5000 :name nil :content "dasdsdas"})
+(defn update-blog [{:keys [db id name content]}]
   (jc1 db
        (->  (h/update :blogs)
-            (h/sset {:name    (when (seq name) name)
-                     :content (when (seq content) content)})
+            (h/sset (->> {:name    (when (seq name) name)
+                          :content (when (seq content) content)}
+                         (remove (fn [x]  (nil? (last x))))
+                         (into {})))
             (h/where [:= :id id]))))

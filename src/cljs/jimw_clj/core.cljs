@@ -53,6 +53,17 @@
         (let [data (:body response)]
           (op-fn data)))))
 
+;; (update-blog 5000 nil "uuuuu" #(prn %))
+(defn update-blog
+  [id name content op-fn]
+  (go (let [response
+            (<!
+             (http/put (str (api-root "/update-blog/") id)
+                       {:json-params
+                        {:name name :content content}}))]
+        (let [data (:body response)]
+          (op-fn data)))))
+
 (def swap-blog-list
   (fn [data]
     (->
@@ -120,7 +131,10 @@
 (def blog-name-edit (with-meta blog-name-input-par
                       {:component-did-mount #(.focus (r/dom-node %))}))
 
-(defn blog-name-save [id name] (swap! blog-list assoc-in [id :name] name))
+(defn blog-name-save [id name]
+  (do
+    (swap! blog-list assoc-in [id :name] name)
+    (update-blog id name nil #(prn %))))
 
 (defn blog-name-item []
   (let [editing (r/atom false)]

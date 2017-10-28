@@ -20,5 +20,12 @@
      :or   {limit 10 offset 0 q ""}} :params}]
   (ok (db/search-blogs {:db db/*db* :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
 
+(defn update-blog
+  [{{:keys [id name content]} :params}]
+  (let [res (db/update-blog {:db db/*db* :id (Integer/parseInt id) :name name :content content})]
+    (if res
+      (ok res) (not-found))))
+
 (defroutes api-routes
-  (GET "/blogs" [] get-blogs))
+  (GET "/blogs" [] get-blogs)
+  (PUT "/update-blog/:id" [] update-blog))
