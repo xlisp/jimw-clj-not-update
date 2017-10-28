@@ -14,7 +14,8 @@
             [cljsjs.highlight.langs.clojure]
             [cljsjs.highlight.langs.ruby]
             [cljsjs.highlight.langs.java]
-            [jimw-clj.edit :as edit])
+            [jimw-clj.edit :as edit]
+            [jimw-clj.edit-md :as edit-md])
   (:import goog.History))
 
 (.setOptions js/marked
@@ -117,13 +118,17 @@
     (swap! blog-list assoc-in [id :name] name)
     (update-blog id name nil #(prn %))))
 
+(defn blog-content-save [id content]
+  (do
+    (swap! blog-list assoc-in [id :content] content)
+    (update-blog id nil content #(prn %))))
+
 (defn md-render [id name content]
   (let [editing (r/atom false)]
     [:div.container
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
-      [:div {:dangerouslySetInnerHTML
-             {:__html (js/marked content)}}]
+      [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
