@@ -82,12 +82,20 @@
 
 ;; .e.g : (jconn *db* (-> (h/select :*) (h/from :navs)))
 (defn jconn [conn sqlmap]
-  (let [sql-str (sql/format sqlmap)]
-    (info (str "SQL: " sql-str))
-    (jdbc/query conn sql-str)))
+  (let [sql-vec (sql/format sqlmap)]
+    (info (str "SQL: " sql-vec))
+    (jdbc/query conn sql-vec)))
 
 (defn jconn1 [conn sqlmap]
-  (first (jdbc/query conn (sql/format sqlmap))))
+  (let [sql-vec (sql/format sqlmap)]
+    (info (str "SQL: " sql-vec))
+    (first (jdbc/query conn sql-vec))))
+
+(defn jc1 [conn sqlmap]
+  (let [sql-vec (sql/format sqlmap)
+        sql-returning (apply vector (str (first sql-vec) " RETURNING *") (rest sql-vec))]
+    (info (str "SQL: " sql-returning))
+    (first (jdbc/query conn sql-returning))))
 
 ;; (first-nav {:db conn :past-id 13})
 (defn first-nav [{:keys [db past-id]}]
@@ -130,3 +138,11 @@
              (h/where (when (seq q)
                         [:or [:like :name (str "%" q "%")]
                          [:like :content (str "%" q "%")]])))))
+
+;; (update-blogs {:db *db* :id 5000 :name "1111" :content "333"})
+(defn update-blogs [{:keys [db id name content]}]
+  (jc1 db
+       (->  (h/update :blogs)
+            (h/sset {:name    (when (seq name) name)
+                     :content (when (seq content) content)})
+            (h/where [:= :id id]))))
