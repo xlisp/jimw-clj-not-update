@@ -26,6 +26,12 @@
     (if res
       (ok res) (not-found))))
 
+(defn create-blog
+  [{{:keys [name content]} :params}]
+  (let [res (db/create-blog {:db db/*db* :name name :content content})]
+    (ok res)))
+
 (defroutes api-routes
   (GET "/blogs" [] get-blogs)
-  (PUT "/update-blog/:id" [] update-blog))
+  (PUT "/update-blog/:id" [] update-blog)
+  (POST "/create-blog" [] create-blog))

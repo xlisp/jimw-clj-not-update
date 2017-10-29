@@ -55,7 +55,6 @@
         (let [data (:body response)]
           (op-fn data)))))
 
-;; (update-blog 5000 nil "uuuuu" #(prn %))
 (defn update-blog
   [id name content op-fn]
   (go (let [response
@@ -65,6 +64,16 @@
                         {:name name :content content}}))]
         (let [data (:body response)]
           (op-fn data)))))
+
+(defn create-default-blog
+  []
+  (go (let [response
+            (<!
+             (http/post (api-root "/create-blog")
+                        {:json-params
+                         {:name (str "给我一个lisp的支点" (js/Date.now)) :content "### 我可以撬动整个地球!"}}))]
+        (let [data (:body response)]
+          (swap! blog-list assoc (:id data) {:id (:id data) :content (:content data) :name (:name data)})))))
 
 (def swap-blog-list
   (fn [data]
@@ -92,7 +101,9 @@
    {:class (when (= page (session/get :page)) "active")}
    [:a.nav-link
     {:href uri
-     :on-click #(reset! collapsed? true)} title]])
+     :on-click #(if (= page :create-blog)
+                  (create-default-blog)
+                  (reset! collapsed? true))} title]])
 
 (defn navbar []
   (let [collapsed? (r/atom true)]
@@ -105,7 +116,8 @@
         [:a.navbar-brand {:href "#/"} "jimw-clj"]
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
-         [nav-link "#/about" "About" :about collapsed?]]]])))
+         [nav-link "#/about" "About" :about collapsed?]
+         [nav-link "#/" "NewBlog" :create-blog collapsed?]]]])))
 
 (defn about-page []
   [:div.container
