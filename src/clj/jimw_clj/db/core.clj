@@ -148,3 +148,10 @@
                          (remove (fn [x]  (nil? (last x))))
                          (into {})))
             (h/where [:= :id id]))))
+
+;; (create-blog {:db *db* :name "测试" :content "aaaaabbbccc"})
+(defn create-blog [{:keys [db name content]}]
+  (jc1 db
+       (->  (h/insert-into :blogs)
+            (h/values [{:name name
+                        :content content}]))))
