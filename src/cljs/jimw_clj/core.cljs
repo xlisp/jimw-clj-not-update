@@ -15,7 +15,8 @@
             [cljsjs.highlight.langs.ruby]
             [cljsjs.highlight.langs.java]
             [jimw-clj.edit :as edit]
-            [jimw-clj.edit-md :as edit-md])
+            [jimw-clj.edit-md :as edit-md]
+            [jimw-clj.todos :as todos])
   (:import goog.History))
 
 (.setOptions js/marked
