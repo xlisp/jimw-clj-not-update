@@ -38,6 +38,7 @@ To start a web server for the application, run:
 * jimw-clj的代码语义搜索
 * 登陆系统参考护理项目和clojure-web-admin
 * db连接没有db的连接池5个,所以每次curd第一次都很慢
+* Markdown的图片上传功能,用阿里云或者直接上传服务器
 
 ## 以实现一个优秀研究为工具目的: 量子力学研究工具诞生了MMA => 机器学习算法(.e.g:维特比算法)学习工具诞生了JIMW
 * 数据流的λ化, 其他语言实现的算法的λ 化
