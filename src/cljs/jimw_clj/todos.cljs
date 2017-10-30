@@ -5,74 +5,61 @@
             [cljs.core.async :refer [<!]]
             [cemerick.url :refer (url url-encode)]))
 
-(def params (url (.. js/window -location -href)))
-(def host-url (str "http://" (:host params) ":" (:port params)))
-(def params-q (:query params))
-(def past_id (get params-q "past_id"))
-(def first-parid (get params-q "first_parid"))
-(if past_id nil (js/alert "Params past_id not nil!"))
-(if first-parid nil (js/alert "Params first-parid not nil!")) 
-
-(def todo-api-url (str host-url "/pasts/" past_id "/navs.json/"))
-
+(defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defonce todos (r/atom (sorted-map)))
-
-(defonce todos-list-init
-  (go (let [response
-            (<!
-             (http/get todo-api-url
-                       {:with-credentials? false
-                        :query-params {"since" ""}}))]
-        (let [body (:body response) status (:status response)]
-          (cond
-            (= 401 status) (js/alert (str "Unauthorized, please login " host-url "/admins/sign_in"))
-            (= 404 status) (js/alert (str "Not found past" past_id "!"))
-            (= 200 status) (reset! todos (zipmap  (map :id body) body))
-            :else (js/alert "Get todo list failure, pelease check the todos api!"))
-          ))))
-
-(defn create-todo [text parid body]
-  (go (let [response
-            (<!
-             (http/post todo-api-url
-                        {:with-credentials? false
-                         :query-params {:content text :parid parid}}))]
-        (if (= (:status response) 201)
-          (body (:body response))
-          (js/alert "Create todo failure!"))
-        )))       
-
-(defn ud-url [id] (str host-url "/pasts/" past_id "/navs/" id ".json") ) 
-
-(defn update-todo [id text body]
-  (go (let [response
-            (<!
-             (http/put (ud-url id)
-                       {:with-credentials? false
-                        :query-params {:content text}}))]
-        (body (:status response))
-        )))
-
-(defn delete-todo [id body]
-  (go (let [response
-            (<!
-             (http/delete (ud-url id)
-                          {:with-credentials? false
-                           :query-params {}}))]
-        (body (:status response))
-        )))
-
-
 (defonce counter (r/atom 0))
 
-(defn add-todo [text parid]
-  (do
-    (create-todo
-     text
-     parid
-     #(swap! todos assoc (:id %) {:id (:id %) :content (:content %) :done false}))
-    )
-  )
+;; (get-todos-list 2222 #(prn %))
+(defn get-todos-list
+  [blog op-fn]
+  (go (let [response
+            (<!
+             (http/get (api-root "/todos")
+                       {:with-credentials? false
+                        :query-params {:blog blog}}))]
+        (let [body (:body response)]
+          (op-fn body)))))
+
+;; (create-todo "dasdsadsa" 12 2222 #(prn %))
+(defn create-todo [text parid blog op-fn]
+  (go (let [response
+            (<!
+             (http/post (api-root "/create-todo")
+                        {:with-credentials? false
+                         :query-params {:content text :parid parid :blog blog}}))]
+        (if (= (:status response) 200)
+          (op-fn (:body response))
+          (js/alert "Create todo failure!")))))
+
+;; (update-todo 11 "aaadasdsadsaoooo" 12 2222 #(prn %))
+(defn update-todo [id text parid blog op-fn]
+  (go (let [response
+            (<!
+             (http/put (str (api-root "/update-todo/") id)
+                       {:with-credentials? false
+                        :query-params {:content text :parid parid :blog blog}}))]
+        (if (= (:status response) 200)
+          (op-fn (:body response))
+          (js/alert "Update todo failure!")))))
+
+;; (delete-todo 11 #(prn %))
+(defn delete-todo [id op-fn]
+  (go (let [response
+            (<!
+             (http/delete (api-root "/delete-todo")
+                          {:with-credentials? false
+                           :query-params {:id id}}))]
+        (if (= (:status response) 200)
+          (op-fn (:body response))
+          (js/alert "Delete todo failure!")))))
+
+(comment
+(defn add-todo [text parid blog]
+  (create-todo
+   text
+   parid
+   #(swap! todos assoc (:id %) {:id (:id %) :content (:content %) :done false})
+   blog))
 
 (defn toggle [id] (swap! todos update-in [id :done] not))
 
@@ -156,7 +143,7 @@
      {:id id
       :type "text"
       :placeholder (str "Subneed to be done for " id "?")
-      :on-save #(add-todo % id)
+      :on-save #(add-todo % id 4857)
       }]
     )
   )
@@ -179,11 +166,11 @@
 (defn new-todo []
   [todo-input {:id "new-todo"
                :placeholder "What needs to be done?"
-               :on-save #(add-todo % first-parid)}]
+               :on-save #(add-todo % 1 4857)}]
   )
 
 
-(defn todo-app [props]
+(defn todo-app []
   (let [filt (r/atom :all)]
     (fn []
       (let [items (vals @todos)
@@ -208,3 +195,5 @@
               [todo-stats {:active active :done done :filt filt}]]])]
          [:footer#info
           [:p "Double-click to edit a todo"]]]))))
+
+)

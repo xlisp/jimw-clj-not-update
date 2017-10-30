@@ -142,6 +142,7 @@
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
+      ;; [todos/todo-app]
       [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []

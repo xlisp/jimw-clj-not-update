@@ -155,3 +155,38 @@
        (->  (h/insert-into :blogs)
             (h/values [{:name name
                         :content content}]))))
+
+;; (search-todos {:db *db* :q "a" :blog 2223})
+(defn search-todos [{:keys [db blog q]}]
+  (jconn db
+         (-> (h/select :*)
+             (h/from :todos)
+             (h/order-by [:id :desc])
+             (h/where (when (seq q)
+                        [:like :content (str "%" q "%")]))
+             (h/merge-where (when (pos? blog) [:= :blog blog])))))
+
+;; (create-todo {:db *db* :content "aaaaabbbccc" :parid 3 :blog 2222})
+(defn create-todo [{:keys [db parid blog content]}]
+  (jc1 db
+       (->  (h/insert-into :todos)
+            (h/values [{:content content
+                        :parid   parid
+                        :blog    blog}]))))
+
+;; (update-todo {:db *db* :id 3 :content "aaaaabbbccctt" :parid 6 :blog 2226})
+(defn update-todo [{:keys [db id parid blog content]}]
+  (jc1 db
+       (->  (h/update :todos)
+            (h/sset (->> {:parid    (when (pos? parid) parid)
+                          :content (when (seq content) content)
+                          :blog (when (pos? blog) blog)}
+                         (remove (fn [x]  (nil? (last x))))
+                         (into {})))
+            (h/where [:= :id id]))))
+
+;; (delete-todo {:db *db* :id 3})
+(defn delete-todo [{:keys [db id]}]
+  (jc1 db
+       (-> (h/delete-from :todos)
+           (h/where [:= :id id]))))
