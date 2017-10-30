@@ -11,4 +11,4 @@ profiles.clj
 /log
 figwheel_server.log
 resources/docs/docs.md
-
+resources/public/js/autosize.min.js

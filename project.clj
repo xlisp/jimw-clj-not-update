@@ -114,6 +114,9 @@
                       :output-dir "target/cljsbuild/public/js/out"
                       :source-map true
                       :optimizations :none
+                      :foreign-libs [{:file "resources/public/js/autosize.min.js"
+                                      :provides ["myexterns.autosize"]}]
+                      :externs ["resources/public/js/autosize.ext.js"]
                       :pretty-print true}}}}
                   
                   

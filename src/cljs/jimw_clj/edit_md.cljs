@@ -1,5 +1,6 @@
 (ns jimw-clj.edit-md
   (:require [reagent.core :as r]
+            [myexterns.autosize :as autosize]
             [cljsjs.marked]))
 
 (defn blog-content-input-par [{:keys [id name on-save on-stop]}]
@@ -26,7 +27,10 @@
     (fn [{:keys [id name save-fn]}]
       [:li {:class (str (if @editing "editing"))}
        [:div.view
-        [:div {:on-double-click #(reset! editing true)
+        [:div {:on-double-click
+               #(do (reset! editing true)
+                    (js/setTimeout (fn []
+                                     (js/autosize (.querySelector js/document "textarea"))) 500))
                :dangerouslySetInnerHTML
                {:__html (js/marked name)}}]]
        (when @editing
