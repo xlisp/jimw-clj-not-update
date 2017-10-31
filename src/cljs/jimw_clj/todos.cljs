@@ -105,15 +105,19 @@
         "Clear completed " done])]))
 
 (def new-todo-par
-  (fn [id]
+  (fn [id blog-list blog-id]
     [todo-input-par
      {:id id
       :type "text"
       :placeholder (str "Subneed to be done for " id "?")
-      ;; :on-save #(add-todo % id 4857)
-      }]
-    )
-  )
+      :on-save
+      (fn [content]
+        (create-todo
+         content id blog-id
+         (fn [data]
+           (swap! blog-list update-in
+                  [(:blog data) :todos]
+                  #(assoc % (:id data) {:id (:id data) :parid (:parid data) :content (:content data)})))))}]))
 
 (defn todo-item []
   (let [editing (r/atom false)]
@@ -130,7 +134,7 @@
                                (swap! blog-list update-in
                                       [blog-id :todos] #(dissoc % id)))))}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par id)]]
+        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par id blog-list blog-id)]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save
