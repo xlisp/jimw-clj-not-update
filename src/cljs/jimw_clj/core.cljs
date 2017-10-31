@@ -82,7 +82,10 @@
      (map (fn [li]
             (do
               (swap! blog-list assoc (:id li)
-                     {:id (:id li) :name (:name li) :content (:content li)})
+                     {:id (:id li) :name (:name li) :content (:content li)
+                      :todos (into
+                              (sorted-map-by >)
+                              (map (fn [x] (vector (:id x) x)) (:todos li)))})
               (:id li))) data) str prn)))
 
 (defonce blog-list-init
@@ -142,7 +145,7 @@
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
-      ;; [todos/todo-app]
+      [todos/todo-app blog-list id]
       [:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []

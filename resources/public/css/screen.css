@@ -132,11 +132,13 @@ button {
 	appearance: none;
 }
 
+/* background: #eaeaea url('bg.png'); */
+/* 
 body {
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	line-height: 1.4em;
 	background: #eaeaea;
-	/* background: #eaeaea url('bg.png'); */
+
 	color: #4d4d4d;
 	width: 550px;
 	margin: 0 auto;
@@ -146,6 +148,7 @@ body {
 	-o-font-smoothing: antialiased;
 	font-smoothing: antialiased;
 }
+*/
 
 button,
 input[type="checkbox"] {

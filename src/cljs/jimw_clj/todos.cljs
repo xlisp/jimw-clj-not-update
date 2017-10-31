@@ -7,7 +7,6 @@
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defonce todos (r/atom (sorted-map)))
-(defonce counter (r/atom 0))
 
 ;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
@@ -52,38 +51,6 @@
         (if (= (:status response) 200)
           (op-fn (:body response))
           (js/alert "Delete todo failure!")))))
-
-(comment
-(defn add-todo [text parid blog]
-  (create-todo
-   text
-   parid
-   #(swap! todos assoc (:id %) {:id (:id %) :content (:content %) :done false})
-   blog))
-
-(defn toggle [id] (swap! todos update-in [id :done] not))
-
-(defn save [id content]
-  (update-todo
-   id content
-   #(if (= % 204)
-      (swap! todos assoc-in [id :content] content)
-      (js/alert (str "Update todo " id " failure!")))
-   )
-  )
-
-(defn delete [id]
-  (delete-todo
-   id
-   #(if (= % 204)
-      (swap! todos dissoc id)
-      (js/alert (str "Delete todo " id " failure!")))
-   )
-  )
-
-(defn mmap [m f a] (->> m (f a) (into (empty m))))
-(defn complete-all [v] (swap! todos mmap map #(assoc-in % [1 :done] v)))
-(defn clear-done [] (swap! todos mmap remove #(get-in % [1 :done])))
 
 (defn todo-input [{:keys [content on-save on-stop]}]
   (let [val (r/atom content)
@@ -134,7 +101,7 @@
       [:li [:a (props-for :active) "Active"]]
       [:li [:a (props-for :done) "Completed"]]]
      (when (pos? done)
-       [:button#clear-completed {:on-click clear-done}
+       [:button#clear-completed ;; {:on-click clear-done}
         "Clear completed " done])]))
 
 (def new-todo-par
@@ -143,7 +110,7 @@
      {:id id
       :type "text"
       :placeholder (str "Subneed to be done for " id "?")
-      :on-save #(add-todo % id 4857)
+      ;; :on-save #(add-todo % id 4857)
       }]
     )
   )
@@ -155,38 +122,49 @@
                         (if @editing "editing"))}
        [:div.view
         [:label {:on-double-click #(reset! editing true)} content]
-        [:button.destroy {:on-click #(delete id)}]
+        ;; [:button.destroy {:on-click #(delete id)}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
         [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
         ]
        (when @editing
          [todo-edit {:class "edit" :content content
-                     :on-save #(save id %)
+                     ;; :on-save #(save id %)
                      :on-stop #(reset! editing false)}])])))
-(defn new-todo []
+
+(defn new-todo [blog-list blog-id items]
   [todo-input {:id "new-todo"
                :placeholder "What needs to be done?"
-               :on-save #(add-todo % 1 4857)}]
-  )
+               :on-save
+               (fn [content]
+                 (let [parid
+                       (if (= (count items) 0) 1
+                           (->
+                            (filter #(= (:parid %) 1) items)
+                            first :id))]
+                   (create-todo
+                    content parid blog-id
+                    (fn [data]
+                      (swap! blog-list update-in
+                             [blog-id :todos]
+                             #(assoc % (:id data) {:id (:id data) :parid parid :content content}))))))}])
 
-
-(defn todo-app []
+(defn todo-app [blog-list blog-id]
   (let [filt (r/atom :all)]
     (fn []
-      (let [items (vals @todos)
+      (let [items (vals (get-in @blog-list [blog-id :todos]))
             done (->> items (filter :done) count)
             active (- (count items) done)]
         [:div
          [:section#todoapp
           [:header#header
            [:h1 "todos tree"]
-           (new-todo)
+           (new-todo blog-list blog-id items)
            ]
           (when (-> items count pos?)
             [:div
              [:section#main
               [:ul#todo-list
-               (for [todo (filter (case @filt
+               (for [todo items #_(filter (case @filt
                                     :active (complement :done)
                                     :done :done
                                     :all identity) items)]
@@ -195,5 +173,3 @@
               [todo-stats {:active active :done done :filt filt}]]])]
          [:footer#info
           [:p "Double-click to edit a todo"]]]))))
-
-)

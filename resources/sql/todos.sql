@@ -5,7 +5,6 @@ CREATE TABLE todos (
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE (blog, parid)
 );
 
 CREATE SEQUENCE todos_new_id_seq
