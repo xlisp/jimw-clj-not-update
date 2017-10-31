@@ -127,10 +127,32 @@
          ((tree (idd :id)) par))
        (par id)))))
 
-;; (search-blogs {:db *db* :q "s"})
+(defn agg-json-object
+  [kvs]
+  (honeysql.core/call
+   :coalesce (->> (for [[k v] kvs]
+                    [(if (keyword? k) (name k) k) v])
+                  (apply concat)
+                  (apply honeysql.core/call :jsonb_build_object)
+                  (honeysql.core/call :jsonb_agg))
+   (honeysql.core/call :cast "[]" :jsonb)))
+
+(def todos-subquery
+  (-> (h/select (agg-json-object
+                 {:id :id
+                  :parid :parid
+                  :content :content
+                  :created_at :created_at
+                  :updated_at :updated_at}))
+      (h/from :todos)))
+
+;; (search-blogs {:db *db* :q "肌肉记忆"})
 (defn search-blogs [{:keys [db limit offset q]}]
   (jconn db
-         (-> (h/select :*)
+         (-> (h/select :id :name :content :created_at :updated_at
+                       [(-> todos-subquery
+                            (h/where [:= :blogs.id :todos.blog]))
+                        :todos])
              (h/from :blogs)
              (h/limit limit)
              (h/offset offset)
@@ -156,7 +178,7 @@
             (h/values [{:name name
                         :content content}]))))
 
-;; (search-todos {:db *db* :q "a" :blog 2223})
+;; (search-todos {:db *db* :q "a" :blog 4857})
 (defn search-todos [{:keys [db blog q]}]
   (jconn db
          (-> (h/select :*)

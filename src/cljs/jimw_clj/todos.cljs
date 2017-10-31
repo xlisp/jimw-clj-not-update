@@ -9,7 +9,7 @@
 (defonce todos (r/atom (sorted-map)))
 (defonce counter (r/atom 0))
 
-;; (get-todos-list 2222 #(prn %))
+;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
   [blog op-fn]
   (go (let [response
