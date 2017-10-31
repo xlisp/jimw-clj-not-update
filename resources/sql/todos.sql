@@ -1,10 +1,10 @@
 CREATE TABLE todos (
   id BIGSERIAL PRIMARY KEY,
   blog BIGSERIAL NOT NULL REFERENCES blogs (id),
-  parid BIGSERIAL TEXT NOT NULL,
+  parid BIGSERIAL NOT NULL,
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE SEQUENCE todos_new_id_seq

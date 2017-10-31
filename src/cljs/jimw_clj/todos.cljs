@@ -131,43 +131,43 @@
                      ;; :on-save #(save id %)
                      :on-stop #(reset! editing false)}])])))
 
-(defn new-todo [blog-list blog-id items]
+(defn new-todo [blog-list blog-id items parid-first-id]
   [todo-input {:id "new-todo"
                :placeholder "What needs to be done?"
                :on-save
                (fn [content]
-                 (let [parid
-                       (if (= (count items) 0) 1
-                           (->
-                            (filter #(= (:parid %) 1) items)
-                            first :id))]
-                   (create-todo
-                    content parid blog-id
-                    (fn [data]
-                      (swap! blog-list update-in
-                             [blog-id :todos]
-                             #(assoc % (:id data) {:id (:id data) :parid parid :content content}))))))}])
+                 (create-todo
+                  content @parid-first-id blog-id
+                  (fn [data]
+                    (if (= @parid-first-id 1)
+                      (reset! parid-first-id (:id data)))
+                    (swap! blog-list update-in
+                           [(:blog data) :todos]
+                           #(assoc % (:id data) {:id (:id data) :parid (:parid data) :content (:content data)})))))}])
 
 (defn todo-app [blog-list blog-id]
   (let [filt (r/atom :all)]
     (fn []
       (let [items (vals (get-in @blog-list [blog-id :todos]))
+            parid-first-id (-> (if (= (count items) 0) 1
+                                   (->
+                                    (filter #(= (:parid %) 1) items)
+                                    first :id)) r/atom)
             done (->> items (filter :done) count)
             active (- (count items) done)]
         [:div
          [:section#todoapp
           [:header#header
            [:h1 "todos tree"]
-           (new-todo blog-list blog-id items)
-           ]
+           (new-todo blog-list blog-id items parid-first-id)]
           (when (-> items count pos?)
             [:div
              [:section#main
               [:ul#todo-list
                (for [todo items #_(filter (case @filt
-                                    :active (complement :done)
-                                    :done :done
-                                    :all identity) items)]
+                                            :active (complement :done)
+                                            :done :done
+                                            :all identity) items)]
                  ^{:key (:id todo)} [todo-item todo])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
