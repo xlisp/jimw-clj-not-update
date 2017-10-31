@@ -122,10 +122,15 @@
                         (if @editing "editing"))}
        [:div.view
         [:label {:on-double-click #(reset! editing true)} content]
-        ;; [:button.destroy {:on-click #(delete id)}]
+        [:button.destroy {:on-click
+                          (fn []
+                            (delete-todo
+                             id
+                             (fn [data]
+                               (swap! blog-list update-in
+                                      [blog-id :todos] #(dissoc % id)))))}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id) } (new-todo-par id)]
-        ]
+        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par id)]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save
