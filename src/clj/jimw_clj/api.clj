@@ -40,7 +40,7 @@
   [{{:keys [id parid blog content]} :params}]
   (let [res (db/update-todo {:db db/*db*
                              :id (Integer/parseInt id)
-                             :parid (Integer/parseInt parid)
+                             ;; :parid (Integer/parseInt parid)
                              :blog (Integer/parseInt blog)
                              :content content})]
     (if res

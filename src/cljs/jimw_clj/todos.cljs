@@ -31,12 +31,12 @@
           (js/alert "Create todo failure!")))))
 
 ;; (update-todo 11 "aaadasdsadsaoooo" 12 2222 #(prn %))
-(defn update-todo [id text parid blog op-fn]
+(defn update-todo [id text #_parid blog op-fn]
   (go (let [response
             (<!
              (http/put (str (api-root "/update-todo/") id)
                        {:with-credentials? false
-                        :query-params {:content text :parid parid :blog blog}}))]
+                        :query-params {:content text #_:parid #_parid :blog blog}}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
           (js/alert "Update todo failure!")))))
@@ -117,7 +117,7 @@
 
 (defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done content]}]
+    (fn [{:keys [id done content]} blog-list blog-id]
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))}
        [:div.view
@@ -128,7 +128,11 @@
         ]
        (when @editing
          [todo-edit {:class "edit" :content content
-                     ;; :on-save #(save id %)
+                     :on-save
+                     (fn [content]
+                       (update-todo
+                        id content blog-id
+                        #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                      :on-stop #(reset! editing false)}])])))
 
 (defn new-todo [blog-list blog-id items parid-first-id]
@@ -168,7 +172,7 @@
                                             :active (complement :done)
                                             :done :done
                                             :all identity) items)]
-                 ^{:key (:id todo)} [todo-item todo])]]
+                 ^{:key (:id todo)} [todo-item todo blog-list blog-id])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
          [:footer#info

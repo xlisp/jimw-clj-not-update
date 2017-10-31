@@ -200,7 +200,7 @@
 (defn update-todo [{:keys [db id parid blog content]}]
   (jc1 db
        (->  (h/update :todos)
-            (h/sset (->> {:parid    (when (pos? parid) parid)
+            (h/sset (->> {;;:parid    (when (pos? parid) parid)
                           :content (when (seq content) content)
                           :blog (when (pos? blog) blog)}
                          (remove (fn [x]  (nil? (last x))))
