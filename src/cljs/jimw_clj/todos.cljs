@@ -184,7 +184,7 @@
         [:div
          [:section#todoapp
           [:header#header
-           [:h1 "todos tree"]
+           ;; [:h1 "todos tree"]
            (new-todo blog-list blog-id items parid-first-id)]
           (when (-> items count pos?)
             [:div
@@ -197,5 +197,5 @@
                  ^{:key (:id todo)} [todo-item todo blog-list blog-id])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
-         [:footer#info
+         #_[:footer#info
           [:p "Double-click to edit a todo"]]]))))
