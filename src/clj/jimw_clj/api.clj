@@ -12,8 +12,23 @@
    [jimw-clj.db.core :as db]
    [ring.util.http-response :refer :all]
    [ring.util.response :refer [response]]
+   [buddy.sign.jwt :as jwt]
+   [clj-time.core :as time]
    [taoensso.timbre :refer [error debug info]])
   (:gen-class))
+
+(def conf-token "test-steve-token")
+
+(defn token-sign
+  [ids]
+  (jwt/sign
+   (merge
+    ids {:exp (time/plus (time/now) (time/millis 7200000))})
+   conf-token))
+
+(defn token-unsign
+  [token]
+  (jwt/unsign token conf-token))
 
 (defn get-blogs
   [{{:keys [q limit offset]

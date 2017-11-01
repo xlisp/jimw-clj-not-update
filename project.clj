@@ -40,7 +40,8 @@
                  [cljsjs/marked "0.3.5-0"]
                  [cljs-http "0.1.43"]
                  [cljsjs/highlight "9.12.0-0"]
-                 [com.cemerick/url "0.1.1"]]
+                 [com.cemerick/url "0.1.1"]
+                 [buddy/buddy-sign "2.2.0"]]
 
   :min-lein-version "2.0.0"
 
