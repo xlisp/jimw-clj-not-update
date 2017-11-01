@@ -13,6 +13,7 @@
    [ring.util.http-response :refer :all]
    [ring.util.response :refer [response]]
    [buddy.sign.jwt :as jwt]
+   [buddy.hashers :as hashers]
    [clj-time.core :as time]
    [taoensso.timbre :refer [error debug info]])
   (:gen-class))
@@ -29,6 +30,25 @@
 (defn token-unsign
   [token]
   (jwt/unsign token conf-token))
+
+(defn- check-password
+  [text digest]
+  (when (and text digest)
+    (hashers/check text digest)))
+
+(defn login
+  [{:keys [params]}]
+  (try
+    (let [{:keys [id password username]}
+          (db/get-user-by-username
+           {:db db/*db* :username (:username params)})]
+      (if (check-password (:password params) password)
+        (ok {:id id
+             :username username
+             :token (token-sign {:user username})})
+        (unauthorized)))
+    (catch Exception ex
+      (unauthorized))))
 
 (defn get-blogs
   [{{:keys [q limit offset]
@@ -77,6 +97,7 @@
       (ok res) (not-found))))
 
 (defroutes api-routes
+  (POST "/login" [] login)
   (GET "/blogs" [] get-blogs)
   (PUT "/update-blog/:id" [] update-blog)
   (POST "/create-blog" [] create-blog)

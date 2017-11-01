@@ -7,7 +7,8 @@
     [mount.core :refer [defstate]]
     [honeysql.core :as sql]
     [honeysql.helpers :as h]
-    [taoensso.timbre :refer [error debug info]])
+    [taoensso.timbre :refer [error debug info]]
+    [buddy.hashers :as hashers])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -212,3 +213,15 @@
   (jc1 db
        (-> (h/delete-from :todos)
            (h/where [:= :id id]))))
+
+(defn insert-user [{:keys [db username password]}]
+  (jc1 db
+       (-> (h/insert-into :users)
+           (h/values [{:username username
+                       :password (hashers/derive password)}]))))
+
+(defn get-user-by-username [{:keys [db username]}]
+  (jconn1 db
+          (-> (h/select :*)
+              (h/from :users)
+              (h/where [:= :username username]))))
