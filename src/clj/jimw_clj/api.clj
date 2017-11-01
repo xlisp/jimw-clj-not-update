@@ -50,6 +50,13 @@
     (catch Exception ex
       (unauthorized))))
 
+(defn check-api-token
+  [f]
+  (fn [request]
+    (if (get-in request [:params :jimw_clj_userinfo :user])
+      (f request)
+      (unauthorized))))
+
 (defn get-blogs
   [{{:keys [q limit offset]
      :or   {limit 10 offset 0 q ""}} :params}]
@@ -102,12 +109,12 @@
   (ok {:params params}))
 
 (defroutes api-routes
-  (GET "/test-api" [] test-api)
   (POST "/login" [] login)
-  (GET "/blogs" [] get-blogs)
-  (PUT "/update-blog/:id" [] update-blog)
-  (POST "/create-blog" [] create-blog)
-  (GET "/todos" [] get-todos)
-  (PUT "/update-todo/:id" [] update-todo)
-  (POST "/create-todo" [] create-todo)
-  (DELETE "/delete-todo" [] delete-todo))
+  (GET "/test-api" [] (check-api-token test-api))
+  (GET "/blogs" [] (check-api-token get-blogs))
+  (PUT "/update-blog/:id" [] (check-api-token update-blog))
+  (POST "/create-blog" [] (check-api-token create-blog))
+  (GET "/todos" [] (check-api-token get-todos))
+  (PUT "/update-todo/:id" [] (check-api-token update-todo))
+  (POST "/create-todo" [] (check-api-token create-todo))
+  (DELETE "/delete-todo" [] (check-api-token delete-todo)))
