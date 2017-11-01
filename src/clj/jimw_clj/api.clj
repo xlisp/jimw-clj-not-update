@@ -96,7 +96,13 @@
     (if res
       (ok res) (not-found))))
 
+;; headers => jimw-clj-token: "token" => {:params {:jimw_clj_userinfo {:user "abc"}}}
+(defn test-api
+  [{:keys [params]}]
+  (ok {:params params}))
+
 (defroutes api-routes
+  (GET "/test-api" [] test-api)
   (POST "/login" [] login)
   (GET "/blogs" [] get-blogs)
   (PUT "/update-blog/:id" [] update-blog)

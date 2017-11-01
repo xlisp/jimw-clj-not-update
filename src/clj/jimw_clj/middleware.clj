@@ -8,7 +8,9 @@
             [jimw-clj.config :refer [env]]
             [ring.middleware.flash :refer [wrap-flash]]
             [immutant.web.middleware :refer [wrap-session]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
+            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+            [buddy.sign.jwt :as jwt]
+            [ring.util.http-response :refer :all])
   (:import [javax.servlet ServletContext]))
 
 (defn wrap-context [handler]
@@ -51,6 +53,24 @@
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
+(def conf-token "test-steve-token")
+
+(defn token-unsign
+  [token]
+  (jwt/unsign token conf-token))
+
+(defn wrap-token
+  [handler]
+  (fn [{:keys [remote-addr headers] :as request}]
+    (if-let [token (get-in request [:headers "jimw-clj-token"])]
+      (let [decoded (try
+                      (token-unsign token)
+                      (catch Throwable _))]
+        (if decoded
+          (handler (assoc-in request [:params :jimw_clj_userinfo] decoded))
+          (unauthorized "Invalid token !")))
+      (handler request))))
+
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
       wrap-webjars
@@ -60,5 +80,6 @@
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
             (dissoc :session)))
+      wrap-token
       wrap-context
       wrap-internal-error))
