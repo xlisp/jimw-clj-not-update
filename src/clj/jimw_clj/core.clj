@@ -3,7 +3,7 @@
             [luminus.repl-server :as repl]
             [luminus.http-server :as http]
             [luminus-migrations.core :as migrations]
-            [jimw-clj.config :refer [env]]
+            [jimw-clj.config :as config :refer [env]]
             [cider.nrepl :refer [cider-nrepl-handler]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
@@ -55,5 +55,6 @@
       (migrations/migrate args (select-keys env [:database-url]))
       (System/exit 0))
     :else
-    (start-app args)))
-  
+    (do
+      (config/jimw-load-conf)
+      (start-app args))))

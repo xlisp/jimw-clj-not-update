@@ -15,21 +15,16 @@
    [buddy.sign.jwt :as jwt]
    [buddy.hashers :as hashers]
    [clj-time.core :as time]
-   [taoensso.timbre :refer [error debug info]])
+   [taoensso.timbre :refer [error debug info]]
+   [jimw-clj.config :as config])
   (:gen-class))
-
-(def conf-token "test-steve-token")
 
 (defn token-sign
   [ids]
   (jwt/sign
    (merge
     ids {:exp (time/plus (time/now) (time/millis 7200000))})
-   conf-token))
-
-(defn token-unsign
-  [token]
-  (jwt/unsign token conf-token))
+   (:jimw-clj-jwt-key @config/jimw-conf)))
 
 (defn- check-password
   [text digest]

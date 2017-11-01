@@ -5,7 +5,7 @@
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.webjars :refer [wrap-webjars]]
             [muuntaja.middleware :refer [wrap-format wrap-params]]
-            [jimw-clj.config :refer [env]]
+            [jimw-clj.config :as config :refer [env]]
             [ring.middleware.flash :refer [wrap-flash]]
             [immutant.web.middleware :refer [wrap-session]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
@@ -53,11 +53,9 @@
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
-(def conf-token "test-steve-token")
-
 (defn token-unsign
   [token]
-  (jwt/unsign token conf-token))
+  (jwt/unsign token (:jimw-clj-jwt-key @config/jimw-conf)))
 
 (defn wrap-token
   [handler]

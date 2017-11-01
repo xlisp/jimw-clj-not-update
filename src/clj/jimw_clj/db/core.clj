@@ -8,7 +8,8 @@
     [honeysql.core :as sql]
     [honeysql.helpers :as h]
     [taoensso.timbre :refer [error debug info]]
-    [buddy.hashers :as hashers])
+    [buddy.hashers :as hashers]
+    [jimw-clj.config :as config])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -20,8 +21,8 @@
             PreparedStatement]))
 
 (defstate ^:dynamic *db*
-  :start (conman/connect! {:jdbc-url #_(env :database-url)
-                           "postgresql://jim:123456@127.0.0.1:5432/blackberry"})
+  :start (conman/connect! {:jdbc-url
+                           (:database-url @config/jimw-conf)})
   :stop (conman/disconnect! *db*))
 
 (conman/bind-connection *db* "sql/queries.sql")
