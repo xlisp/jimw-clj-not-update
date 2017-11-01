@@ -16,7 +16,8 @@
             [cljsjs.highlight.langs.java]
             [jimw-clj.edit :as edit]
             [jimw-clj.edit-md :as edit-md]
-            [jimw-clj.todos :as todos])
+            [jimw-clj.todos :as todos]
+            [alandipert.storage-atom :refer [local-storage]])
   (:import goog.History))
 
 (.setOptions js/marked
@@ -45,6 +46,17 @@
 
 (defonce page-offset (r/atom 0))
 (defonce blog-list (r/atom (sorted-map-by >)))
+(def api-token (local-storage (r/atom "") :api-token))
+
+(defn login
+  [username password op-fn]
+  (go (let [response
+            (<!
+             (http/post (api-root "/login")
+                       {:with-credentials? false
+                        :query-params {:username username :password password}}))]
+        (let [data (:body response)]
+          (op-fn data)))))
 
 (defn get-blog-list
   [q offset op-fn]
@@ -52,6 +64,7 @@
             (<!
              (http/get (api-root "/blogs")
                        {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
                         :query-params {:q q :limit 10 :offset (* offset 10)}}))]
         (let [data (:body response)]
           (op-fn data)))))
@@ -61,7 +74,8 @@
   (go (let [response
             (<!
              (http/put (str (api-root "/update-blog/") id)
-                       {:json-params
+                       {:headers {"jimw-clj-token" @api-token}
+                        :json-params
                         {:name name :content content}}))]
         (let [data (:body response)]
           (op-fn data)))))
@@ -71,7 +85,8 @@
   (go (let [response
             (<!
              (http/post (api-root "/create-blog")
-                        {:json-params
+                        {:headers {"jimw-clj-token" @api-token}
+                         :json-params
                          {:name (str "给我一个lisp的支点" (js/Date.now)) :content "### 我可以撬动整个地球!"}}))]
         (let [data (:body response)]
           (swap! blog-list assoc (:id data) {:id (:id data) :content (:content data) :name (:name data)})))))
@@ -124,10 +139,45 @@
          [nav-link "#/" "NewBlog" :create-blog collapsed?]]]])))
 
 (defn about-page []
-  [:div.container
-   [:div.row
-    [:div.col-md-12
-     [:img {:src (str js/context "/img/warning_clojure.png")}]]]])
+  (if-not (empty? @api-token)
+    [:div.container
+     [:div.row
+      [:div.col-md-12
+       [:img {:src (str js/context "/img/warning_clojure.png")}]]]]
+    (let [username (r/atom "")
+          password (r/atom "")]
+      [:div {:class "main-login main-center"}
+       [:form {:class "form-horizontal", :method "post", :action "#"}
+        [:div {:class "form-group"}
+         [:label {:for "name", :class "cols-sm-2 control-label"} "Your Name"]
+         [:div {:class "cols-sm-10"}
+          [:div {:class "input-group"}
+           [:span {:class "input-group-addon"}
+            [:i {:class "fa fa-user fa", :aria-hidden "true"}]]
+           [:input {:type "text", :class "form-control", :name "name", :id "name", :placeholder "Enter your Name"
+                    :on-change #(reset! username (-> % .-target .-value))}]]]]
+        [:div {:class "form-group"}
+         [:label {:for "confirm", :class "cols-sm-2 control-label"} "Confirm Password"]
+         [:div {:class "cols-sm-10"}
+          [:div {:class "input-group"}
+           [:span {:class "input-group-addon"}
+            [:i {:class "fa fa-lock fa-lg", :aria-hidden "true"}]]
+           [:input {:type "password", :class "form-control", :name "confirm", :id "confirm", :placeholder "Confirm your Password"
+                    :on-change #(reset! password (-> % .-target .-value))}]]]]
+        [:div {:class "form-group"}
+         [:button
+          {:type "button", :class "btn btn-primary btn-lg btn-block login-button"
+           :on-click
+           (fn []
+             (login
+              @username @password
+              (fn [data]
+                (if (:token data)
+                  (do
+                    (js/alert "login success!")
+                    (reset! api-token (:token data))
+                    (set! (.. js/window -location -href) (api-root "")))
+                  (js/alert "username or password is error!")))))} "Login"]]]])))
 
 (defn blog-name-save [id name]
   (do

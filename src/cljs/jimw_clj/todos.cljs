@@ -8,6 +8,15 @@
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defonce todos (r/atom (sorted-map)))
 
+(defn get-api-token
+  []
+  (->
+   (.getItem js/localStorage "[\"~#'\",\"~:api-token\"]")
+   (clojure.string/split "\"")
+   (get 3)))
+
+(def memoized-api-token (memoize get-api-token))
+
 ;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
   [blog op-fn]
@@ -15,6 +24,7 @@
             (<!
              (http/get (api-root "/todos")
                        {:with-credentials? false
+                        :headers {"jimw-clj-token" (memoized-api-token)}
                         :query-params {:blog blog}}))]
         (let [body (:body response)]
           (op-fn body)))))
@@ -25,6 +35,7 @@
             (<!
              (http/post (api-root "/create-todo")
                         {:with-credentials? false
+                         :headers {"jimw-clj-token" (memoized-api-token)}
                          :query-params {:content text :parid parid :blog blog}}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
@@ -36,6 +47,7 @@
             (<!
              (http/put (str (api-root "/update-todo/") id)
                        {:with-credentials? false
+                        :headers {"jimw-clj-token" (memoized-api-token)}
                         :query-params {:content text #_:parid #_parid :blog blog}}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
@@ -47,6 +59,7 @@
             (<!
              (http/delete (api-root "/delete-todo")
                           {:with-credentials? false
+                           :headers {"jimw-clj-token" (memoized-api-token)}
                            :query-params {:id id}}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
