@@ -36,12 +36,12 @@ To start a web server for the application, run:
 * 单个文件(单篇文章)=>独立出去文件(独立出去完整的文章)
 * 多行输入textarea 手动，自动换行问题 √
 * 多个关键词搜索=>jimw-clj的代码语义搜索 ①
-* 登陆系统参考护理项目和clojure-web-admin ①
+* 登陆系统参考护理项目和clojure-web-admin (采用jwt的API验证) √
 * db连接没有db的连接池5个,所以每次curd第一次都很慢 ①
 * Markdown的图片上传功能,用阿里云或者直接上传服务器 ①
 * 和Clojure编写的APP,收集的数据用于训练jimw-clj的习惯: '网页语音阅读'阅读网页资料 + ocr 阅读书本拍照资料等等
 * todos.cljs分开一个单页面来做,不然一个页面太多的atom不好控制了 => 一个atom放两级的数据,第一层是blog,第一层是todos,如果todos有内容就请求显示出来,可以在一个树上去更新两者 (采用一个atom放两级的数据,页面分开放的方法ok) √
-* 为了API和单页面都可以方便使用,用jwt通用的加密方案加密API,登录成功就获取token
+* 为了API和单页面都可以方便使用,用jwt通用的加密方案加密API,登录成功就获取token √
 
 ## 以实现一个优秀研究为工具目的: 量子力学研究工具诞生了MMA => 机器学习算法(.e.g:维特比算法)学习工具诞生了JIMW
 * 数据流的λ化, 其他语言实现的算法的λ 化
