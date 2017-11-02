@@ -1024,5 +1024,11 @@ ul.nav > li.brand > a {
 
 .search-margin {
     margin: 10px 0 10px 0;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
+.app-margin {
+    padding-left: 5px;
+    padding-right: 5px;
+}

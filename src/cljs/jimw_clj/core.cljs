@@ -224,7 +224,7 @@
       #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
-  [:div.container
+  [:div.container.app-margin
    (for [blog @blog-list]
      [:div
       (md-render
