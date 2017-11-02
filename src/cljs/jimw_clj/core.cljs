@@ -21,8 +21,9 @@
   (:import goog.History))
 
 (.setOptions js/marked
-             #js {:highlight (fn [code]
-                               (.-value (.highlightAuto js/hljs code)))})
+             (clj->js
+              {:table true
+               :highlight #(.-value (.highlightAuto js/hljs %))}))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defn s-height [] (.. js/document -body -scrollHeight))
