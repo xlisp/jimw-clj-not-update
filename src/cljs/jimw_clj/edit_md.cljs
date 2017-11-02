@@ -25,7 +25,7 @@
 (defn blog-content-item []
   (let [editing (r/atom false)]
     (fn [{:keys [id name save-fn]}]
-      [:li {:class (str (if @editing "editing"))}
+      [:li.liststyle {:class (str (if @editing "editing"))}
        [:div.view
         [:div {:on-double-click
                #(do (reset! editing true)

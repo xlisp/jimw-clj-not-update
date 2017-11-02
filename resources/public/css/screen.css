@@ -996,14 +996,15 @@ ul.nav > li.brand > a {
 	display: block;
 }
 
-li { /* li 标签, 不显示点 */
-    list-style: none;
-}
-
 /*
 .btn-height { btn-height class 撑开高度 
     height: 38px;
 } */
+
+/* li 标签, 不显示点 */
+.liststyle {
+    list-style: none;
+}
 
 .glyphicon {
     position: relative;
