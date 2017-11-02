@@ -114,7 +114,7 @@
  #(if (is-page-end-m-pc)
     (do
       (swap! page-offset inc)
-      (get-blog-list "" @page-offset swap-blog-list))
+      (get-blog-list @search-key @page-offset swap-blog-list))
     nil))
 
 (defn nav-link [uri title page collapsed?]
@@ -140,7 +140,7 @@
                                (do
                                  (reset! blog-list (sorted-map-by >))
                                  (reset! page-offset 0)
-                                 (reset! search-key search-str)
+                                 (reset! search-key @search-str)
                                  (get-blog-list
                                   @search-str @page-offset
                                   (fn [data]
