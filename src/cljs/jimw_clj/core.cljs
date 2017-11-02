@@ -129,7 +129,7 @@
 (defn searchbar []
   (let [search-str (r/atom "")]
     (fn []
-      [:div {:class "input-group", :id "adv-search"}
+      [:div#adv-search.input-group.search-margin
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
                 :on-change #(reset! search-str (-> % .-target .-value))}]
        [:div {:class "input-group-btn"}
