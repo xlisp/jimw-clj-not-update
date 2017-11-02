@@ -13,9 +13,21 @@ You will need [Leiningen][1] 2.0 or above installed.
 ## Running
 
 To start a web server for the application, run:
-
+```bash
     lein run
-
+```
+To start cljs dev compile
+```bash
+    lein figwheel
+```
+cljs product js compile
+```bash
+➜  jimw-clj git:(master) lein with-profile +uberjar cljsbuild once min
+Compiling ClojureScript...
+Compiling "target/cljsbuild/public/js/app.js" from ["src/cljc" "src/cljs" "env/prod/cljs"]...
+Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
+➜  jimw-clj git:(master) ✗
+``` 
 ## Todos
 * 滑动分页 (支持手机和电脑滑动分页) √
 * 当前文章的标签云,最近一段时间的标签云

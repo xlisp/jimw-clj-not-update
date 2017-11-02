@@ -82,7 +82,9 @@
                  :pretty-print false
                  :closure-warnings
                  {:externs-validation :off :non-standard-jsdoc :off}
-                 :externs ["react/externs/react.js"]}}}}
+                 :externs ["react/externs/react.js"]
+                 :foreign-libs [{:file "resources/public/js/autosize.min.js"
+                                      :provides ["myexterns.autosize"]}]}}}}
              
              
              :aot :all
