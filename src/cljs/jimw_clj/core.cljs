@@ -122,9 +122,10 @@
    {:class (when (= page (session/get :page)) "active")}
    [:a.nav-link
     {:href uri
-     :on-click #(if (= page :create-blog)
-                  (create-default-blog)
-                  (reset! collapsed? true))} title]])
+     :on-click #(cond (= page :create-blog) (create-default-blog)
+                      (= page :logout-blog) (reset! api-token "")
+                      :else
+                      (reset! collapsed? true))} title]])
 
 (defn searchbar []
   (let [search-str (r/atom "")]
@@ -159,7 +160,8 @@
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]
-         [nav-link "#/" "NewBlog" :create-blog collapsed?]]]])))
+         [nav-link "#/" "NewBlog" :create-blog collapsed?]
+         [nav-link "#/about" "Logout" :logout-blog collapsed?]]]])))
 
 (defn about-page []
   (if-not (empty? @api-token)
