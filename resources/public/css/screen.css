@@ -995,3 +995,7 @@ ul.nav > li.brand > a {
 #todo-list li:hover .reply {
 	display: block;
 }
+
+li {
+    list-style: none;
+}
