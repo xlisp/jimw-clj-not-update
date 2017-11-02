@@ -48,6 +48,7 @@
 (defonce page-offset (r/atom 0))
 (defonce blog-list (r/atom (sorted-map-by >)))
 (def api-token (local-storage (r/atom "") :api-token))
+(defonce search-key (r/atom ""))
 
 (defn login
   [username password op-fn]
@@ -124,6 +125,27 @@
      :on-click #(if (= page :create-blog)
                   (create-default-blog)
                   (reset! collapsed? true))} title]])
+
+(defn searchbar []
+  (let [search-str (r/atom "")]
+    (fn []
+      [:div {:class "input-group", :id "adv-search"}
+       [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
+                :on-change #(reset! search-str (-> % .-target .-value))}]
+       [:div {:class "input-group-btn"}
+        [:div {:class "btn-group", :role "group"}
+         [:div {:class "dropdown dropdown-lg"}]
+         [:button {:type "button", :class "btn btn-primary"
+                   :on-click (fn []
+                               (do
+                                 (reset! blog-list (sorted-map-by >))
+                                 (reset! page-offset 0)
+                                 (reset! search-key search-str)
+                                 (get-blog-list
+                                  @search-str @page-offset
+                                  (fn [data]
+                                    (swap-blog-list data)))))}
+          [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]])))
 
 (defn navbar []
   (let [collapsed? (r/atom true)]
@@ -243,6 +265,7 @@
 
 (defn mount-components []
   (r/render [#'navbar] (.getElementById js/document "navbar"))
+  (r/render [#'searchbar] (.getElementById js/document "searchbar"))
   (r/render [#'page] (.getElementById js/document "app")))
 
 (defn init! []
