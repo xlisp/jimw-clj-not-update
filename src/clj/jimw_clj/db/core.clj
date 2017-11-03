@@ -85,49 +85,85 @@
 ;; .e.g : (jconn *db* (-> (h/select :*) (h/from :navs)))
 (defn jconn [conn sqlmap]
   (let [sql-vec (sql/format sqlmap)]
-    (info (str "SQL: " sql-vec))
+    (debug (str "SQL: " sql-vec))
     (jdbc/query conn sql-vec)))
 
 (defn jconn1 [conn sqlmap]
   (let [sql-vec (sql/format sqlmap)]
-    (info (str "SQL: " sql-vec))
+    (debug (str "SQL: " sql-vec))
     (first (jdbc/query conn sql-vec))))
 
 (defn jc1 [conn sqlmap]
   (let [sql-vec (sql/format sqlmap)
         sql-returning (apply vector (str (first sql-vec) " RETURNING *") (rest sql-vec))]
-    (info (str "SQL: " sql-returning))
+    (debug (str "SQL: " sql-returning))
     (first (jdbc/query conn sql-returning))))
 
-;; (first-nav {:db conn :past-id 13})
-(defn first-nav [{:keys [db past-id]}]
+;; (first-nav {:db *db* :blog 4857})
+(defn first-nav [{:keys [db blog]}]
   (jconn1 db
           (-> (h/select :*)
-              (h/from :navs)
-              (h/where [:= :past_id past-id])
+              (h/from :todos)
+              (h/where [:= :blog blog])
               (h/order-by [:updated_at :desc])
               (h/limit 1))))
 
-;; (get-nav-by-past-id {:db conn :past-id 13 :parid 279})
-(defn get-nav-by-past-id [{:keys [db parid past-id]}]
+;; (get-nav-by-past-id {:db *db* :blog 4857 :parid 50})
+(defn get-nav-by-past-id [{:keys [db parid blog]}]
   (jconn db
          (-> (h/select :*)
-             (h/from :navs)
+             (h/from :todos)
              (h/where
               [:and
-               [:= :past_id past-id]
+               [:= :blog blog]
                [:= :parid parid]]))))
 
-#_((tree (:id (first-nav {:db conn :past-id 13})))
-   (fn [id]
-     (get-nav-by-past-id {:db conn :past-id 13 :parid id})))
-(def tree
-  (fn [id]
+;; ((get-nav-by-id {:db *db* :id 50}) :content)
+(defn get-nav-by-id [{:keys [db id]}]
+  (jconn1 db
+          (-> (h/select :*)
+              (h/from :todos)
+              (h/where [:= :id id]))))
+
+(def tree-fn
+  (fn [id output-fn]
     (fn [par]
       (map
        (fn [idd]
-         ((tree (idd :id)) par))
+         (output-fn idd)
+         ((tree-fn (idd :id) output-fn) par))
        (par id)))))
+
+(def tree-out-puts (atom ()))
+
+;; (tree-todo-generate {:db *db* :blog 4857})
+(defn tree-todo-generate
+  [{:keys [db blog]}]
+  (let [_ (reset! tree-out-puts (list))
+        output-fn
+        (fn [idd]
+          (swap!
+           tree-out-puts conj
+           (str "\"" (:content (get-nav-by-id {:db db :id (:parid idd)})) "\"" " -> "
+                "\"" (:content idd) "\"\n")))]
+    ((tree-fn
+      (:id (first-nav {:db db :blog blog}))
+      output-fn)
+     (fn [id]
+       (get-nav-by-past-id {:db db :blog blog :parid id})))))
+
+;; (writer-tree-file 4857)
+(defn writer-tree-file
+  [blog]
+  (-> (Thread.
+       (fn []
+         (with-open [wtr (clojure.java.io/writer
+                          (str "resources/public/todos-" blog ".gv"))]
+           (.write wtr "digraph G {\n")
+           (doseq [line @tree-out-puts]
+             (.write wtr line))
+           (.write wtr "\n}"))))
+      .start))
 
 (defn agg-json-object
   [kvs]

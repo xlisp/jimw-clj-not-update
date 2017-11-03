@@ -48,6 +48,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 单个文件(单篇文章)=>独立出去文件(独立出去完整的文章)
 * 多行输入textarea 手动，自动换行问题 √
 * 多个关键词搜索=>jimw-clj的代码语义搜索 ①
+* 搜索词记录到一张表里面,方便做文章和todos推荐 ①
 * 登陆系统参考护理项目和clojure-web-admin (采用jwt的API验证) √
 * db连接没有db的连接池5个,所以每次curd第一次都很慢 ①
 * Markdown的图片上传功能,用阿里云或者直接上传服务器 ①

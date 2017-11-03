@@ -103,6 +103,11 @@
   [{:keys [params]}]
   (ok {:params params}))
 
+(defn tree-todo-generate
+  [{{:keys [blog]} :params}]
+  (do (db/tree-todo-generate {:db db/*db* :blog (Integer/parseInt blog)})
+      (db/writer-tree-file blog)))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -112,4 +117,5 @@
   (GET "/todos" [] (check-api-token get-todos))
   (PUT "/update-todo/:id" [] (check-api-token update-todo))
   (POST "/create-todo" [] (check-api-token create-todo))
-  (DELETE "/delete-todo" [] (check-api-token delete-todo)))
+  (DELETE "/delete-todo" [] (check-api-token delete-todo))
+  (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate)))
