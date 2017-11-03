@@ -204,7 +204,8 @@
   (jc1 db
        (->  (h/update :blogs)
             (h/sset (->> {:name    (when (seq name) name)
-                          :content (when (seq content) content)}
+                          :content (when (seq content) content)
+                          :updated_at (honeysql.core/call :now)}
                          (remove (fn [x]  (nil? (last x))))
                          (into {})))
             (h/where [:= :id id]))))
@@ -240,7 +241,8 @@
        (->  (h/update :todos)
             (h/sset (->> {;;:parid    (when (pos? parid) parid)
                           :content (when (seq content) content)
-                          :blog (when (pos? blog) blog)}
+                          :blog (when (pos? blog) blog)
+                          :updated_at (honeysql.core/call :now)}
                          (remove (fn [x]  (nil? (last x))))
                          (into {})))
             (h/where [:= :id id]))))
