@@ -103,10 +103,18 @@
   [{:keys [params]}]
   (ok {:params params}))
 
+;; (db/tree-todo-generate {:db db/*db* :blog 4859})
+;; (db/writer-tree-file 4859)
 (defn tree-todo-generate
   [{{:keys [blog]} :params}]
-  (do (db/tree-todo-generate {:db db/*db* :blog (Integer/parseInt blog)})
-      (db/writer-tree-file blog)))
+  (do
+    (info (str "======>> tree-todo-generate"
+               (db/tree-todo-generate
+                {:db db/*db*
+                 :blog (Integer/parseInt blog)})))
+    (Thread/sleep 1000)
+    (db/writer-tree-file (Integer/parseInt blog))
+    (ok {:msg "ok!"})))
 
 (defroutes api-routes
   (POST "/login" [] login)
