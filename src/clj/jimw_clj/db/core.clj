@@ -196,8 +196,13 @@
              (h/offset offset)
              (h/order-by [:id :desc])
              (h/where (when (seq q)
-                        [:or [:like :name (str "%" q "%")]
-                         [:like :content (str "%" q "%")]])))))
+                        (let [q-list (clojure.string/split q #" ")]
+                          (apply conj [:and]
+                                 (map #(vector
+                                        :or
+                                        [:like :name (str "%" % "%")]
+                                        [:like :content (str "%" % "%")])
+                                      q-list))))))))
 
 ;; (update-blog {:db *db* :id 5000 :name nil :content "dasdsdas"})
 (defn update-blog [{:keys [db id name content]}]
