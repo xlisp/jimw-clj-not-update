@@ -59,6 +59,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 用选中的文章部分文字来创建todos: 就像有道词典一样`指词即译模式（按下Ctrl键指词）`, 就创建一个todos => `var selectionObj = window.getSelection(); selectionObj.toString() `
 ```js
 // chrome-extension://aohddidmgooofkgohkbkaohadkolgejj/lookup.js
+document.addEventListener("mousemove", update_mouse_pos, true);
+document.addEventListener("mouseup", on_mouse_up, true);
+document.addEventListener("mousedown", on_mouse_down, true);
+document.addEventListener("dblclick", on_mouse_dbclick, true);
+
 function on_mouse_up(event) {
     if ( Math.abs(event.clientX - mouse_down_x) > 2 || Math.abs(event.clientY - mouse_down_y) > 2)
     {
