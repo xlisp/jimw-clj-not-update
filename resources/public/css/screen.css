@@ -1032,3 +1032,7 @@ ul.nav > li.brand > a {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.blog-name {
+    color: black;
+}
