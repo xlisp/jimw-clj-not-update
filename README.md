@@ -80,6 +80,7 @@ function on_mouse_up(event) {
 }
 ```
 * ClojureScript写Chrome的插件像Gooreplacer一样,帮助jimw-clj编辑: chrome-extension://jnlkjeecojckkigmchmfoigphmgkgbip/option/index.html => 写一个有道词典的cljs版本 ①
+* 通过Chrome的插件调用本地的语言识别和OCR文字识别的服务
 
 ## 以实现一个优秀研究为工具目的: 量子力学研究工具诞生了MMA => 机器学习算法(.e.g:维特比算法)学习工具诞生了JIMW
 * 数据流的λ化, 其他语言实现的算法的λ 化
