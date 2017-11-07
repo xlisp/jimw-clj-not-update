@@ -62,25 +62,27 @@
 
 (defn get-blog-list
   [q offset op-fn]
-  (go (let [response
+  (go (let [{:keys [status body]}
             (<!
              (http/get (api-root "/blogs")
                        {:with-credentials? false
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {:q q :limit 10 :offset (* offset 10)}}))]
-        (let [data (:body response)]
-          (op-fn data)))))
+        (if (= status 200)
+          (op-fn body)
+          (js/alert "Unauthorized !")))))
 
 (defn update-blog
   [id name content op-fn]
-  (go (let [response
+  (go (let [{:keys [status body]}
             (<!
              (http/put (str (api-root "/update-blog/") id)
                        {:headers {"jimw-clj-token" @api-token}
                         :json-params
                         {:name name :content content}}))]
-        (let [data (:body response)]
-          (op-fn data)))))
+        (if (= status 200)
+          (op-fn body)
+          (js/alert "Unauthorized !")))))
 
 (defn create-default-blog
   []
@@ -91,7 +93,9 @@
                          :json-params
                          {:name (str "给我一个lisp的支点" (js/Date.now)) :content "### 我可以撬动整个地球!"}}))]
         (let [data (:body response)]
-          (swap! blog-list assoc (:id data) {:id (:id data) :content (:content data) :name (:name data)})))))
+          (swap! blog-list assoc (:id data)
+                 {:id (:id data) :content (:content data) :name (:name data)
+                  :todos (sorted-map-by >)})))))
 
 (def swap-blog-list
   (fn [data]
