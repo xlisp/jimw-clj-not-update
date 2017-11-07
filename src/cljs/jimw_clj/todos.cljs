@@ -3,7 +3,8 @@
   (:require [reagent.core :as r :refer [atom]]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
-            [cemerick.url :refer (url url-encode)]))
+            [cemerick.url :refer (url url-encode)]
+            #_[cljsjs.jquery]))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defonce todos (r/atom (sorted-map)))
@@ -16,6 +17,14 @@
    (get 3)))
 
 (def memoized-api-token (memoize get-api-token))
+
+(defn tree-todo-generate [blog]
+  (go (let [response
+            (<!
+             (http/post (api-root "/tree-todo-generate")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" (memoized-api-token)}
+                         :query-params {:blog blog}}))])))
 
 ;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
@@ -182,9 +191,13 @@
             done (->> items (filter :done) count)
             active (- (count items) done)]
         [:div
+         [:button {:on-click
+                   #(do (js/alert "Update...")
+                        (tree-todo-generate blog-id)) } "tree-generate😊"]
+         [:a {:href (str "/todos-" blog-id ".gv")
+              :download (str "past_" blog-id "_navs.zip")} "download-gv-file"]
          [:section#todoapp
           [:header#header
-           ;; [:h1 "todos tree"]
            (new-todo blog-list blog-id items parid-first-id)]
           (when (-> items count pos?)
             [:div

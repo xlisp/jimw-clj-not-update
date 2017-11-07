@@ -43,7 +43,8 @@
                  [com.cemerick/url "0.1.1"]
                  [buddy/buddy-sign "2.2.0"]
                  [buddy/buddy-hashers "1.3.0"]
-                 [alandipert/storage-atom "2.0.1"]]
+                 [alandipert/storage-atom "2.0.1"]
+                 [cljsjs/jquery "3.2.1-0"]]
 
   :min-lein-version "2.0.0"
 

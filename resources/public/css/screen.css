@@ -204,6 +204,12 @@ input[type="checkbox"] {
 	text-rendering: optimizeLegibility;
 }
 
+#todoapp a {
+    /*position: absolute;*/
+}
+#todoapp button {
+    /*position: absolute;*/
+}
 #header {
 	padding-top: 15px;
 	border-radius: inherit;
