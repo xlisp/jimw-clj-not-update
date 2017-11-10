@@ -136,6 +136,15 @@
 
 (def tree-out-puts (atom ()))
 
+;; TODO: 机器学习,自动分行,断句,连接词和介词换行
+(defn replace-tree-enter
+  [st]
+  (-> st
+      (clojure.string/replace #",|\.|，|。| |:|=>" "\n")
+      (clojure.string/replace "的" "的\n")
+      (clojure.string/replace "和" "和\n")
+      (clojure.string/replace "以" "以\n")))
+  
 ;; (tree-todo-generate {:db *db* :blog 4859})
 (defn tree-todo-generate
   [{:keys [db blog]}]
@@ -144,8 +153,9 @@
         (fn [idd]
           (swap!
            tree-out-puts conj
-           (str "\"" (:content (get-nav-by-id {:db db :id (:parid idd)})) "\"" " -> "
-                "\"" (:content idd) "\"\n")))]
+           (str "\"" (replace-tree-enter (:content (get-nav-by-id {:db db :id (:parid idd)})))
+                "\"" " -> "
+                "\"" (replace-tree-enter (:content idd)) "\"\n")))]
     ((tree-fn
       (:id (first-nav {:db db :blog blog}))
       output-fn)
