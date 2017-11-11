@@ -217,10 +217,11 @@
             [:div
              [:section#main
               [:ul#todo-list
-               (for [todo items #_(filter (case @filt
-                                            :active (complement :done)
-                                            :done :done
-                                            :all identity) items)]
+               (for [todo (filter
+                           (case @filt
+                             :active (complement :done)
+                             :done :done
+                             :all identity) items)]
                  ^{:key (:id todo)} [todo-item todo blog-list blog-id])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
