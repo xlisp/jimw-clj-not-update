@@ -1060,3 +1060,7 @@ ul.nav > li.brand > a {
 .blog-name {
     color: black;
 }
+
+.margin-download {
+    margin-left: 15px;
+}
