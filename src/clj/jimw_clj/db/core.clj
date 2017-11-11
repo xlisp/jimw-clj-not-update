@@ -254,13 +254,18 @@
 ;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
 ;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
 ;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done true})
+;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done "false"})
+;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done "true"})
 (defn update-todo [{:keys [db id parid blog content done]}]
   (jc1 db
        (->  (h/update :todos)
             (h/sset (->> {;;:parid    (when (pos? parid) parid)
                           :content (when (seq content) content)
                           :blog (when (pos? blog) blog)
-                          :done (when (not (nil? done)) done)
+                          :done (let [ndone (if (string? done) (Boolean/valueOf done) done)]
+                                  (when
+                                      (not (nil? ndone))
+                                    ndone))
                           :updated_at (honeysql.core/call :now)}
                          (remove (fn [x]  (nil? (last x))))
                          (into {})))
