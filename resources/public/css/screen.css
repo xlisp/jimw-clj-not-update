@@ -329,6 +329,24 @@ label[for='toggle-all'] {
 	display: none;
 }
 
+#todo-list li .toggle-checkbox {
+	text-align: center;
+	width: 40px;
+	/* auto, since non-WebKit browsers doesn't support input styling */
+	height: auto;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+        margin-left: 6%;
+	/* Mobile Safari */
+	border: none;
+	/*-webkit-appearance: none;*/
+	-ms-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+}
+
+
 #todo-list li .toggle {
 	text-align: center;
 	width: 40px;
