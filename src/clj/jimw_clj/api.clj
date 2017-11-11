@@ -74,11 +74,12 @@
   (ok (db/search-todos {:db db/*db* :q q :blog (Integer/parseInt blog)})))
 
 (defn update-todo
-  [{{:keys [id parid blog content]} :params}]
+  [{{:keys [id parid blog content done]} :params}]
   (let [res (db/update-todo {:db db/*db*
                              :id (Integer/parseInt id)
                              ;; :parid (Integer/parseInt parid)
                              :blog (Integer/parseInt blog)
+                             :done done
                              :content content})]
     (if res
       (ok res) (not-found))))

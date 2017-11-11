@@ -190,6 +190,7 @@
                  {:id :id
                   :parid :parid
                   :content :content
+                  :done :done
                   :created_at :created_at
                   :updated_at :updated_at}))
       (h/from :todos)))
@@ -250,13 +251,16 @@
                         :parid   parid
                         :blog    blog}]))))
 
-;; (update-todo {:db *db* :id 3 :content "aaaaabbbccctt" :parid 6 :blog 2226})
-(defn update-todo [{:keys [db id parid blog content]}]
+;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
+;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
+;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done true})
+(defn update-todo [{:keys [db id parid blog content done]}]
   (jc1 db
        (->  (h/update :todos)
             (h/sset (->> {;;:parid    (when (pos? parid) parid)
                           :content (when (seq content) content)
                           :blog (when (pos? blog) blog)
+                          :done (when (not (nil? done)) done)
                           :updated_at (honeysql.core/call :now)}
                          (remove (fn [x]  (nil? (last x))))
                          (into {})))
