@@ -51,13 +51,16 @@
           (js/alert "Create todo failure!")))))
 
 ;; (update-todo 11 "aaadasdsadsaoooo" 12 2222 #(prn %))
-(defn update-todo [id text #_parid blog op-fn]
+(defn update-todo [id text #_parid blog done op-fn]
   (go (let [response
             (<!
              (http/put (str (api-root "/update-todo/") id)
                        {:with-credentials? false
                         :headers {"jimw-clj-token" (memoized-api-token)}
-                        :query-params {:content text #_:parid #_parid :blog blog}}))]
+                        :query-params
+                        (if (nil? done)
+                          {:content text :blog blog}
+                          {:content text #_:parid #_parid :blog blog :done done})}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
           (js/alert "Update todo failure!")))))
@@ -147,6 +150,17 @@
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))}
        [:div.view
+        [:input.toggle-checkbox
+         {:type "checkbox"
+          :checked done
+          :on-change
+          (fn []
+            (let [done-stat (if (true? done) false true)]
+              (swap! blog-list update-in
+                     [blog-id :todos id :done] (fn [x] done-stat))
+              (update-todo
+               id nil blog-id done-stat
+               #(prn %))))}]
         [:label {:on-double-click #(reset! editing true)} content]
         [:button.destroy {:on-click
                           (fn []
@@ -162,7 +176,7 @@
                      :on-save
                      (fn [content]
                        (update-todo
-                        id content blog-id
+                        id content blog-id nil
                         #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                      :on-stop #(reset! editing false)}])])))
 
