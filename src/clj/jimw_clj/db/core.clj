@@ -153,14 +153,26 @@
         (fn [idd]
           (swap!
            tree-out-puts conj
-           (str "\"" (replace-tree-enter (:content (get-nav-by-id {:db db :id (:parid idd)})))
+           (str "\"" (replace-tree-enter (:content
+                                          ;;
+                                          (let [res-1 (get-nav-by-id {:db db :id (:parid idd)})]
+                                            (if (= (:done res-1) true) {:content "done"} res-1))
+                                          ;;
+                                          ))
                 "\"" " -> "
-                "\"" (replace-tree-enter (:content idd)) "\"\n")))]
+                "\"" (replace-tree-enter (:content
+                                          ;;
+                                          (if (= (:done idd) true) {:content "done"} idd)
+                                          ;;
+                                          )) "\"\n")))]
     ((tree-fn
       (:id (first-nav {:db db :blog blog}))
       output-fn)
      (fn [id]
-       (get-nav-by-past-id {:db db :blog blog :parid id})))))
+       ;;
+       (get-nav-by-past-id {:db db :blog blog :parid id})
+       ;;
+       ))))
 
 ;; (writer-tree-file 4857)
 (defn writer-tree-file
