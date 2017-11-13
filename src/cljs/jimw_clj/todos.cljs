@@ -129,6 +129,19 @@
        [:button#clear-completed ;; {:on-click clear-done}
         "Clear completed " done])]))
 
+(defn todo-stats-tmp [{:keys [filt active done]}]
+  (let [props-for (fn [name]
+                    {:class (if (= name @filt) "selected")
+                     :on-click #(reset! filt name)})]
+    [:div
+     [:ul#filters
+      [:li [:a (props-for :all) "A"]]
+      [:li [:a (props-for :active) "O"]]
+      [:li [:a (props-for :done) "C"]]]
+     (when (pos? done)
+       [:button#clear-completed ;; {:on-click clear-done}
+        "Clear completed " done])]))
+
 (def new-todo-par
   (fn [id blog-list blog-id]
     [todo-input-par
@@ -205,6 +218,8 @@
             done (->> items (filter :done) count)
             active (- (count items) done)]
         [:div
+         [todo-stats-tmp {:active active :done done :filt filt}]
+         [:br]
          [:button {:on-click
                    #(do (js/alert "Update...")
                         (tree-todo-generate blog-id)) } "tree-generate"]
