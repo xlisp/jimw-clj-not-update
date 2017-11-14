@@ -23,7 +23,7 @@
   [ids]
   (jwt/sign
    (merge
-    ids {:exp (time/plus (time/now) (time/millis 7200000))})
+    ids {:exp (time/plus (time/now) (time/millis 86400000))})
    (:jimw-clj-jwt-key @config/jimw-conf)))
 
 (defn- check-password
