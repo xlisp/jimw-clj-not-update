@@ -9,7 +9,8 @@
     [honeysql.helpers :as h]
     [taoensso.timbre :refer [error debug info]]
     [buddy.hashers :as hashers]
-    [jimw-clj.config :as config])
+    [jimw-clj.config :as config]
+    [hikari-cp.core :as pool])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -20,12 +21,16 @@
             Timestamp
             PreparedStatement]))
 
-(defstate ^:dynamic *db*
-  :start (conman/connect! {:jdbc-url
-                           (:database-url @config/jimw-conf)})
-  :stop (conman/disconnect! *db*))
-
-(conman/bind-connection *db* "sql/queries.sql")
+(defstate conn
+  :start (try
+           {:datasource
+            (pool/make-datasource
+             (:datasource-options
+              @config/jimw-conf))}
+           (catch Throwable e
+             (info (str e ", 连接池连接失败!"))
+             (System/exit 1)))
+  :stop (pool/close-datasource conn))
 
 (defn to-date [^java.sql.Date sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))
@@ -82,7 +87,7 @@
            :user "jim"
            :password "123456"})
 
-;; .e.g : (jconn *db* (-> (h/select :*) (h/from :navs)))
+;; .e.g : (jconn conn (-> (h/select :*) (h/from :navs)))
 (defn jconn [conn sqlmap]
   (let [sql-vec (sql/format sqlmap)]
     (debug (str "SQL: " sql-vec))
@@ -99,7 +104,7 @@
     (debug (str "SQL: " sql-returning))
     (first (jdbc/query conn sql-returning))))
 
-;; (first-nav {:db *db* :blog 4857})
+;; (first-nav {:db conn :blog 4857})
 (defn first-nav [{:keys [db blog]}]
   (jconn1 db
           (-> (h/select :*)
@@ -108,7 +113,7 @@
               (h/order-by [:updated_at :desc])
               (h/limit 1))))
 
-;; (get-nav-by-past-id {:db *db* :blog 4857 :parid 50})
+;; (get-nav-by-past-id {:db conn :blog 4857 :parid 50})
 (defn get-nav-by-past-id [{:keys [db parid blog]}]
   (jconn db
          (-> (h/select :*)
@@ -118,7 +123,7 @@
                [:= :blog blog]
                [:= :parid parid]]))))
 
-;; ((get-nav-by-id {:db *db* :id 50}) :content)
+;; ((get-nav-by-id {:db conn :id 50}) :content)
 (defn get-nav-by-id [{:keys [db id]}]
   (jconn1 db
           (-> (h/select :*)
@@ -145,7 +150,7 @@
       (clojure.string/replace "和" "和\n")
       (clojure.string/replace "以" "以\n")))
   
-;; (tree-todo-generate {:db *db* :blog 4859})
+;; (tree-todo-generate {:db conn :blog 4859})
 (defn tree-todo-generate
   [{:keys [db blog]}]
   (let [_ (reset! tree-out-puts (list))
@@ -207,7 +212,7 @@
                   :updated_at :updated_at}))
       (h/from :todos)))
 
-;; (search-blogs {:db *db* :q "肌肉记忆"})
+;; (search-blogs {:db conn :q "肌肉记忆"})
 (defn search-blogs [{:keys [db limit offset q]}]
   (jconn db
          (-> (h/select :id :name :content :created_at :updated_at
@@ -227,7 +232,7 @@
                                         [:like :content (str "%" % "%")])
                                       q-list))))))))
 
-;; (update-blog {:db *db* :id 5000 :name nil :content "dasdsdas"})
+;; (update-blog {:db conn :id 5000 :name nil :content "dasdsdas"})
 (defn update-blog [{:keys [db id name content]}]
   (jc1 db
        (->  (h/update :blogs)
@@ -238,14 +243,14 @@
                          (into {})))
             (h/where [:= :id id]))))
 
-;; (create-blog {:db *db* :name "测试" :content "aaaaabbbccc"})
+;; (create-blog {:db conn :name "测试" :content "aaaaabbbccc"})
 (defn create-blog [{:keys [db name content]}]
   (jc1 db
        (->  (h/insert-into :blogs)
             (h/values [{:name name
                         :content content}]))))
 
-;; (search-todos {:db *db* :q "a" :blog 4857})
+;; (search-todos {:db conn :q "a" :blog 4857})
 (defn search-todos [{:keys [db blog q]}]
   (jconn db
          (-> (h/select :*)
@@ -255,7 +260,7 @@
                         [:like :content (str "%" q "%")]))
              (h/merge-where (when (pos? blog) [:= :blog blog])))))
 
-;; (create-todo {:db *db* :content "aaaaabbbccc" :parid 3 :blog 2222})
+;; (create-todo {:db conn :content "aaaaabbbccc" :parid 3 :blog 2222})
 (defn create-todo [{:keys [db parid blog content]}]
   (jc1 db
        (->  (h/insert-into :todos)
@@ -263,11 +268,11 @@
                         :parid   parid
                         :blog    blog}]))))
 
-;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
-;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
-;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done true})
-;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done "false"})
-;; (update-todo {:db *db* :id 58 :content "aaaaabbbccctt" :blog 4857 :done "true"})
+;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
+;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
+;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done true})
+;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done "false"})
+;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done "true"})
 (defn update-todo [{:keys [db id parid blog content done]}]
   (jc1 db
        (->  (h/update :todos)
@@ -283,7 +288,7 @@
                          (into {})))
             (h/where [:= :id id]))))
 
-;; (delete-todo {:db *db* :id 3})
+;; (delete-todo {:db conn :id 3})
 (defn delete-todo [{:keys [db id]}]
   (jc1 db
        (-> (h/delete-from :todos)

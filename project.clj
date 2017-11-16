@@ -44,7 +44,8 @@
                  [buddy/buddy-sign "2.2.0"]
                  [buddy/buddy-hashers "1.3.0"]
                  [alandipert/storage-atom "2.0.1"]
-                 [cljsjs/jquery "3.2.1-0"]]
+                 [cljsjs/jquery "3.2.1-0"]
+                 [hikari-cp "1.8.2"]]
 
   :min-lein-version "2.0.0"
 

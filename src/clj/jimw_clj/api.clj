@@ -36,7 +36,7 @@
   (try
     (let [{:keys [id password username]}
           (db/get-user-by-username
-           {:db db/*db* :username (:username params)})]
+           {:db db/conn :username (:username params)})]
       (if (check-password (:password params) password)
         (ok {:id id
              :username username
@@ -55,27 +55,27 @@
 (defn get-blogs
   [{{:keys [q limit offset]
      :or   {limit 10 offset 0 q ""}} :params}]
-  (ok (db/search-blogs {:db db/*db* :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
+  (ok (db/search-blogs {:db db/conn :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
 
 (defn update-blog
   [{{:keys [id name content]} :params}]
-  (let [res (db/update-blog {:db db/*db* :id (Integer/parseInt id) :name name :content content})]
+  (let [res (db/update-blog {:db db/conn :id (Integer/parseInt id) :name name :content content})]
     (if res
       (ok res) (not-found))))
 
 (defn create-blog
   [{{:keys [name content]} :params}]
-  (let [res (db/create-blog {:db db/*db* :name name :content content})]
+  (let [res (db/create-blog {:db db/conn :name name :content content})]
     (ok res)))
 
 (defn get-todos
   [{{:keys [q blog]
      :or   {q ""}} :params}]
-  (ok (db/search-todos {:db db/*db* :q q :blog (Integer/parseInt blog)})))
+  (ok (db/search-todos {:db db/conn :q q :blog (Integer/parseInt blog)})))
 
 (defn update-todo
   [{{:keys [id parid blog content done]} :params}]
-  (let [res (db/update-todo {:db db/*db*
+  (let [res (db/update-todo {:db db/conn
                              :id (Integer/parseInt id)
                              ;; :parid (Integer/parseInt parid)
                              :blog (Integer/parseInt blog)
@@ -86,7 +86,7 @@
 
 (defn create-todo
   [{{:keys [parid blog content]} :params}]
-  (let [res (db/create-todo {:db db/*db*
+  (let [res (db/create-todo {:db db/conn
                              :parid (Integer/parseInt parid)
                              :blog (Integer/parseInt blog)
                              :content content})]
@@ -94,7 +94,7 @@
 
 (defn delete-todo
   [{{:keys [id]} :params}]
-  (let [res (db/delete-todo {:db db/*db*
+  (let [res (db/delete-todo {:db db/conn
                              :id (Integer/parseInt id)})]
     (if res
       (ok res) (not-found))))
@@ -104,14 +104,14 @@
   [{:keys [params]}]
   (ok {:params params}))
 
-;; (db/tree-todo-generate {:db db/*db* :blog 4859})
+;; (db/tree-todo-generate {:db db/conn :blog 4859})
 ;; (db/writer-tree-file 4859)
 (defn tree-todo-generate
   [{{:keys [blog]} :params}]
   (do
     (info (str "======>> tree-todo-generate"
                (db/tree-todo-generate
-                {:db db/*db*
+                {:db db/conn
                  :blog (Integer/parseInt blog)})))
     (Thread/sleep 1000)
     (db/writer-tree-file (Integer/parseInt blog))
