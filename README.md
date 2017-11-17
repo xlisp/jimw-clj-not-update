@@ -1,8 +1,5 @@
-# jimw-clj
-
-generated using Luminus version "2.9.11.53"
-
-FIXME
+# jimw-clj: 结合机器学习做的带todos的博客 
+* Power by Clojure/ClojureScript, Reagent
 
 ## Prerequisites
 
