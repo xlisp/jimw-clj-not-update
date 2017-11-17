@@ -10,7 +10,8 @@
     [taoensso.timbre :refer [error debug info]]
     [buddy.hashers :as hashers]
     [jimw-clj.config :as config]
-    [hikari-cp.core :as pool])
+    [hikari-cp.core :as pool]
+    [clojure.java.shell :as shell])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -305,3 +306,14 @@
           (-> (h/select :*)
               (h/from :users)
               (h/where [:= :username username]))))
+
+(defn import-project-file-to-blog
+  []
+  (let [file-names
+        (->
+         (shell/sh "find" "lib" "-name" "*.clj*")
+         :out
+         (clojure.string/split #"\n"))
+        content-fn (fn [file-name] (str "```clojure\n" (slurp file-name) "\n```"))]
+    (for [file-name file-names]
+      (create-blog {:db conn :name file-name :content (content-fn file-name)}))))

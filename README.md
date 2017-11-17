@@ -90,6 +90,11 @@ function on_mouse_up(event) {
 * 支持英文每日总结写作
 * 支持英文精彩文章标注学习
 
+## his_search_pro_code 分支: 导入安卓反编译的代码或者新的项目的代码,做搜索分析
+* 每个文件都是一篇文章 -> 每个函数都是一篇文章
+* 多条件reduce搜索
+* 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目)
+
 ## License
 
 Copyright © 2017 FIXME
