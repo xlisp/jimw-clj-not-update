@@ -92,6 +92,9 @@ function on_mouse_up(event) {
 * 多条件reduce搜索
 * 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目)
 
+## 借力打力
+* 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
+
 ## License
 
 Copyright © 2017 FIXME
