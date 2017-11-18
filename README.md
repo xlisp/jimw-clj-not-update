@@ -1,5 +1,9 @@
 # jimw-clj: 结合机器学习做的带todos的博客 
 * Power by Clojure/ClojureScript, Reagent
+* 操作演示,就像聊天一样生成Lisp树
+![](./demo.gif)
+以上操作,生成如下的节点树
+![](./demo_res.png)
 
 ## Prerequisites
 
