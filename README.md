@@ -83,6 +83,7 @@ function on_mouse_up(event) {
 * ClojureScript写Chrome的插件像Gooreplacer一样,帮助jimw-clj编辑: chrome-extension://jnlkjeecojckkigmchmfoigphmgkgbip/option/index.html => 写一个有道词典的cljs版本 ①
 * 通过Chrome的插件调用本地的语言识别和OCR文字识别的服务
 * 修改一下后端,id是updated_at的uinx时间id: 把update变成unix时间,就可以按照update的id来排序了===>> 书放在最上面的思想(默认的排序), 也提供选择排序按照创建的id(找附近创建的搜索思想) ① 可以支持两种排序方式, 按照id和updated_at的unix的数字大小排序
+* 用上你所有的血与泪: 增加hichats显示,统计各个blog和todos的修改次数和增加次数
 
 ## 以实现一个优秀研究为工具目的: 量子力学研究工具诞生了MMA => 机器学习算法(.e.g:维特比算法)学习工具诞生了JIMW
 * 数据流的λ化, 其他语言实现的算法的λ 化
