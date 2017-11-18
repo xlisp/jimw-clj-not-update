@@ -353,3 +353,15 @@
             (op-fn code-list file-name)))]
     (for [file-name file-names]
       (split-code file-name))))
+
+(defn import-project-s-exp-to-blog
+  []
+  (let [content-fn (fn [content] (str "```clojure\n" content "\n```"))]
+    (read-string-for-pro
+     (fn [code-list file-name]
+       (do
+         (prn (str file-name " >>>>>>"))
+         (map
+          (fn [content] (do (create-blog {:db conn :name file-name :content (content-fn content)}) (first content)))
+          code-list))
+       ))))
