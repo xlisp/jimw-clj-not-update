@@ -90,7 +90,7 @@ function on_mouse_up(event) {
 ## his_search_pro_code 分支: 导入安卓反编译的代码或者新的项目的代码,做搜索分析
 * 每个文件都是一篇文章 -> 每个函数都是一篇文章
 * 多条件reduce搜索
-* 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目)
+* 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目,如何写一个解释器,bbatsov/rubocop)
 
 ## 借力打力
 * 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
