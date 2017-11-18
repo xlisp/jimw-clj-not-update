@@ -356,12 +356,14 @@
 
 (defn import-project-s-exp-to-blog
   []
-  (let [content-fn (fn [content] (str "```clojure\n" content "\n```"))]
+  (let [content-fn (fn [content]
+                     (->
+                      (str "```clojure\n" content "\n```")
+                      (str/replace #"\)" ")\n")))]
     (read-string-for-pro
      (fn [code-list file-name]
        (do
          (prn (str file-name " >>>>>>"))
          (map
           (fn [content] (do (create-blog {:db conn :name file-name :content (content-fn content)}) (first content)))
-          code-list))
-       ))))
+          code-list))))))
