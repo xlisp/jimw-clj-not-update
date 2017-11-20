@@ -29,12 +29,22 @@ Compiling "target/cljsbuild/public/js/app.js" from ["src/cljc" "src/cljs" "env/p
 Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ➜  jimw-clj git:(master) ✗
 ``` 
-## Todos
+## 已完成Todos
 * 滑动分页 (支持手机和电脑滑动分页) √
-* 当前文章的标签云,最近一段时间的标签云(用pg_jieba分词)①
 * 排序是按照updated_at的时间来排序 (不方便cljs排序改成了按照id来排序) √
 * 支持编辑文章,直接通过编辑文章列表的方式,可以预览markdown,支持手机友好编辑文章(直接双击就是编辑文章,标题和内容的编辑是分开的,离开on-blur就是保存,看到markdown的显示) √
 * 每一篇文章'评论'都可以创建jimw树,把jimw和todos-tree整合得很好,可以作为todos类型的文章使用,方便复杂脑图分析(支持树干树枝评论生成树形) √
+* 深度学习的学习目录todos,就像这个readme一样完成之后打钩,再看看列表就成就满满 ①  √
+* 导出tree.gv文件给GraphViz看 √
+* 多行输入textarea 手动，自动换行问题 √
+* 登陆系统参考护理项目和clojure-web-admin (采用jwt的API验证) √
+* db连接没有db的连接池5个,所以每次curd第一次都很慢 ①  (hikari-cp) √
+* todos.cljs分开一个单页面来做,不然一个页面太多的atom不好控制了 => 一个atom放两级的数据,第一层是blog,第一层是todos,如果todos有内容就请求显示出来,可以在一个树上去更新两者 (采用一个atom放两级的数据,页面分开放的方法ok) √
+* 为了API和单页面都可以方便使用,用jwt通用的加密方案加密API,登录成功就获取token √
+* 多条件reduce搜索 √
+
+## 未完成Todos
+* 当前文章的标签云,最近一段时间的标签云(用pg_jieba分词)①
 * 连接微信爬虫,每天的消息,自动提取兴趣点, 用旧的华为手机作为微信爬虫(R,Clojure,Haskell),提取兴趣点来通知消息给jimw-clj
 * 连接'网页语音阅读'APP,把语音成jimw树,文章可以选择创作
 * 复习前端css,不仅实用,而且要漂亮,有创作的兴趣
@@ -44,18 +54,10 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 点击文章段落的标注,可以任意位置插入标注文本,和'网页语音阅读'一样的效果, 或者选中一句话进行标注
 * 加入文章的语义网络,就像Dracket一样查看源码函数变量,显示引用
 * 就像jim-emacs-fun-r-lisp的功能λ目录一样做jimw-clj功能列表
-* 深度学习的学习目录todos,就像这个readme一样完成之后打钩,再看看列表就成就满满 ①  √
-* 导出tree.gv文件给GraphViz看 √
 * 单个文件(单篇文章)=>独立出去文件(独立出去完整的文章)
-* 多行输入textarea 手动，自动换行问题 √
-* 多个关键词搜索=>jimw-clj的代码语义搜索 ①  (语义网未实现meta主谓宾) √
 * 搜索词记录到一张表里面,方便做文章和todos推荐 ①
-* 登陆系统参考护理项目和clojure-web-admin (采用jwt的API验证) √
-* db连接没有db的连接池5个,所以每次curd第一次都很慢 ①  (hikari-cp) √ 
 * Markdown的图片上传功能,用阿里云或者直接上传服务器 ①
 * 和Clojure编写的APP,收集的数据用于训练jimw-clj的习惯: '网页语音阅读'阅读网页资料 + ocr 阅读书本拍照资料等等
-* todos.cljs分开一个单页面来做,不然一个页面太多的atom不好控制了 => 一个atom放两级的数据,第一层是blog,第一层是todos,如果todos有内容就请求显示出来,可以在一个树上去更新两者 (采用一个atom放两级的数据,页面分开放的方法ok) √
-* 为了API和单页面都可以方便使用,用jwt通用的加密方案加密API,登录成功就获取token √
 * 方便学习推导递归算法 => tree的算法递归的实现方式是自我推导出来的二叉树算法: <算法新解>普通算法用出去影响整个生活,更新到fp-book里面
 * 用选中的文章部分文字来创建todos: 就像有道词典一样`指词即译模式（按下Ctrl键指词）`, 就创建一个todos => `var selectionObj = window.getSelection(); selectionObj.toString() `
 ```js
@@ -98,7 +100,7 @@ function on_mouse_up(event) {
 
 ## his_search_pro_code 分支: 导入安卓反编译的代码或者新的项目的代码,做搜索分析
 * 每个文件都是一篇文章 -> 每个函数都是一篇文章
-* 多条件reduce搜索 √
+* jimw-clj的代码语义搜索 ①  (语义网未实现meta主谓宾) 
 * 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目,如何写一个解释器,bbatsov/rubocop)
 * 方便Markdown的todo和todo列表转换,todo做好了,可以导入成md文章(md的todo文章,可以转为todo列表,打钩编辑单条等): `*`标签的文章,批量导入到todos的功能,以及把todos只有一级的导出到`*`标签的文章
 
