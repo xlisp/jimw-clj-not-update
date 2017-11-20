@@ -319,7 +319,8 @@
     (for [file-name file-names]
       (create-blog {:db conn :name file-name :content (content-fn file-name)}))))
 
-;; (read-string-for-pro (fn [code-list file-name] (prn (str file-name " >>>>>>")) (map first code-list)))
+;; 测试新的项目导入是否解析报错:
+;; (read-string-for-pro (fn [code-list file-name] (map first code-list)))
 (defn read-string-for-pro
   [op-fn]
   (let [file-names
@@ -328,7 +329,8 @@
          (clojure.string/split #"\n"))
         split-code
         (fn [file-name]
-          (let [remove-invalid-token (fn [st]
+          (let [_ (prn (str file-name " >>>>>>"))
+                remove-invalid-token (fn [st]
                                        (-> st
                                            (str/replace #"::" "double-colon-")
                                            (str/replace #"#js" "the-tag-js")
