@@ -286,12 +286,18 @@
   (get-blog-list "" @page-offset
                  (fn [data] (swap-blog-list data))))
 
+(def is-end (atom true))
+
 (set!
  js/window.onscroll
- #(if (is-page-end-m-pc)
+ #(if (and (is-page-end-m-pc) @is-end)
     (do
       (swap! page-offset inc)
-      (get-blog-list @search-key @page-offset swap-blog-list))
+      (reset! is-end false)
+      (get-blog-list @search-key @page-offset
+                     (fn [data]
+                       (swap-blog-list data)
+                       (reset! is-end true))))
     nil))
 
 (defn nav-link [uri title page collapsed?]
