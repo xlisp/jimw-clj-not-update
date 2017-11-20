@@ -12,7 +12,8 @@
     [jimw-clj.config :as config]
     [hikari-cp.core :as pool]
     [clojure.java.shell :as shell]
-    [clojure.string :as str])
+    [clojure.string :as str]
+    [clojure.pprint :as pp])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -358,10 +359,11 @@
 
 (defn import-project-s-exp-to-blog
   []
-  (let [content-fn (fn [content]
-                     (->
-                      (str "```clojure\n" content "\n```")
-                      (str/replace #"\)" ")\n")))]
+  (let [content-fn
+        (fn [content]
+          (str "```clojure\n"
+               (pp/write content :dispatch pp/code-dispatch :stream nil)
+               "\n```"))]
     (read-string-for-pro
      (fn [code-list file-name]
        (do
