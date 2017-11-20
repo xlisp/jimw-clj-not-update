@@ -369,3 +369,10 @@
          (map
           (fn [content] (do (create-blog {:db conn :name file-name :content (content-fn content)}) (first content)))
           code-list))))))
+
+(defn insert-event [{:keys [db event_name info event_data]}]
+  (jc1 db
+       (-> (h/insert-into :events)
+           (h/values [{:event_name event_name
+                       :info       (when (seq info) info)
+                       :event_data (when (seq event_data) event_data)}]))))

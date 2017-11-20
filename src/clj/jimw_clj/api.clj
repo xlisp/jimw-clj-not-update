@@ -117,6 +117,13 @@
     (db/writer-tree-file (Integer/parseInt blog))
     (ok {:msg "ok!"})))
 
+(defn record-event
+  [{{:keys [event_name info event_data]} :params}]
+  (ok (db/insert-event {:db db/conn
+                        :event_name event_name
+                        :info       info
+                        :event_data event_data})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -127,4 +134,5 @@
   (PUT "/update-todo/:id" [] (check-api-token update-todo))
   (POST "/create-todo" [] (check-api-token create-todo))
   (DELETE "/delete-todo" [] (check-api-token delete-todo))
-  (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate)))
+  (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate))
+  (POST "/record-event" [] (check-api-token record-event)))
