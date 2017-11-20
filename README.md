@@ -100,6 +100,7 @@ function on_mouse_up(event) {
 * 每个文件都是一篇文章 -> 每个函数都是一篇文章
 * 多条件reduce搜索 √
 * 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目,如何写一个解释器,bbatsov/rubocop)
+* 方便Markdown的todo和todo列表转换,todo做好了,可以导入成md文章(md的todo文章,可以转为todo列表,打钩编辑单条等): `*`标签的文章,批量导入到todos的功能,以及把todos只有一级的导出到`*`标签的文章
 
 ## 借力打力
 * 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
