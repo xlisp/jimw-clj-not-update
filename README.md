@@ -40,11 +40,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 复习前端css,不仅实用,而且要漂亮,有创作的兴趣
 * 结合更多的机器学习算法来提高文章的质量,关联规则,文章自动分类等,把机器学习算法用出去到现实生活当中
 * cljs图形化使得更MMA化,甚至能摆脱Google的使用
-* 每天的文章的推荐
+* 每天的文章的协同过滤推荐: 根据最近30天的搜索的记录,和change-log来生成协同过滤推荐
 * 点击文章段落的标注,可以任意位置插入标注文本,和'网页语音阅读'一样的效果, 或者选中一句话进行标注
 * 加入文章的语义网络,就像Dracket一样查看源码函数变量,显示引用
 * 就像jim-emacs-fun-r-lisp的功能λ目录一样做jimw-clj功能列表
-* 深度学习的学习目录todos,就像这个readme一样完成之后打钩,再看看列表就成就满满 ①
+* 深度学习的学习目录todos,就像这个readme一样完成之后打钩,再看看列表就成就满满 ①  √
 * 导出tree.gv文件给GraphViz看 √
 * 单个文件(单篇文章)=>独立出去文件(独立出去完整的文章)
 * 多行输入textarea 手动，自动换行问题 √
@@ -79,6 +79,7 @@ function on_mouse_up(event) {
         }
     }
 }
+* 就像clojure-china一样,选中引用回复: 导入'网页语音标记阅读',用token访问jimw-clj的API,导入标记todos
 ```
 * ClojureScript写Chrome的插件像Gooreplacer一样,帮助jimw-clj编辑: chrome-extension://jnlkjeecojckkigmchmfoigphmgkgbip/option/index.html => 写一个有道词典的cljs版本 ①
 * 通过Chrome的插件调用本地的语言识别和OCR文字识别的服务
@@ -97,7 +98,7 @@ function on_mouse_up(event) {
 
 ## his_search_pro_code 分支: 导入安卓反编译的代码或者新的项目的代码,做搜索分析
 * 每个文件都是一篇文章 -> 每个函数都是一篇文章
-* 多条件reduce搜索
+* 多条件reduce搜索 √
 * 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目,如何写一个解释器,bbatsov/rubocop)
 
 ## 借力打力
