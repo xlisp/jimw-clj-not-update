@@ -240,7 +240,7 @@
              (http/get (api-root "/blogs")
                        {:with-credentials? false
                         :headers {"jimw-clj-token" @api-token}
-                        :query-params {:q q :limit 10 :offset (* offset 10)}}))]
+                        :query-params {:q q :limit 5 :offset (* offset 5)}}))]
         (if (= status 200)
           (op-fn body)
           (js/alert "Unauthorized !")))))
