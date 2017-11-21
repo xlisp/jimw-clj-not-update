@@ -330,22 +330,14 @@ label[for='toggle-all'] {
 }
 
 #todo-list li .toggle-checkbox {
-	text-align: center;
-	width: 40px;
-	/* auto, since non-WebKit browsers doesn't support input styling */
-	height: auto;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-        margin-left: 6%;
-	/* Mobile Safari */
-	border: none;
-	/*-webkit-appearance: none;*/
-	-ms-appearance: none;
-	-o-appearance: none;
-	appearance: none;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    left: 45px;
 }
-
 
 #todo-list li .toggle {
 	text-align: center;
@@ -381,14 +373,7 @@ label[for='toggle-all'] {
 }
 
 #todo-list li label {
-	/*white-space: pre;*/
-	word-break: break-word;
-	padding: 15px 60px 15px 15px;
-	margin-left: 45px;
-	display: block;
-	line-height: 1.2;
-	-webkit-transition: color 0.4s;
-	transition: color 0.4s;
+    margin-left: 60px;
 }
 
 #todo-list li.completed label {
