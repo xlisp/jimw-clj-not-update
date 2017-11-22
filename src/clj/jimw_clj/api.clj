@@ -127,9 +127,15 @@
 (defn update-todo-sort
   [{{:keys [origins response target]} :params}]
   (ok (db/update-todo-sort {:db db/conn
-                            :origins origins
-                            :response (Integer/parseInt response)
-                            :target (Integer/parseInt response)})))
+                            :origins (into {} origins)
+                            :response response
+                            :target target})))
+
+#_(db/update-todo-sort
+   {:db db/conn
+    :origins (into {} [[65 1] [66 2] [67 3] [68 4] [69 5] [70 6] [71 7]])
+    :response 70
+    :target 3})
 
 (defroutes api-routes
   (POST "/login" [] login)
