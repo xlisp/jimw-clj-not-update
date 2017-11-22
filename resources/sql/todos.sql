@@ -5,6 +5,7 @@ CREATE TABLE todos (
   parid BIGSERIAL NOT NULL,
   content TEXT NOT NULL,
   done BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_id INT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

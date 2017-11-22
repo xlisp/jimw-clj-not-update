@@ -378,3 +378,26 @@
            (h/values [{:event_name event_name
                        :info       (when (seq info) info)
                        :event_data (when (seq event_data) event_data)}]))))
+
+(defn update-todo-sort
+  [{:keys [db origins response target]}]
+  (let [get-key-by-val (fn [value] (first (filter (comp #{value} origins) (keys origins))))
+        is-up (> (get origins response) target)
+        beetweens (->>
+                   origins
+                   (filter
+                    (if is-up
+                      #(and (> (get origins response) (last %))
+                            (< (dec target) (last %)))
+                      #(and (> (inc target) (last %))
+                            (< (get origins response) (last %)))))
+                   (map #(vector
+                          (first %)
+                          ((if is-up inc dec)
+                           (last %)))))
+        alls (conj beetweens [response target])]
+    (for [item alls]
+      (jc1 db
+           (->  (h/update :todos)
+                (h/sset {:sort_id (last item)})
+                (h/where [:= :id (first item)]))))))

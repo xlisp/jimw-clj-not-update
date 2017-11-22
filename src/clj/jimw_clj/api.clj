@@ -124,6 +124,13 @@
                         :info       info
                         :event_data event_data})))
 
+(defn update-todo-sort
+  [{{:keys [origins response target]} :params}]
+  (ok (db/update-todo-sort {:db db/conn
+                            :origins origins
+                            :response (Integer/parseInt response)
+                            :target (Integer/parseInt response)})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -135,4 +142,5 @@
   (POST "/create-todo" [] (check-api-token create-todo))
   (DELETE "/delete-todo" [] (check-api-token delete-todo))
   (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate))
-  (POST "/record-event" [] (check-api-token record-event)))
+  (POST "/record-event" [] (check-api-token record-event))
+  (POST "/update-todo-sort" [] (check-api-token update-todo-sort)))
