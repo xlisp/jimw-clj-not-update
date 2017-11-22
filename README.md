@@ -112,6 +112,7 @@ function on_mouse_up(event) {
 * 提交的`git log`数据分析
 * 手机上的语音标记todo,可以上传GPS,陀螺仪等等传感器数据到jimw-clj的API分析
 * 练拳的照片和录音,还有运动记录,在线更新到jimw-clj上分析
+* 加一个专门的搜索列表,像Google搜索一样,可以复杂条件搜索代码的列表=>代码语义搜索列表
 
 ## 借力打力
 * 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
