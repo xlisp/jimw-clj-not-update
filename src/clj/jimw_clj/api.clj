@@ -128,8 +128,8 @@
   [{{:keys [origins response target]} :params}]
   (ok (db/update-todo-sort {:db db/conn
                             :origins (into {} origins)
-                            :response (Integer/parseInt response)
-                            :target (Integer/parseInt target)})))
+                            :response response
+                            :target target})))
 
 (defroutes api-routes
   (POST "/login" [] login)
