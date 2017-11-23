@@ -212,7 +212,8 @@
                   :content :content
                   :done :done
                   :created_at :created_at
-                  :updated_at :updated_at}))
+                  :updated_at :updated_at
+                  :sort_id :sort_id}))
       (h/from :todos)))
 
 ;; (search-blogs {:db conn :q "肌肉记忆"})

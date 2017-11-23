@@ -76,6 +76,17 @@
           (op-fn (:body response))
           (js/alert "Delete todo failure!")))))
 
+(defn update-todo-sort [origins response target op-fn]
+  (go (let [response
+            (<!
+             (http/post (api-root "/update-todo-sort")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" (memoized-api-token)}
+                         :json-params {:origins origins :response response :target target}}))]
+        (if (= (:status response) 200)
+          (op-fn (:body response))
+          (js/alert "Update todo sort failure!")))))
+
 (defn todo-input [{:keys [content on-save on-stop]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
@@ -156,10 +167,16 @@
                   [(:blog data) :todos]
                   #(assoc % (:id data) {:id (:id data) :parid (:parid data) :content (:content data)})))))}]))
 
+(defn get-todo-sort-id [id items]
+  (->
+   (filter
+    (fn [x] x (= (first x) id)) items)
+   first last))
+
 (defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done content]} blog-list blog-id
-         todo-target todo-begin]
+    (fn [{:keys [id done content sort_id]} blog-list blog-id
+         todo-target todo-begin origins]
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))
             :draggable true
@@ -167,8 +184,11 @@
                                 (reset! todo-begin id))
             :on-drag-end #(do
                             (prn (str "目标位置" @todo-target))
-                            )
-            ;; 一直打印出来
+                            (update-todo-sort (vec origins)
+                                              @todo-begin
+                                              (get-todo-sort-id @todo-target (vec origins))
+                                              (fn [data] (prn data))))
+            ;; 一直打印出来: TODOS修改经过上方的颜色
             :on-drag-over #(reset! todo-target id)}
        [:div.view
         [:input.toggle-checkbox
@@ -226,7 +246,8 @@
             done (->> items (filter :done) count)
             active (- (count items) done)
             todo-target (atom 0)
-            todo-begin (atom 0)]
+            todo-begin (atom 0)
+            origins (map #(vector (:id %)  (:sort_id %)) items)]
         [:div
          [todo-stats-tmp {:active active :done done :filt filt}]
          [:br]
@@ -249,7 +270,7 @@
                              :done :done
                              :all identity) items)]
                  ^{:key (:id todo)} [todo-item todo blog-list blog-id
-                                     todo-target todo-begin])]]
+                                     todo-target todo-begin origins])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
          #_[:footer#info
