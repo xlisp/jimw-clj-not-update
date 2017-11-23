@@ -8,6 +8,8 @@
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 (defonce todos (r/atom (sorted-map)))
+(def todo-target (atom 0))
+(def todo-begin (atom 0))
 
 (defn get-api-token
   []
@@ -161,7 +163,15 @@
   (let [editing (r/atom false)]
     (fn [{:keys [id done content]} blog-list blog-id]
       [:li {:class (str (if done "completed ")
-                        (if @editing "editing"))}
+                        (if @editing "editing"))
+            :draggable true
+            :on-drag-start #(do (prn (str "开始拖动" id))
+                                (reset! todo-begin id))
+            :on-drag-end #(do
+                            (prn (str "目标位置" @todo-target))
+                            )
+            ;; 一直打印出来
+            :on-drag-over #(reset! todo-target id)}
        [:div.view
         [:input.toggle-checkbox
          {:type "checkbox"
