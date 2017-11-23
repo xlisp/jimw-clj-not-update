@@ -7,9 +7,6 @@
             #_[cljsjs.jquery]))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
-(defonce todos (r/atom (sorted-map)))
-(def todo-target (atom 0))
-(def todo-begin (atom 0))
 
 (defn get-api-token
   []
@@ -161,7 +158,8 @@
 
 (defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done content]} blog-list blog-id]
+    (fn [{:keys [id done content]} blog-list blog-id
+         todo-target todo-begin]
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))
             :draggable true
@@ -226,7 +224,9 @@
                                     (filter #(= (:parid %) 1) items)
                                     first :id)) r/atom)
             done (->> items (filter :done) count)
-            active (- (count items) done)]
+            active (- (count items) done)
+            todo-target (atom 0)
+            todo-begin (atom 0)]
         [:div
          [todo-stats-tmp {:active active :done done :filt filt}]
          [:br]
@@ -248,8 +248,9 @@
                              :active (complement :done)
                              :done :done
                              :all identity) items)]
-                 ^{:key (:id todo)} [todo-item todo blog-list blog-id])]]
+                 ^{:key (:id todo)} [todo-item todo blog-list blog-id
+                                     todo-target todo-begin])]]
              [:footer#footer
               [todo-stats {:active active :done done :filt filt}]]])]
          #_[:footer#info
-          [:p "Double-click to edit a todo"]]]))))
+            [:p "Double-click to edit a todo"]]]))))
