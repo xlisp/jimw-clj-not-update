@@ -347,7 +347,10 @@
                                            (str/replace #"\\\/" "-back-slant-que-")
                                            (str/replace #"\\\)" "-back-slant-que-")
                                            (str/replace #"\\\#" "-back-slant-que-")
-                                           (str/replace #"\\s" "-back-slant-que-")))
+                                           (str/replace #"\\s" "-back-slant-que-")
+                                           (str/replace "\\{" "-back-slant-que-")
+                                           (str/replace "\\}" "-back-slant-que-")
+                                           ))
                 list-init (fn [st] (str "( " st " )"))
                 code-list (->>
                            (slurp file-name)
