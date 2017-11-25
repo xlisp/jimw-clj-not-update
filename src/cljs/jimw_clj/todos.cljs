@@ -211,7 +211,7 @@
               (swap! blog-list update-in
                      [blog-id :todos id :done] (fn [x] done-stat))
               (update-todo
-               id nil blog-id done-stat
+               sort_id nil blog-id done-stat
                #(prn %))))}]
         [:label {:on-double-click #(reset! editing true)} content]
         [:button.destroy {:on-click
@@ -228,7 +228,7 @@
                      :on-save
                      (fn [content]
                        (update-todo
-                        id content blog-id nil
+                        sort_id content blog-id nil
                         #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                      :on-stop #(reset! editing false)}])])))
 
