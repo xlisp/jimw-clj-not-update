@@ -268,7 +268,7 @@
         (let [data (:body response)]
           (swap! blog-list assoc (:id data)
                  {:id (:id data) :content (:content data) :name (:name data)
-                  :todos (sorted-map-by >)})))))
+                  :todos (sorted-map-by <)})))))
 
 (def swap-blog-list
   (fn [data]
@@ -278,7 +278,7 @@
               (swap! blog-list assoc (:id li)
                      {:id (:id li) :name (:name li) :content (:content li)
                       :todos (into
-                              (sorted-map-by >)
+                              (sorted-map-by <)
                               (map (fn [x] (vector (:id x) x)) (:todos li)))})
               (:id li))) data) str prn)))
 
