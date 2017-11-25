@@ -182,12 +182,23 @@
             :draggable true
             :on-drag-start #(do (prn (str "开始拖动" sort_id))
                                 (reset! todo-begin sort_id))
-            :on-drag-end #(do
-                            (prn (str "目标位置" @todo-target))
-                            (update-todo-sort (vec origins)
-                                              @todo-begin
-                                              (get-todo-sort-id @todo-target (vec origins))
-                                              (fn [data] (prn data))))
+            :on-drag-end (fn []
+                           (do
+                             (prn (str "目标位置" @todo-target))
+                             (update-todo-sort
+                              (vec origins)
+                              @todo-begin
+                              (get-todo-sort-id @todo-target (vec origins))
+                              (fn [data]
+                                (prn
+                                 (str 
+                                  (for [mdata data]
+                                    (swap! blog-list update-in
+                                           [blog-id :todos]
+                                           #(assoc % (:sort_id mdata) {:id (:sort_id mdata)
+                                                                       :sort_id (:id mdata)
+                                                                       :parid (:parid mdata)
+                                                                       :content (:content mdata)})))))))))
             ;; 一直打印出来: TODOS修改经过上方的颜色
             :on-drag-over #(reset! todo-target id)}
        [:div.view
