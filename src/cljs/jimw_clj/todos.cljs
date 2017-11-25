@@ -153,19 +153,20 @@
         "Clear completed " done])]))
 
 (def new-todo-par
-  (fn [id blog-list blog-id]
+  (fn [sort_id blog-list blog-id]
     [todo-input-par
-     {:id id
+     {:id sort_id
       :type "text"
-      :placeholder (str "Subneed to be done for " id "?")
+      :placeholder (str "Subneed to be done for " sort_id "?")
       :on-save
       (fn [content]
         (create-todo
-         content id blog-id
+         content sort_id blog-id
          (fn [data]
            (swap! blog-list update-in
                   [(:blog data) :todos]
-                  #(assoc % (:id data) {:id (:id data) :parid (:parid data) :content (:content data)})))))}]))
+                  #(assoc % (:sort_id data) {:id (:id data) :sort_id (:sort_id data)
+                                             :parid (:parid data) :content (:content data)})))))}]))
 
 (defn get-todo-sort-id [id items]
   (->
@@ -222,7 +223,7 @@
                                (swap! blog-list update-in
                                       [blog-id :todos] #(dissoc % id)))))}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par id blog-list blog-id)]]
+        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par sort_id blog-list blog-id)]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save
@@ -244,7 +245,8 @@
                       (reset! parid-first-id (:id data)))
                     (swap! blog-list update-in
                            [(:blog data) :todos]
-                           #(assoc % (:id data) {:id (:id data) :parid (:parid data) :content (:content data)})))))}])
+                           #(assoc % (:sort_id data) {:id (:id data) :sort_id (:sort_id data)
+                                                      :parid (:parid data) :content (:content data)})))))}])
 
 (defn todo-app [blog-list blog-id]
   (let [filt (r/atom :all)]
