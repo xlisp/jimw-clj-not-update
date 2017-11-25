@@ -165,7 +165,7 @@
          (fn [data]
            (swap! blog-list update-in
                   [(:blog data) :todos]
-                  #(assoc % (:sort_id data) {:id (:id data) :sort_id (:sort_id data)
+                  #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
                                              :parid (:parid data) :content (:content data)})))))}]))
 
 (defn get-todo-sort-id [id items]
@@ -245,7 +245,7 @@
                       (reset! parid-first-id (:id data)))
                     (swap! blog-list update-in
                            [(:blog data) :todos]
-                           #(assoc % (:sort_id data) {:id (:id data) :sort_id (:sort_id data)
+                           #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
                                                       :parid (:parid data) :content (:content data)})))))}])
 
 (defn todo-app [blog-list blog-id]
