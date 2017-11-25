@@ -170,7 +170,7 @@
 (defn get-todo-sort-id [id items]
   (->
    (filter
-    (fn [x] x (= (first x) id)) items)
+    (fn [x] x (= (last x) id)) items)
    first last))
 
 (defn todo-item []
@@ -180,8 +180,8 @@
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))
             :draggable true
-            :on-drag-start #(do (prn (str "开始拖动" id))
-                                (reset! todo-begin id))
+            :on-drag-start #(do (prn (str "开始拖动" sort_id))
+                                (reset! todo-begin sort_id))
             :on-drag-end #(do
                             (prn (str "目标位置" @todo-target))
                             (update-todo-sort (vec origins)
@@ -247,7 +247,7 @@
             active (- (count items) done)
             todo-target (atom 0)
             todo-begin (atom 0)
-            origins (map #(vector (:id %)  (:sort_id %)) items)]
+            origins (map #(vector (:sort_id %) (:id %)) items)]
         [:div
          [todo-stats-tmp {:active active :done done :filt filt}]
          [:br]

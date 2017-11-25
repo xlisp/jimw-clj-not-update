@@ -207,13 +207,13 @@
 
 (def todos-subquery
   (-> (h/select (agg-json-object
-                 {:id :id
+                 {:sort_id :id
+                  :id :sort_id ;; TODOS: 为了减少前端大量修改,而修改后端
                   :parid :parid
                   :content :content
                   :done :done
                   :created_at :created_at
-                  :updated_at :updated_at
-                  :sort_id :sort_id}))
+                  :updated_at :updated_at}))
       (h/from :todos)))
 
 ;; (search-blogs {:db conn :q "肌肉记忆"})
