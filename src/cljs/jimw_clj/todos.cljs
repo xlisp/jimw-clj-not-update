@@ -190,7 +190,7 @@
                               @todo-begin
                               (get-todo-sort-id @todo-target (vec origins))
                               (fn [data]
-                                (prn
+                                (count
                                  (str 
                                   (for [mdata data]
                                     (swap! blog-list update-in
