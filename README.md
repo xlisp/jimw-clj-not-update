@@ -124,6 +124,7 @@ function on_mouse_up(event) {
 ## 借力打力
 * 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
 * 有子评论过的todo 或者 done后的 元素, 在使用拖拽时, 样式就错了
+* 做一个像Chrome一样的广义的审查元素, 通过前端视图来模式匹配，对应的后端代码是在哪里的 => 2017 CLJS将要驾驭机器学习来打败业务系统
 
 ## License
 
