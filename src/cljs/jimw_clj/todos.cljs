@@ -264,12 +264,13 @@
         [:div
          [todo-stats-tmp {:active active :done done :filt filt}]
          [:br]
-         [:button {:on-click
-                   #(do (js/alert "Update...")
-                        (tree-todo-generate blog-id)) } "tree-generate"]
-         [:a.margin-download
+         [:button.btn.tree-btn
+          {:on-click
+           #(do (js/alert "Update...")
+                (tree-todo-generate blog-id)) } "🌲  Generate"]
+         [:a.btn.margin-download
           {:href (str "/todos-" blog-id ".gv")
-           :download (str "past_" blog-id "_navs.zip")} "download-gv-file"]
+           :download (str "past_" blog-id "_navs.zip")} "Download"]
          [:section#todoapp
           [:header#header
            (new-todo blog-list blog-id items parid-first-id)]
