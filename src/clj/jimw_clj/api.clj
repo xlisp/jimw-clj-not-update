@@ -16,7 +16,10 @@
    [buddy.hashers :as hashers]
    [clj-time.core :as time]
    [taoensso.timbre :refer [error debug info]]
-   [jimw-clj.config :as config])
+   [jimw-clj.config :as config]
+   [clojure.java.io :as io])
+  (:import (org.apache.commons.codec.binary Base64)
+           (org.apache.commons.io IOUtils))
   (:gen-class))
 
 (defn token-sign
@@ -130,6 +133,13 @@
                             :origins (into {} origins)
                             :response response
                             :target target})))
+
+(defn file-to-base64-string
+  [file-name]
+  (let [string-to-base64
+        (fn [st]
+          (String. (Base64/encodeBase64 st)))]
+    (str "data:image/png;base64," (string-to-base64  (IOUtils/toByteArray (io/input-stream file-name))))))
 
 (defroutes api-routes
   (POST "/login" [] login)
