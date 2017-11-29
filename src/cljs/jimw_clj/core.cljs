@@ -190,7 +190,8 @@
             [jimw-clj.edit :as edit]
             [jimw-clj.edit-md :as edit-md]
             [jimw-clj.todos :as todos]
-            [alandipert.storage-atom :refer [local-storage]])
+            [alandipert.storage-atom :refer [local-storage]]
+            [myexterns.viz])
   (:import goog.History))
 
 (.setOptions js/marked

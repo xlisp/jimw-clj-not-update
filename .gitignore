@@ -15,3 +15,4 @@ resources/public/js/autosize.min.js
 config/config.clj
 resources/public/*.gv
 resources/public/*.svg
+resources/public/js/viz-lite.js

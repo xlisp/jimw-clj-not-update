@@ -85,9 +85,11 @@
                  :pretty-print false
                  :closure-warnings
                  {:externs-validation :off :non-standard-jsdoc :off}
-                 :externs ["react/externs/react.js" "resources/public/js/autosize.ext.js"]
+                 :externs ["react/externs/react.js" "resources/public/js/autosize.ext.js" "resources/public/js/viz.ext.js"]
                  :foreign-libs [{:file "resources/public/js/autosize.min.js"
-                                      :provides ["myexterns.autosize"]}]}}}}
+                                 :provides ["myexterns.autosize"]}
+                                {:file "resources/public/js/viz-lite.js"
+                                 :provides ["myexterns.viz"]}]}}}}
              
              
              :aot :all
@@ -123,7 +125,9 @@
                       :source-map true
                       :optimizations :none
                       :foreign-libs [{:file "resources/public/js/autosize.min.js"
-                                      :provides ["myexterns.autosize"]}]
+                                      :provides ["myexterns.autosize"]}
+                                     {:file "resources/public/js/viz-lite.js"
+                                      :provides ["myexterns.viz"]}]
                       :externs ["resources/public/js/autosize.ext.js"]
                       :pretty-print true}}}}
                   
