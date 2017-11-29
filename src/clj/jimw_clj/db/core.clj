@@ -187,12 +187,16 @@
   [blog]
   (-> (Thread.
        (fn []
-         (with-open [wtr (clojure.java.io/writer
-                          (str "resources/public/todos-" blog ".gv"))]
-           (.write wtr "digraph G {\n")
-           (doseq [line @tree-out-puts]
-             (.write wtr line))
-           (.write wtr "\n}"))))
+         (do
+           (with-open [wtr (clojure.java.io/writer
+                            (str "resources/public/todos-" blog ".gv"))]
+             (.write wtr "digraph G {\n")
+             (doseq [line @tree-out-puts]
+               (.write wtr line))
+             (.write wtr "\n}"))
+           (shell/sh
+            "dot" "-Tsvg" (str "resources/public/todos-" blog ".gv") "-o"
+            (str "resources/public/todos-" blog ".svg")))))
       .start))
 
 (defn agg-json-object
