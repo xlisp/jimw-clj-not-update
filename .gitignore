@@ -14,3 +14,4 @@ resources/docs/docs.md
 resources/public/js/autosize.min.js
 config/config.clj
 resources/public/*.gv
+resources/public/*.svg
