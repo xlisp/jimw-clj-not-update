@@ -224,6 +224,16 @@
 (def api-token (local-storage (r/atom "") :api-token))
 (defonce search-key (r/atom ""))
 
+;; (viz-string "digraph { a -> b; }")
+;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
+;; (let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))
+(defn viz-string
+  [str]
+  (.-documentElement
+   (.parseFromString
+    (js/DOMParser.)
+    (js/Viz str) "image/svg+xml")))
+
 (defn login
   [username password op-fn]
   (go (let [response
@@ -405,6 +415,7 @@
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
+      [:div.gvoutput {:id (str "gv-output-" id)}]
       #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
