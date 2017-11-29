@@ -416,7 +416,8 @@
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
       [:div.gvoutput {:id (str "gv-output-" id)}]
-      [:a {:on-click #(let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))} "test-gv"]
+      ;; 生产环境测试viz.js已ok
+      #_[:a {:on-click #(let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))} "test-gv"]
       #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
