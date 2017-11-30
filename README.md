@@ -60,29 +60,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 和Clojure编写的APP,收集的数据用于训练jimw-clj的习惯: '网页语音阅读'阅读网页资料 + ocr 阅读书本拍照资料等等
 * 方便学习推导递归算法 => tree的算法递归的实现方式是自我推导出来的二叉树算法: <算法新解>普通算法用出去影响整个生活,更新到fp-book里面
 * 用选中的文章部分文字来创建todos: 就像有道词典一样`指词即译模式（按下Ctrl键指词）`, 就创建一个todos => `var selectionObj = window.getSelection(); selectionObj.toString() `
-```js
-// chrome-extension://aohddidmgooofkgohkbkaohadkolgejj/lookup.js
-document.addEventListener("mousemove", update_mouse_pos, true);
-document.addEventListener("mouseup", on_mouse_up, true);
-document.addEventListener("mousedown", on_mouse_down, true);
-document.addEventListener("dblclick", on_mouse_dbclick, true);
-
-function on_mouse_up(event) {
-    if ( Math.abs(event.clientX - mouse_down_x) > 2 || Math.abs(event.clientY - mouse_down_y) > 2)
-    {
-        var sText = document.selection == undefined ? document.getSelection().toString():document.selection.createRange().text;
-        if (sText != "")
-        {
-            // todo: 字符串过长的问题.
-            if (sText.length >2000)
-                sText = sText.substr(0, 2000);
-            chrome.extension.sendRequest({action:"stroke", msg:sText}, onText);
-            console.log(sText);
-        }
-    }
-}
 * 就像clojure-china一样,选中引用回复: 导入'网页语音标记阅读',用token访问jimw-clj的API,导入标记todos
-```
 * ClojureScript写Chrome的插件像Gooreplacer一样,帮助jimw-clj编辑: chrome-extension://jnlkjeecojckkigmchmfoigphmgkgbip/option/index.html => 写一个有道词典的cljs版本 ①
 * 通过Chrome的插件调用本地的语言识别和OCR文字识别的服务
 * 修改一下后端,id是updated_at的uinx时间id: 把update变成unix时间,就可以按照update的id来排序了===>> 书放在最上面的思想(默认的排序), 也提供选择排序按照创建的id(找附近创建的搜索思想) ① 可以支持两种排序方式, 按照id和updated_at的unix的数字大小排序
@@ -125,7 +103,8 @@ function on_mouse_up(event) {
 * 借助了太阳的引力才能甩出太阳系: 用re-frame来新构造jimw-clj的cljs系统
 * 有子评论过的todo 或者 done后的 元素, 在使用拖拽时, 样式就错了
 * 做一个像Chrome一样的广义的审查元素, 通过前端视图来模式匹配，对应的后端代码是在哪里的 => 2017 CLJS将要驾驭机器学习来打败业务系统
-* 用CLJS直接画GV的树形的图
+* 用CLJS直接画GV的树形的图, 加上事件流处理, 做数据分析
+* 业务代码的数据流分析和可视化数据流, Dataframe的对应关系 ` a + b => c ` , 可视化项目树形数据流
 
 ## License
 
