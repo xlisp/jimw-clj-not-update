@@ -130,14 +130,14 @@
                      :on-click #(reset! filt name)})]
     [:div
      [:span#todo-count
-      [:strong active] " " (case active 1 "item" "items") " left"]
+      [:strong active] " " #_(case active 1 "item" "items") " left"]
      [:ul#filters
       [:li [:a (props-for :all) "All"]]
       [:li [:a (props-for :active) "Active"]]
       [:li [:a (props-for :done) "Completed"]]]
-     (when (pos? done)
-       [:button#clear-completed ;; {:on-click clear-done}
-        "Clear completed " done])]))
+     #_(when (pos? done)
+         [:button#clear-completed ;; {:on-click clear-done}
+          "Clear completed " done])]))
 
 (defn todo-stats-tmp [{:keys [filt active done]}]
   (let [props-for (fn [name]
@@ -214,7 +214,7 @@
               (update-todo
                sort_id nil blog-id done-stat
                #(prn %))))}]
-        [:label {:on-double-click #(reset! editing true)} content]
+        [:label.todo-front-size {:on-double-click #(reset! editing true)} content]
         [:button.destroy {:on-click
                           (fn []
                             (delete-todo
@@ -262,12 +262,12 @@
             todo-begin (atom 0)
             origins (map #(vector (:sort_id %) (:id %)) items)]
         [:div
-         [todo-stats-tmp {:active active :done done :filt filt}]
-         [:br]
+         #_[todo-stats-tmp {:active active :done done :filt filt}]
+         #_[:br]
          [:button.btn.tree-btn
           {:on-click
            #(do (js/alert "Update...")
-                (tree-todo-generate blog-id)) } "🌲  Generate"]
+                (tree-todo-generate blog-id)) } "Generate"]
          [:a.btn.margin-download
           {:href (str "/todos-" blog-id ".gv")
            :download (str "past_" blog-id "_navs.zip")} "Download"]

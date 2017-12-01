@@ -109,7 +109,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 功夫图的自动生成的能力, 通过安卓的notebook笔记的描述，来自动画图, 深度学习自然语言转换为肢体图形语言
 * 加快博客搜索速度: 添加一个blog表的数据冗余,如果false,就不需要todos的子查询了
 * 向下滑,分页的loading图
-* 整体的字体都要调小一点,手机上的notepad那么大的字体
+* 整体的字体都要调小一点,手机上的notepad那么大的字体 √ 
 * 写一个HTML转Markdown的功能
 * 分页无限加载用Twitter的方式,无限价值,Cljs的对象可以无限多,但是dom元素越多就会越卡住了
 * 支持多个Clojure代码算法库的学习=>支持其他的语言
