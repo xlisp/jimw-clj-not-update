@@ -111,6 +111,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 向下滑,分页的loading图
 * 整体的字体都要调小一点,手机上的notepad那么大的字体
 * 写一个HTML转Markdown的功能
+* 分页无限加载用Twitter的方式,无限价值,Cljs的对象可以无限多,但是dom元素越多就会越卡住了
 
 ## License
 
