@@ -110,6 +110,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 加快博客搜索速度: 添加一个blog表的数据冗余,如果false,就不需要todos的子查询了
 * 向下滑,分页的loading图
 * 整体的字体都要调小一点,手机上的notepad那么大的字体
+* 写一个HTML转Markdown的功能
 
 ## License
 
