@@ -107,6 +107,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 业务代码的数据流分析和可视化数据流, Dataframe的对应关系 ` a + b => c ` , 可视化项目树形数据流
 * 批处理 + 特别处理 = 统计学方法修改某某数据流经过的代码, 批处理得越多, 说明统计运筹学运用得好, 反正是每一个繁琐无味数据型代码都特别改一遍
 * 功夫图的自动生成的能力, 通过安卓的notebook笔记的描述，来自动画图, 深度学习自然语言转换为肢体图形语言
+* 加快博客搜索速度: 添加一个blog表的数据冗余,如果false,就不需要todos的子查询了
 
 ## License
 
