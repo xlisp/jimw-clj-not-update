@@ -113,6 +113,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 写一个HTML转Markdown的功能
 * 分页无限加载用Twitter的方式,无限价值,Cljs的对象可以无限多,但是dom元素越多就会越卡住了
 * 支持多个Clojure代码算法库的学习=>支持其他的语言
+* 算法GIF图和统计学图 => `gganimate:构建R语言可视化gif动图`在线版本
 
 ## License
 
