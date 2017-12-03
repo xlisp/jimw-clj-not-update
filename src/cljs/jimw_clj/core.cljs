@@ -408,6 +408,18 @@
     (swap! blog-list assoc-in [id :content] content)
     (update-blog id nil content #(prn %))))
 
+(defn get-digraph
+  [blog op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/get (api-root (str "/todos-" 21170 ".gv"))
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {}}))]
+        (if (= status 200)
+          (op-fn body)
+          (js/alert "Unauthorized !")))))
+
 (defn md-render [id name content]
   (let [editing (r/atom false)]
     [:div.container
@@ -415,9 +427,15 @@
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
-      [:div.gvoutput {:id (str "gv-output-" id)}]
       ;; 生产环境测试viz.js已ok
-      ;; [:a {:on-click #(let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))} "test-gv"]
+      [:a.tree-btn {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))]
+                                 (get-digraph id
+                                              (fn [digraph-str]
+                                                (.appendChild
+                                                 graph
+                                                 (viz-string digraph-str)))))} "Generate"]
+      [:div.gvoutput {:id (str "gv-output-" id)}]
+      [:hr]
       ;; 移除gv: (let [graph (.querySelector js/document "#gv-output-9845") svg (.querySelector graph "svg")] (if svg (.removeChild graph svg) ()))
       #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
