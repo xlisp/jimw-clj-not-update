@@ -1047,6 +1047,8 @@ ul.nav > li.brand > a {
 
 .blog-name {
     color: black;
+    background-color: #d6d6d4;
+    border-radius: 5px;
 }
 
 .margin-download {
