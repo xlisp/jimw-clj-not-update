@@ -222,8 +222,10 @@
                              (fn [data]
                                (swap! blog-list update-in
                                       [blog-id :todos] #(dissoc % id)))))}]
-        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block") }]
-        [:label.input-label { :id (str "input-label-id-" id)} (new-todo-par sort_id blog-list blog-id)]]
+        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
+        [:label.input-label {:id (str "input-label-id-" id)
+                             :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none")}
+         (new-todo-par sort_id blog-list blog-id)]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save

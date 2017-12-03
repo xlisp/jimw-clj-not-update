@@ -171,7 +171,7 @@ input[type="checkbox"] {
 	content: '';
 	border-left: 1px solid #f5d6d6;
 	border-right: 1px solid #f5d6d6;
-	width: 2px;
+	width: 30px;
 	position: absolute;
 	top: 0;
 	left: 20px;
@@ -980,13 +980,13 @@ ul.nav > li.brand > a {
 
 #todo-list li .reply {
     display: none;
-    text-align: center;
-    width: 40px;
+    /*text-align: left;*/
+    width: 5px;
     height: auto;
     position: absolute;
     top: 0;
     bottom: 0;
-    margin: auto 0;
+    /*margin: auto 0;*/
     border: none;
     -webkit-appearance: none;
 }
