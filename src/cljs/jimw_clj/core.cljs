@@ -449,16 +449,18 @@
          :download (str "past_" id "_navs.zip")} "Download"]
        ;; 生产环境测试viz.js已ok
        [:button.btn.margin-download
-        {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))]
-                      (get-digraph id
-                                   (fn [digraph-str]
-                                     (.appendChild
-                                      graph
-                                      (viz-string digraph-str)))))} "Viz"]]
+        {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))
+                          svg (.querySelector graph "svg")]
+                      (do
+                        (if svg (.removeChild graph svg) ())
+                        (get-digraph id
+                                     (fn [digraph-str]
+                                       (.appendChild
+                                        graph
+                                        (viz-string digraph-str))))))} "Viz"]]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:hr]
-      ;; 移除gv: (let [graph (.querySelector js/document "#gv-output-9845") svg (.querySelector graph "svg")] (if svg (.removeChild graph svg) ()))
       #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
 
 (defn home-page []
