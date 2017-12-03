@@ -104,7 +104,7 @@
                                27 (stop)
                                nil)}])))
 
-(defn todo-input-par [{:keys [id content on-save on-stop]}]
+(defn todo-input-par [{:keys [id content on-save on-stop on-blur]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -114,7 +114,7 @@
     (fn [{:keys [id class placeholder]}]
       [:input.input-par {:type "text" :value @val
                          :id id :class class :placeholder placeholder
-                         :on-blur save
+                         :on-blur #(if on-blur (do (save) (on-blur)) (save))
                          :on-change #(reset! val (-> % .-target .-value))
                          :on-key-down #(case (.-which %)
                                          13 (save)
@@ -153,11 +153,12 @@
         "Clear completed " done])]))
 
 (def new-todo-par
-  (fn [sort_id blog-list blog-id]
+  (fn [sort_id blog-list blog-id on-blur]
     [todo-input-par
      {:id sort_id
       :type "text"
       :placeholder (str "Subneed to be done for " sort_id "?")
+      :on-blur on-blur
       :on-save
       (fn [content]
         (create-todo
@@ -223,9 +224,9 @@
                                (swap! blog-list update-in
                                       [blog-id :todos] #(dissoc % id)))))}]
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
-        [:div.input-label {:id (str "input-label-id-" id)
-                           :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none")}
-         (new-todo-par sort_id blog-list blog-id)]]
+        [:div.input-label {:id (str "input-label-id-" id)}
+         (new-todo-par sort_id blog-list blog-id
+                       #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save
