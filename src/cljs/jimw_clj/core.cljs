@@ -228,11 +228,15 @@
 ;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
 ;; (let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))
 (defn viz-string
-  [str]
+  [st]
   (.-documentElement
    (.parseFromString
     (js/DOMParser.)
-    (js/Viz str) "image/svg+xml")))
+    (->
+     (js/Viz st)
+     (clojure.string/replace-first #"width=\"\d+pt\"" "")
+     (clojure.string/replace-first #"height=\"\d+pt\"" ""))
+    "image/svg+xml")))
 
 (defn login
   [username password op-fn]
