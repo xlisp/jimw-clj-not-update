@@ -416,7 +416,7 @@
   [blog op-fn]
   (go (let [{:keys [status body]}
             (<!
-             (http/get (api-root (str "/todos-" 21170 ".gv"))
+             (http/get (api-root (str "/todos-" blog ".gv"))
                        {:with-credentials? false
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {}}))]
