@@ -424,6 +424,14 @@
           (op-fn body)
           (js/alert "Unauthorized !")))))
 
+(defn tree-todo-generate [blog]
+  (go (let [response
+            (<!
+             (http/post (api-root "/tree-todo-generate")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" @api-token}
+                         :query-params {:blog blog}}))])))
+
 (defn md-render [id name content]
   (let [editing (r/atom false)]
     [:div.container
@@ -431,13 +439,23 @@
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
-      ;; 生产环境测试viz.js已ok
-      [:a.tree-btn {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))]
-                                 (get-digraph id
-                                              (fn [digraph-str]
-                                                (.appendChild
-                                                 graph
-                                                 (viz-string digraph-str)))))} "Generate"]
+      [:div
+       [:button.btn.tree-btn
+        {:on-click
+         #(do (js/alert "Update...")
+              (tree-todo-generate id))} "Generate"]
+       [:a.btn.margin-download
+        {:href (str "/todos-" id ".gv")
+         :download (str "past_" id "_navs.zip")} "Download"]
+       ;; 生产环境测试viz.js已ok
+       [:button.btn.margin-download
+        {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))]
+                      (get-digraph id
+                                   (fn [digraph-str]
+                                     (.appendChild
+                                      graph
+                                      (viz-string digraph-str)))))} "Viz"]]
+      [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:hr]
       ;; 移除gv: (let [graph (.querySelector js/document "#gv-output-9845") svg (.querySelector graph "svg")] (if svg (.removeChild graph svg) ()))

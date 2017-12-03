@@ -17,14 +17,6 @@
 
 (def memoized-api-token (memoize get-api-token))
 
-(defn tree-todo-generate [blog]
-  (go (let [response
-            (<!
-             (http/post (api-root "/tree-todo-generate")
-                        {:with-credentials? false
-                         :headers {"jimw-clj-token" (memoized-api-token)}
-                         :query-params {:blog blog}}))])))
-
 ;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
   [blog op-fn]
@@ -267,13 +259,7 @@
         [:div
          #_[todo-stats-tmp {:active active :done done :filt filt}]
          #_[:br]
-         [:button.btn.tree-btn
-          {:on-click
-           #(do (js/alert "Update...")
-                (tree-todo-generate blog-id)) } "Generate"]
-         [:a.btn.margin-download
-          {:href (str "/todos-" blog-id ".gv")
-           :download (str "past_" blog-id "_navs.zip")} "Download"]
+         
          [:section#todoapp
           [:header#header
            (new-todo blog-list blog-id items parid-first-id)]
