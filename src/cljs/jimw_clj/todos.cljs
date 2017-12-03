@@ -250,7 +250,7 @@
             parid-first-id (-> (if (= (count items) 0) 1
                                    (->
                                     (filter #(= (:parid %) 1) items)
-                                    first :id)) r/atom)
+                                    first :sort_id)) r/atom)
             done (->> items (filter :done) count)
             active (- (count items) done)
             todo-target (atom 0)
@@ -259,7 +259,6 @@
         [:div
          #_[todo-stats-tmp {:active active :done done :filt filt}]
          #_[:br]
-         
          [:section#todoapp
           [:header#header
            (new-todo blog-list blog-id items parid-first-id)]
