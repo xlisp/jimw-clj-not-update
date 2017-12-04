@@ -50,16 +50,22 @@
 
   :min-lein-version "2.0.0"
 
+  ;; .e.g: ` export JRI_PATH=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/ `
   :jvm-opts ["-server" "-Dconf=.lein-env"
-             ~(str "-Djava.library.path=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/:" 
-             (System/getProperty "java.library.path"))]
+             ~(str "-Djava.library.path=" (get (System/getenv) "JRI_PATH") ":"
+                   (System/getProperty "java.library.path"))]
   :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
-  :resource-paths ["resources" "target/cljsbuild"
-                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/JRI.jar"
-                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/JRIEngine.jar"
-                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/REngine.jar"
-                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/libjri.so"]
+  :resource-paths ~(apply
+                    conj
+                    ["resources" "target/cljsbuild"]
+                    (map #(str (get (System/getenv) "JRI_PATH") %)
+                         (list "JRI.jar"
+                               "JRIEngine.jar"
+                               "REngine.jar"
+                               (if (= (get (System/getenv) "OS_TYPE") "MACOX")
+                                 "libjri.jnilib"
+                                 "libjri.so"))))
   :target-path "target/%s/"
   :main ^:skip-aot jimw-clj.core
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
