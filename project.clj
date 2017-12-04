@@ -45,14 +45,21 @@
                  [buddy/buddy-hashers "1.3.0"]
                  [alandipert/storage-atom "2.0.1"]
                  [cljsjs/jquery "3.2.1-0"]
+                 [clj-jri "0.1.1-SNAPSHOT"]
                  [hikari-cp "1.8.2"]]
 
   :min-lein-version "2.0.0"
 
-  :jvm-opts ["-server" "-Dconf=.lein-env"]
+  :jvm-opts ["-server" "-Dconf=.lein-env"
+             ~(str "-Djava.library.path=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/:" 
+             (System/getProperty "java.library.path"))]
   :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
-  :resource-paths ["resources" "target/cljsbuild"]
+  :resource-paths ["resources" "target/cljsbuild"
+                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/JRI.jar"
+                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/JRIEngine.jar"
+                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/REngine.jar"
+                   "/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/libjri.so"]
   :target-path "target/%s/"
   :main ^:skip-aot jimw-clj.core
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
