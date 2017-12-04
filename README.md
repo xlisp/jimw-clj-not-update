@@ -117,6 +117,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 微信聊天记录的爬虫自动生成todos树: 解决很多好的想法和文采的句子都产生于聊天的过程, 如何将自己的消除浮在大数据流之上，"自动驾驶"呢? 
 * 微信聊天记录自动生成,聊天语句提醒,自动回归核心的问题和想法初衷,这样的话, jimwclj就连接了整个世界了
 
+## jimw-clj的特征工程
+* 对于kmeans聚类来说: 一个todos有多少个可用特征(所在的层数,修改的次数,和文章标签云的相关系数,创建时间,修改最后时间,创建时间,上下连接节点数量)
+
 ## License
 
 Copyright © 2017 FIXME
