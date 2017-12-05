@@ -330,10 +330,12 @@
 (defn read-string-for-pro
   [op-fn]
   (let [file-names
-        (remove #(= % "lib/clojure/test/clojure/test_clojure/reader.cljc")
-                (->
-                 (shell/sh "find" "lib" "-name" "*.clj*") :out
-                 (clojure.string/split #"\n")))
+        (->>
+         (->
+          (shell/sh "find" "lib" "-name" "*.clj*") :out
+          (clojure.string/split #"\n"))
+         (remove #(= % "lib/clojure/test/clojure/test_clojure/reader.cljc"))
+         (remove #(= % "test/clojure/test_clojure/java_interop.clj")))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
