@@ -330,31 +330,53 @@
 (defn read-string-for-pro
   [op-fn]
   (let [file-names
-        (->
-         (shell/sh "find" "lib" "-name" "*.clj*") :out
-         (clojure.string/split #"\n"))
+        (remove #(= % "lib/clojure/test/clojure/test_clojure/reader.cljc")
+                (->
+                 (shell/sh "find" "lib" "-name" "*.clj*") :out
+                 (clojure.string/split #"\n")))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
-                remove-invalid-token (fn [st]
-                                       (-> st
-                                           (str/replace #"::" "double-colon-")
-                                           (str/replace #"#js" "the-tag-js")
-                                           (str/replace #"#\?" "")
-                                           (str/replace #"#\"" "\"")
-                                           (str/replace #"\\\." "-back-slant-dot-")
-                                           (str/replace #"\\\\" "-back-slant-")
-                                           (str/replace #"\\d" "-back-slant-num-")
-                                           (str/replace #"\\-" "-back-slant--")
-                                           (str/replace #"\\\?" "-back-slant-que-")
-                                           (str/replace #"\\\*" "-back-slant-que-")
-                                           (str/replace #"\\\/" "-back-slant-que-")
-                                           (str/replace #"\\\)" "-back-slant-que-")
-                                           (str/replace #"\\\#" "-back-slant-que-")
-                                           (str/replace #"\\s" "-back-slant-que-")
-                                           (str/replace "\\{" "-back-slant-que-")
-                                           (str/replace "\\}" "-back-slant-que-")
-                                           ))
+                remove-invalid-token
+                (fn [st]
+                  (-> st
+                      (str/replace #"::" "double-colon-")
+                      (str/replace #"#js" "the-tag-js")
+                      (str/replace #"#\?" "")
+                      (str/replace #"#\"" "\"")
+                      (str/replace #"\\\." "-back-slant-dot-")
+                      (str/replace #"\\\\" "-back-slant-")
+                      (str/replace #"\\d" "-back-slant-num-")
+                      (str/replace #"\\-" "-back-slant--")
+                      (str/replace #"\\\?" "-back-slant-que-")
+                      (str/replace #"\\\*" "-back-slant-que-")
+                      (str/replace #"\\\/" "-back-slant-que-")
+                      (str/replace #"\\\)" "-back-slant-que-")
+                      (str/replace #"\\\#" "-back-slant-que-")
+                      (str/replace #"\\s" "-back-slant-que-")
+                      (str/replace "\\{" "-back-slant-que-")
+                      (str/replace "\\}" "-back-slant-que-")
+                      (str/replace "\\W" "-back-slant-que-")
+                      (str/replace "\\w" "-back-slant-que-")
+                      (str/replace "\\S" "-back-slant-que-")
+                      (str/replace "\\$" "-back-slant-que-")
+                      (str/replace "\\(" "-back-slant-que-")
+                      (str/replace "\\Q" "-back-slant-que-")
+                      (str/replace "\\E" "-back-slant-que-")
+                      (str/replace "\\[" "-back-slant-que-")
+                      (str/replace "\\]" "-back-slant-que-")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestBoolHint" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestLongHint" "")
+                      (str/replace "#clojure.test_clojure.protocols.TestNode" "")
+                      (str/replace "#clojure.test_clojure.protocols.TypeToTestLiterals" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestLiterals" "")
+                      (str/replace "#clojure.test_clojure.protocols.TypeToTestHugeFactories" "")
+                      (str/replace "#clojure.test_clojure.protocols.TypeToTestFactory" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestFactories" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestStatics3" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestStatics2" "")
+                      (str/replace "#clojure.test_clojure.protocols.RecordToTestStatics1" "")
+                      (str/replace "#clojure.test_clojure.compilation.Y[1]" "")))
                 list-init (fn [st] (str "( " st " )"))
                 code-list (->>
                            (slurp file-name)
