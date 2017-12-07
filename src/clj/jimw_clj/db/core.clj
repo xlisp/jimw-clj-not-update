@@ -230,19 +230,12 @@
 ;; (println (tree-todo-generate-new {:db conn :blog 4933}))
 (defn tree-todo-generate-new
   [{:keys [db blog]}]
-  (let [_ (do
-            (jc1 db
-                 (->  (h/update :todos)
-                      (h/sset {:done false})
-                      (h/where [:and
-                                [:= :blog blog]
-                                [:= :parid 1]])))
-            (jc1 db
-                 (->  (h/update :todos)
-                      (h/sset {:done true})
-                      (h/where [:and
-                                [:= :blog blog]
-                                [:= :parid 1]]))))
+  (let [_ (jc1 db
+               (->  (h/update :todos)
+                    (h/sset {:updated_at (honeysql.core/call :now)})
+                    (h/where [:and
+                              [:= :blog blog]
+                              [:= :parid 1]])))
         output-fn
         (fn [res idd]
           (swap!
