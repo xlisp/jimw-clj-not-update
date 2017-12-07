@@ -135,6 +135,15 @@
              (h/order-by [:id :desc])
              (h/limit 1))))
 
+;; (get-nav-count {:db conn :blog 4933}) => 16
+;; (count (list 895 892 890 888 894 893 891 889 887 886 885 903 901 902 900)) ;; => 15
+(defn get-nav-count [{:keys [db blog]}]
+  (-> (jconn db
+             (-> (h/select (sql/call :count :*))
+                 (h/from :todos)
+                 (h/where [:= :blog blog])))
+      first :count))
+
 ;; ((get-nav-by-id {:db conn :id 50}) :content)
 (defn get-nav-by-id [{:keys [db id]}]
   (jconn1 db
@@ -208,16 +217,17 @@
             (str "resources/public/todos-" blog ".svg")))))
       .start))
 
-(defn tree-fn-new [id par res output-fn stop-id]
+(defn tree-fn-new [id par res output-fn sum ids]
   (map
    (fn [idd]
      (output-fn res idd)
-     (if (= (idd :id) stop-id)
+     (swap! ids conj (idd :id))
+     (if (>= (inc (count @ids)) sum)
        @res
-       (tree-fn-new (idd :id) par res output-fn stop-id)))
+       (tree-fn-new (idd :id) par res output-fn sum ids)))
    (par id)))
 
-;; (println (tree-todo-generate-new {:db conn :blog 22791}))
+;; (println (tree-todo-generate-new {:db conn :blog 4933}))
 (defn tree-todo-generate-new
   [{:keys [db blog]}]
   (let [output-fn
@@ -230,13 +240,14 @@
                 "\"" " -> "
                 "\"" (replace-tree-enter (:content
                                           (if (= (:done idd) true) {:content "done"} idd))) "\"\n")))
-        stop-id (:id (first (get-nav-max-id {:db conn :blog blog})))]
+        blog-nav-sum (get-nav-count {:db conn :blog 4933})]
     (str "digraph G {\n"
          (->> (tree-fn-new
                (:id (first-nav {:db db :blog blog}))
                (fn [id]
                  (get-nav-by-past-id {:db db :blog blog :parid id}))
-               (atom (list)) output-fn stop-id) flatten (clojure.string/join "")) "\n}")))
+               (atom (list)) output-fn blog-nav-sum (atom (list)))
+              flatten (clojure.string/join "")) "\n}")))
 
 (defn agg-json-object
   [kvs]
