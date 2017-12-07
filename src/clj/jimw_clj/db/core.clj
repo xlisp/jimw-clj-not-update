@@ -337,8 +337,7 @@
                       (str "lib/jimw-clj/" (first project))
                       "lib") "-name" "*.clj*") :out
           (clojure.string/split #"\n"))
-         (remove #(= % "lib/jimw-clj//clojure/test/clojure/test_clojure/reader.cljc"))
-         (remove #(= % "lib/jimw-clj//clojure/test/clojure/test_clojure/java_interop.clj")))
+         (remove #(= % "lib/jimw-clj/clojure/test/clojure/test_clojure/reader.cljc")))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
