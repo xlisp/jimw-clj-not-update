@@ -126,6 +126,15 @@
                [:= :blog blog]
                [:= :parid parid]]))))
 
+;; (get-nav-max-id {:db conn :blog 22791})
+(defn get-nav-max-id [{:keys [db blog]}]
+  (jconn db
+         (-> (h/select :id)
+             (h/from :todos)
+             (h/where [:= :blog blog])
+             (h/order-by [:id :desc])
+             (h/limit 1))))
+
 ;; ((get-nav-by-id {:db conn :id 50}) :content)
 (defn get-nav-by-id [{:keys [db id]}]
   (jconn1 db
@@ -207,6 +216,27 @@
        @res
        (tree-fn-new (idd :id) par res output-fn stop-id)))
    (par id)))
+
+;; (println (tree-todo-generate-new {:db conn :blog 22791}))
+(defn tree-todo-generate-new
+  [{:keys [db blog]}]
+  (let [output-fn
+        (fn [res idd]
+          (swap!
+           res conj
+           (str "\"" (replace-tree-enter (:content
+                                          (let [res-1 (get-nav-by-id {:db db :id (:parid idd)})]
+                                            (if (= (:done res-1) true) {:content "done"} res-1))))
+                "\"" " -> "
+                "\"" (replace-tree-enter (:content
+                                          (if (= (:done idd) true) {:content "done"} idd))) "\"\n")))
+        stop-id (:id (first (get-nav-max-id {:db conn :blog blog})))]
+    (str "digraph G {\n"
+         (->> (tree-fn-new
+               (:id (first-nav {:db db :blog blog}))
+               (fn [id]
+                 (get-nav-by-past-id {:db db :blog blog :parid id}))
+               (atom (list)) output-fn stop-id) flatten (clojure.string/join "")) "\n}")))
 
 (defn agg-json-object
   [kvs]
