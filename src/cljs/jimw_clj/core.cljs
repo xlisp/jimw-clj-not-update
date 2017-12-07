@@ -432,6 +432,18 @@
                          :headers {"jimw-clj-token" @api-token}
                          :query-params {:blog blog}}))])))
 
+(defn tree-todo-generate-new
+  [blog op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/post (api-root "/tree-todo-generate-new")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" @api-token}
+                         :query-params {:blog blog}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
 (defn md-render [id name content]
   (let [editing (r/atom false)]
     [:div.container
@@ -440,11 +452,11 @@
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
       [:div
-       [:button.btn.tree-btn
+       #_[:button.btn.tree-btn
         {:on-click
          #(do (js/alert "Update...")
               (tree-todo-generate id))} "Generate"]
-       [:a.btn.margin-download
+       #_[:a.btn.margin-download
         {:href (str "/todos-" id ".gv")
          :download (str "past_" id "_navs.zip")} "Download"]
        ;; 生产环境测试viz.js已ok
@@ -453,7 +465,8 @@
                           svg (.querySelector graph "svg")]
                       (do
                         (if svg (.removeChild graph svg) ())
-                        (get-digraph id
+                        (tree-todo-generate-new
+                         #_get-digraph id
                                      (fn [digraph-str]
                                        (.appendChild
                                         graph

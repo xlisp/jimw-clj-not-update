@@ -121,6 +121,13 @@
     (db/writer-tree-file (Integer/parseInt blog))
     (ok {:msg "ok!"})))
 
+(defn tree-todo-generate-new
+  [{{:keys [blog]} :params}]
+  (ok {:data
+       (db/tree-todo-generate-new
+        {:db db/conn
+         :blog (Integer/parseInt blog)})}))
+
 (defn record-event
   [{{:keys [event_name info event_data]} :params}]
   (ok (db/insert-event {:db db/conn
@@ -153,5 +160,6 @@
   (POST "/create-todo" [] (check-api-token create-todo))
   (DELETE "/delete-todo" [] (check-api-token delete-todo))
   (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate))
+  (POST  "/tree-todo-generate-new" [] (check-api-token tree-todo-generate-new))
   (POST "/record-event" [] (check-api-token record-event))
   (POST "/update-todo-sort" [] (check-api-token update-todo-sort)))
