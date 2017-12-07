@@ -452,11 +452,11 @@
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
       [:div
-       #_[:button.btn.tree-btn
+       [:button.btn.tree-btn
         {:on-click
          #(do (js/alert "Update...")
               (tree-todo-generate id))} "Generate"]
-       #_[:a.btn.margin-download
+       [:a.btn.margin-download
         {:href (str "/todos-" id ".gv")
          :download (str "past_" id "_navs.zip")} "Download"]
        ;; 生产环境测试viz.js已ok
