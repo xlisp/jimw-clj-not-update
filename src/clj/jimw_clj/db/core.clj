@@ -199,6 +199,15 @@
             (str "resources/public/todos-" blog ".svg")))))
       .start))
 
+(defn tree-fn-new [id par res output-fn stop-id]
+  (map
+   (fn [idd]
+     (output-fn res idd)
+     (if (= (idd :id) stop-id)
+       @res
+       (tree-fn-new (idd :id) par res output-fn stop-id)))
+   (par id)))
+
 (defn agg-json-object
   [kvs]
   (honeysql.core/call
