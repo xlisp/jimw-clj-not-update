@@ -459,6 +459,16 @@
        [:a.btn.margin-download
         {:href (str "/todos-" id ".gv")
          :download (str "past_" id "_navs.zip")} "Download"]
+       [:button.btn.margin-download
+        {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))
+                          svg (.querySelector graph "svg")]
+                      (do
+                        (if svg (.removeChild graph svg) ())
+                        (get-digraph id
+                                     (fn [digraph-str]
+                                       (.appendChild
+                                        graph
+                                        (viz-string digraph-str))))))} "Viz"]
        ;; 生产环境测试viz.js已ok
        [:button.btn.margin-download
         {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))
@@ -466,11 +476,11 @@
                       (do
                         (if svg (.removeChild graph svg) ())
                         (tree-todo-generate-new
-                         #_get-digraph id
-                                     (fn [digraph-str]
-                                       (.appendChild
-                                        graph
-                                        (viz-string digraph-str))))))} "Viz"]]
+                         id
+                         (fn [digraph-str]
+                           (.appendChild
+                            graph
+                            (viz-string digraph-str))))))} "NewViz"]]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:hr]
