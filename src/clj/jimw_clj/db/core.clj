@@ -326,16 +326,19 @@
       (create-blog {:db conn :name file-name :content (content-fn file-name)}))))
 
 ;; 测试新的项目导入是否解析报错:
-;; (read-string-for-pro (fn [code-list file-name] (map first code-list)))
+;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "clojure")
 (defn read-string-for-pro
-  [op-fn]
+  [op-fn & project]
   (let [file-names
         (->>
          (->
-          (shell/sh "find" "lib" "-name" "*.clj*") :out
+          (shell/sh "find"
+                    (if project
+                      (str "lib/jimw-clj/" (first project))
+                      "lib") "-name" "*.clj*") :out
           (clojure.string/split #"\n"))
-         (remove #(= % "lib/clojure/test/clojure/test_clojure/reader.cljc"))
-         (remove #(= % "lib/clojure/test/clojure/test_clojure/java_interop.clj")))
+         (remove #(= % "lib/jimw-clj//clojure/test/clojure/test_clojure/reader.cljc"))
+         (remove #(= % "lib/jimw-clj//clojure/test/clojure/test_clojure/java_interop.clj")))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
@@ -390,7 +393,7 @@
       (split-code file-name))))
 
 (defn import-project-s-exp-to-blog
-  []
+  [& project]
   (let [content-fn
         (fn [content]
           (str "```clojure\n"
@@ -402,7 +405,8 @@
          (prn (str file-name " >>>>>>"))
          (map
           (fn [content] (do (create-blog {:db conn :name file-name :content (content-fn content)}) (first content)))
-          code-list))))))
+          code-list)))
+     (if project (first project) nil))))
 
 (defn insert-event [{:keys [db event_name info event_data]}]
   (jc1 db
