@@ -345,7 +345,7 @@
                 (fn [st]
                   (-> st
                       (str/replace #"::" "double-colon-")
-                      (str/replace #"#js" "the-tag-js")
+                      (str/replace #"#js" "" #_"the-tag-js")
                       (str/replace #"#\?" "")
                       (str/replace #"#\"" "\"")
                       (str/replace #"\\\." "-back-slant1-dot-")
@@ -369,6 +369,11 @@
                       (str/replace "\\E" "-back-slant19-que-")
                       (str/replace "\\[" "-back-slant20-que-")
                       (str/replace "\\]" "-back-slant21-que-")
+                      (str/replace "\\>" "-back-slant22-que-")
+                      (str/replace "\\:" "-back-slant23-que-")
+                      (str/replace "\\<" "-back-slant24-que-")
+                      (str/replace "\\!" "-back-slant25-que-")
+                      (str/replace "\\+" "-back-slant26-que-")
                       (str/replace "#clojure.test_clojure.protocols.RecordToTestBoolHint" "")
                       (str/replace "#clojure.test_clojure.protocols.RecordToTestLongHint" "")
                       (str/replace "#clojure.test_clojure.protocols.TestNode" "")
