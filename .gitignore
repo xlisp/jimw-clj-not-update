@@ -16,3 +16,4 @@ config/config.clj
 resources/public/*.gv
 resources/public/*.svg
 resources/public/js/viz-lite.js
+resources/public/js/wordcloud2.js
