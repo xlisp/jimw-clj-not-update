@@ -191,7 +191,8 @@
             [jimw-clj.edit-md :as edit-md]
             [jimw-clj.todos :as todos]
             [alandipert.storage-atom :refer [local-storage]]
-            [myexterns.viz])
+            [myexterns.viz]
+            [myexterns.wordcloud])
   (:import goog.History))
 
 (.setOptions js/marked
@@ -480,11 +481,21 @@
                          (fn [digraph-str]
                            (.appendChild
                             graph
-                            (viz-string digraph-str))))))} "NewViz"]]
+                            (viz-string digraph-str))))))} "NewViz"]
+       [:button.btn.margin-download
+        {:on-click #(let [elem (.getElementById js/document (str "wordcloud-" id))]
+                      (set! (.-display (.-style elem)) "block")
+                      (window.WordCloud
+                       elem
+                       (clj->js
+                        {:list
+                         ;; TODOS: 换成文章分词,词语频率的数组
+                         [["foo" 50] ["baraa" 60] ["uuu" 122] ["yyy" 22] ["ada" 30]]
+                         })))} "WordCloud"]]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
-      [:hr]
-      #_[:hr {:align "center" :width "100%" :color "#987cb9" :size "1"}]]]))
+      [:canvas.wcanvas {:id (str "wordcloud-" id)}]
+      [:hr]]]))
 
 (defn home-page []
   [:div.container.app-margin
