@@ -227,7 +227,7 @@
        (tree-fn-new (idd :id) par res output-fn sum ids)))
    (par id)))
 
-;; (println (tree-todo-generate-new {:db conn :blog 4933}))
+;; (println (tree-todo-generate-new {:db conn :blog 4941}))
 (defn tree-todo-generate-new
   [{:keys [db blog]}]
   (let [_ (jc1 db
@@ -246,7 +246,7 @@
                 "\"" " -> "
                 "\"" (replace-tree-enter (:content
                                           (if (= (:done idd) true) {:content "done"} idd))) "\"\n")))
-        blog-nav-sum (get-nav-count {:db conn :blog 4933})]
+        blog-nav-sum (get-nav-count {:db conn :blog blog})]
     (str "digraph G {\n"
          (->> (tree-fn-new
                (:id (first-nav {:db db :blog blog}))
