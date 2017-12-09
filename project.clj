@@ -78,7 +78,7 @@
   [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :figwheel
   {:http-server-root "public"
-   :nrepl-port 7002
+   :nrepl-port 7003
    :server-port 3889
    :css-dirs ["resources/public/css"]
    :nrepl-middleware
