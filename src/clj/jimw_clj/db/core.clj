@@ -13,7 +13,10 @@
     [hikari-cp.core :as pool]
     [clojure.java.shell :as shell]
     [clojure.string :as str]
-    [clojure.pprint :as pp])
+    [clojure.pprint :as pp]
+    [clj-jri.R :as R]
+    [cheshire.core :as cjson]
+    [clojure.core.async :as async])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -23,6 +26,21 @@
             Date
             Timestamp
             PreparedStatement]))
+
+;; Load R lib & function
+(def r-lib
+  ["library(tm)"
+   "library(wordcloud)"
+   "library(memoise)"
+   "library(RJSONIO)"])
+
+;; load r lib
+(if (R/eval r-lib) (info "load R lib ok...") (throw (Exception. "load R lib failure !")))
+
+(def get-term-matrix-path (R/eval "paste(getwd(),'/src/R/getTermMatrix.R', sep='')"))
+
+;; load getTermMatrix function
+(R/eval (str "source('" get-term-matrix-path "')"))
 
 (defstate conn
   :start (try
@@ -298,21 +316,40 @@
 
 ;; (update-blog {:db conn :id 5000 :name nil :content "dasdsdas"})
 (defn update-blog [{:keys [db id name content]}]
-  (jc1 db
-       (->  (h/update :blogs)
-            (h/sset (->> {:name    (when (seq name) name)
-                          :content (when (seq content) content)
-                          :updated_at (honeysql.core/call :now)}
-                         (remove (fn [x]  (nil? (last x))))
-                         (into {})))
-            (h/where [:= :id id]))))
+  (let [res (jc1 db (->  (h/update :blogs)
+                         (h/sset (->> {:name    (when (seq name) name)
+                                       :content (when (seq content) content)
+                                       :updated_at (honeysql.core/call :now)}
+                                      (remove (fn [x]  (nil? (last x))))
+                                      (into {})))
+                         (h/where [:= :id id])))
+        update-wctags (fn []
+                        (let [res-json (R/eval
+                                        (str "toJSON(getTermMatrix(\""
+                                             (->>
+                                              (clojure.string/split (:content res) #"\W")
+                                              (remove #(= % ""))
+                                              (clojure.string/join " ")) "\"))"))]
+                          (info (str "JSON:" res-json "========"))
+                          (jc1 conn
+                               (->  (h/update :blogs)
+                                    (h/sset {:wctags (sql/call
+                                                      :cast
+                                                      (cjson/generate-string
+                                                       (cjson/parse-string
+                                                        res-json)) :jsonb)})
+                                    (h/where [:= :id (:id res)])))))]
+    (async/go
+      (async/<! (async/timeout (* 2 1000)))
+      (update-wctags))    
+    res))
 
 ;; (create-blog {:db conn :name "测试" :content "aaaaabbbccc"})
 (defn create-blog [{:keys [db name content]}]
-  (jc1 db
-       (->  (h/insert-into :blogs)
-            (h/values [{:name name
-                        :content content}]))))
+  (let [res (jc1 db (->  (h/insert-into :blogs)
+                         (h/values [{:name name
+                                     :content content}])))]
+    res))
 
 ;; (search-todos {:db conn :q "a" :blog 4857})
 (defn search-todos [{:keys [db blog q]}]
