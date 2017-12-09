@@ -445,6 +445,18 @@
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
 
+(defn get-blog-wctags
+  [id op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/get (api-root "/get-blog-wctags")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {:id id}}))]
+        (if (= status 200)
+          (op-fn (:wctags (:data body)))
+          (js/alert "Unauthorized !")))))
+
 (defn md-render [id name content]
   (let [editing (r/atom false)]
     [:div.container

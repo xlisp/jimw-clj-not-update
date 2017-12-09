@@ -314,6 +314,12 @@
                                         [:like :content (str "%" % "%")])
                                       q-list))))))))
 
+(defn get-blog-wctags [{:keys [db id]}]
+  (jconn1 db
+          (-> (h/select :id :wctags)
+              (h/from :blogs)
+              (h/where [:= :id id]))))
+
 ;; (update-blog {:db conn :id 5000 :name nil :content "dasdsdas"})
 (defn update-blog [{:keys [db id name content]}]
   (let [res (jc1 db (->  (h/update :blogs)

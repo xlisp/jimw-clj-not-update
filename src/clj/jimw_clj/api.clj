@@ -149,6 +149,12 @@
           (String. (Base64/encodeBase64 st)))]
     (str "data:image/png;base64," (string-to-base64  (IOUtils/toByteArray (io/input-stream file-name))))))
 
+(defn get-blog-wctags
+  [{{:keys [id]} :params}]
+  (let [res (db/get-blog-wctags {:db db/conn :id id})]
+    (if res (ok {:data res})
+        (not-found))))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -162,4 +168,5 @@
   (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate))
   (POST  "/tree-todo-generate-new" [] (check-api-token tree-todo-generate-new))
   (POST "/record-event" [] (check-api-token record-event))
-  (POST "/update-todo-sort" [] (check-api-token update-todo-sort)))
+  (POST "/update-todo-sort" [] (check-api-token update-todo-sort))
+  (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags)))
