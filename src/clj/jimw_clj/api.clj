@@ -151,7 +151,7 @@
 
 (defn get-blog-wctags
   [{{:keys [id]} :params}]
-  (let [res (db/get-blog-wctags {:db db/conn :id id})]
+  (let [res (db/get-blog-wctags {:db db/conn :id (Integer/parseInt id)})]
     (if res (ok {:data res})
         (not-found))))
 

@@ -454,7 +454,9 @@
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {:id id}}))]
         (if (= status 200)
-          (op-fn (:wctags (:data body)))
+          (op-fn
+           (vec (map (fn [item] (vector (name (first item)) (* (last item) 20)))
+                     (:wctags (:data body)))))
           (js/alert "Unauthorized !")))))
 
 (defn md-render [id name content]
@@ -497,13 +499,13 @@
        [:button.btn.margin-download
         {:on-click #(let [elem (.getElementById js/document (str "wordcloud-" id))]
                       (set! (.-display (.-style elem)) "block")
-                      (window.WordCloud
-                       elem
-                       (clj->js
-                        {:list
-                         ;; TODOS: 换成文章分词,词语频率的数组
-                         [["foo" 50] ["baraa" 60] ["uuu" 122] ["yyy" 22] ["ada" 30]]
-                         })))} "WordCloud"]]
+                      (get-blog-wctags
+                       id
+                       (fn [wctags]
+                         (window.WordCloud
+                          elem
+                          (clj->js
+                           {:list wctags})))))} "WordCloud"]]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:canvas.wcanvas {:id (str "wordcloud-" id)}]
