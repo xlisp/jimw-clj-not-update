@@ -44,7 +44,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 多条件reduce搜索 √
 
 ## 未完成Todos
-* 当前文章的标签云,最近一段时间的标签云(用pg_jieba分词)①
+* 已经完成英文的标签云√
+* 当前文章的标签云,最近一段时间的标签云(用pg_jieba分词)①  
 * 连接微信爬虫,每天的消息,自动提取兴趣点, 用旧的华为手机作为微信爬虫(R,Clojure,Haskell),提取兴趣点来通知消息给jimw-clj
 * 连接'网页语音阅读'APP,把语音成jimw树,文章可以选择创作
 * 复习前端css,不仅实用,而且要漂亮,有创作的兴趣
