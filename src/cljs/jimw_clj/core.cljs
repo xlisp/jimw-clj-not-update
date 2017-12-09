@@ -454,9 +454,8 @@
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {:id id}}))]
         (if (= status 200)
-          (op-fn
-           (vec (map (fn [item] (vector (name (first item)) (* (last item) 20)))
-                     (:wctags (:data body)))))
+          (op-fn (vec (map (fn [item] (vector (name (first item)) (* (last item) 10)))
+                           (:data body))))
           (js/alert "Unauthorized !")))))
 
 (defn md-render [id name content]

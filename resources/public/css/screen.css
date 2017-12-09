@@ -1087,6 +1087,9 @@ ul.nav > li.brand > a {
     font-size: 1rem;
 }
 
+/* 最多只能放19个词*/
 .wcanvas {
     display: none;
+    width: 100%;
 }
+
