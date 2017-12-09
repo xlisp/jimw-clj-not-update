@@ -2,10 +2,12 @@ CREATE TABLE blogs (
   id BIGSERIAL PRIMARY KEY,
   name TEXT NOT NULL,
   content TEXT NOT NULL,
+  wctags JSONB NOT NULL DEFAULT '{}';
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ALTER TABLE blogs ADD COLUMN wctags JSONB NOT NULL DEFAULT '{}';
 
 CREATE SEQUENCE blogs_new_id_seq
     START WITH 4859
