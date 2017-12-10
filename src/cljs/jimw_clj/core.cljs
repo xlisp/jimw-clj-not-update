@@ -322,7 +322,7 @@
    [:a.nav-link
     {:href uri
      :on-click #(cond (= page :create-blog) (create-default-blog)
-                      (= page :logout-blog) (reset! api-token "")
+                      (= page :logout) (reset! api-token "")
                       :else
                       (reset! collapsed? true))} title]])
 
