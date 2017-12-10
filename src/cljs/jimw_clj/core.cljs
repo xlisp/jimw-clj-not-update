@@ -359,52 +359,52 @@
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]
-         [nav-link "#/" "NewBlog" :create-blog collapsed?]
-         [nav-link "#/about" "Logout" :logout-blog collapsed?]]]])))
+         #_[nav-link "#/" "NewBlog" :create-blog collapsed?]
+         [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
 
 (defn about-page []
-  (if-not (empty? @api-token)
-    [:div.container
-     [:div.row
-      [:div.col-md-12
-       [:h1 "About Steve Chan"]
-       [:p "My name is Steve Chan and I'm a Clojure/R/ELisp/Ruby hacker from BeiJing, China."]
-       [:p "I love Wing Chun. In the Source I trust !"]
-       [:img {:src (str js/context "/img/warning_clojure.png")}]]]]
-    (let [username (r/atom "")
-          password (r/atom "")]
-      [:div {:class "main-login main-center"}
-       [:form {:class "form-horizontal", :method "post", :action "#"}
-        [:div {:class "form-group"}
-         [:label {:for "name", :class "cols-sm-2 control-label"} "Your Name"]
-         [:div {:class "cols-sm-10"}
-          [:div {:class "input-group"}
-           [:span {:class "input-group-addon"}
-            [:i {:class "fa fa-user fa", :aria-hidden "true"}]]
-           [:input {:type "text", :class "form-control", :name "name", :id "name", :placeholder "Enter your Name"
-                    :on-change #(reset! username (-> % .-target .-value))}]]]]
-        [:div {:class "form-group"}
-         [:label {:for "confirm", :class "cols-sm-2 control-label"} "Confirm Password"]
-         [:div {:class "cols-sm-10"}
-          [:div {:class "input-group"}
-           [:span {:class "input-group-addon"}
-            [:i {:class "fa fa-lock fa-lg", :aria-hidden "true"}]]
-           [:input {:type "password", :class "form-control", :name "confirm", :id "confirm", :placeholder "Confirm your Password"
-                    :on-change #(reset! password (-> % .-target .-value))}]]]]
-        [:div {:class "form-group"}
-         [:button
-          {:type "button", :class "btn btn-primary btn-lg btn-block login-button"
-           :on-click
-           (fn []
-             (login
-              @username @password
-              (fn [data]
-                (if (:token data)
-                  (do
-                    (js/alert "login success!")
-                    (reset! api-token (:token data))
-                    (set! (.. js/window -location -href) (api-root "")))
-                  (js/alert "username or password is error!")))))} "Login"]]]])))
+  [:div.container
+   [:div.row
+    [:div.col-md-12
+     [:h1 "About Steve Chan"]
+     [:p "My name is Steve Chan and I'm a Clojure/R/ELisp/Ruby hacker from BeiJing, China."]
+     [:p "I love Wing Chun. In the Source I trust !"]]]])
+
+(defn logout-page []
+  (let [username (r/atom "")
+        password (r/atom "")]
+    [:div {:class "main-login main-center"}
+     [:form {:class "form-horizontal", :method "post", :action "#"}
+      [:div {:class "form-group"}
+       [:label {:for "name", :class "cols-sm-2 control-label"} "Your Name"]
+       [:div {:class "cols-sm-10"}
+        [:div {:class "input-group"}
+         [:span {:class "input-group-addon"}
+          [:i {:class "fa fa-user fa", :aria-hidden "true"}]]
+         [:input {:type "text", :class "form-control", :name "name", :id "name", :placeholder "Enter your Name"
+                  :on-change #(reset! username (-> % .-target .-value))}]]]]
+      [:div {:class "form-group"}
+       [:label {:for "confirm", :class "cols-sm-2 control-label"} "Confirm Password"]
+       [:div {:class "cols-sm-10"}
+        [:div {:class "input-group"}
+         [:span {:class "input-group-addon"}
+          [:i {:class "fa fa-lock fa-lg", :aria-hidden "true"}]]
+         [:input {:type "password", :class "form-control", :name "confirm", :id "confirm", :placeholder "Confirm your Password"
+                  :on-change #(reset! password (-> % .-target .-value))}]]]]
+      [:div {:class "form-group"}
+       [:button
+        {:type "button", :class "btn btn-primary btn-lg btn-block login-button"
+         :on-click
+         (fn []
+           (login
+            @username @password
+            (fn [data]
+              (if (:token data)
+                (do
+                  (js/alert "login success!")
+                  (reset! api-token (:token data))
+                  (set! (.. js/window -location -href) (api-root "")))
+                (js/alert "username or password is error!")))))} "Login"]]]]))
 
 (defn blog-name-save [id name]
   (do
@@ -525,9 +525,11 @@
        (:name (last blog))
        (:content (last blog)))])])
 
+;; 新增路由区域, 配合navbar使用
 (def pages
   {:home #'home-page
-   :about #'about-page})
+   :about #'about-page
+   :logout #'logout-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -541,6 +543,9 @@
 
 (secretary/defroute "/about" []
   (session/put! :page :about))
+
+(secretary/defroute "/logout" []
+  (session/put! :page :logout))
 
 ;; -------------------------
 ;; History
