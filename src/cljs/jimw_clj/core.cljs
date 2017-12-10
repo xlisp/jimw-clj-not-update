@@ -366,12 +366,13 @@
 (defn about-page []
   [:div.container.about-margin
    [:div.row
-    [:div.col-sm-6
+    [:div.col-sm-4
      [:img.steve-chan-img {:src "/img/steve-chan.jpeg"}]]
     [:div.col-sm-6
      [:h1 "About Steve Chan"]
      [:p "My name is Steve Chan and I'm a Clojure/R/ELisp/Ruby hacker from BeiJing, China."]
      [:p "I love Wing Chun. In the Source I trust !"]
+     [:h4 "features"]
      [:li "用机器学习来机器学习"]
      [:li "用GraphViz树来做决策树训练工具"]
      [:li "用标签云来做贝叶斯训练工具"]
