@@ -26,7 +26,7 @@
     (fn [{:keys [id name save-fn]}]
       [:li.liststyle {:class (str (if @editing "editing"))}
        [:div.view
-        [:h3
+        [:h3.blog-name
          [:label.blog-name {:on-double-click #(reset! editing true)} name]]]
        (when @editing
          [blog-name-edit {:class "edit"

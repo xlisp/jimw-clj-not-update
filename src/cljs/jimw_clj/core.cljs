@@ -367,6 +367,9 @@
     [:div.container
      [:div.row
       [:div.col-md-12
+       [:h1 "About Steve Chan"]
+       [:p "My name is Steve Chan and I'm a Clojure/R/ELisp/Ruby hacker from BeiJing, China."]
+       [:p "I love Wing Chun. In the Source I trust !"]
        [:img {:src (str js/context "/img/warning_clojure.png")}]]]]
     (let [username (r/atom "")
           password (r/atom "")]
