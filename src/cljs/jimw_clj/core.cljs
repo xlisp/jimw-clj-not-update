@@ -454,8 +454,11 @@
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {:id id}}))]
         (if (= status 200)
-          (op-fn (vec (map (fn [item] (vector (name (first item)) (* (last item) 10)))
-                           (:data body))))
+          ;; TODOS: 调节放大图像的倍数
+          (op-fn (vec (map (fn [item] (vector (name (first item)) (* (last item) 5))) 
+                           ;; TODOS: 调节总的个数
+                           (take 30 (:data body))
+                           )))
           (js/alert "Unauthorized !")))))
 
 (defn md-render [id name content]
