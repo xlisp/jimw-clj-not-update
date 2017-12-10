@@ -1094,3 +1094,17 @@ ul.nav > li.brand > a {
     width: 100%;
 }
 
+.please-login {
+    text-align: center;
+    line-height: 200px;
+}
+
+.steve-chan-img {
+    width: "230px";
+    height: "230px";
+    border-radius: 3px;
+}
+
+.about-margin {
+    margin-top: 50px;
+}

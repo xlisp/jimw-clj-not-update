@@ -359,16 +359,27 @@
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/about" "About" :about collapsed?]
+         ;; TODOS: 增加一个Blog创建的单独页面
          #_[nav-link "#/" "NewBlog" :create-blog collapsed?]
          [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
 
 (defn about-page []
-  [:div.container
+  [:div.container.about-margin
    [:div.row
-    [:div.col-md-12
+    [:div.col-sm-6
+     [:img.steve-chan-img {:src "/img/steve-chan.jpeg"}]]
+    [:div.col-sm-6
      [:h1 "About Steve Chan"]
      [:p "My name is Steve Chan and I'm a Clojure/R/ELisp/Ruby hacker from BeiJing, China."]
-     [:p "I love Wing Chun. In the Source I trust !"]]]])
+     [:p "I love Wing Chun. In the Source I trust !"]
+     [:li "用机器学习来机器学习"]
+     [:li "用GraphViz树来做决策树训练工具"]
+     [:li "用标签云来做贝叶斯训练工具"]
+     [:li "整合手机APP及微信浏览器数据流"]
+     [:li "整合Chrome插件数据流"]
+     [:li "整合Emacs数据流"]
+     [:li "整合输入法数据流"]
+     [:li "整合咏春训练数据流"]]]])
 
 (defn logout-page []
   (let [username (r/atom "")
@@ -518,12 +529,14 @@
 
 (defn home-page []
   [:div.container.app-margin
-   (for [blog @blog-list]
-     [:div
-      (md-render
-       (:id (last blog))
-       (:name (last blog))
-       (:content (last blog)))])])
+   (if (seq @api-token)
+     (for [blog @blog-list]
+       [:div
+        (md-render
+         (:id (last blog))
+         (:name (last blog))
+         (:content (last blog)))])
+     [:h3.please-login "please login"])])
 
 ;; 新增路由区域, 配合navbar使用
 (def pages
