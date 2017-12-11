@@ -274,7 +274,7 @@
           (js/alert "Unauthorized !")))))
 
 (defn create-default-blog
-  []
+  [op-fn]
   (go (let [response
             (<!
              (http/post (api-root "/create-blog")
@@ -284,7 +284,8 @@
         (let [data (:body response)]
           (swap! blog-list assoc (:id data)
                  {:id (:id data) :content (:content data) :name (:name data)
-                  :todos (sorted-map-by >)})))))
+                  :todos (sorted-map-by >)})
+          (op-fn)))))
 
 (def swap-blog-list
   (fn [data]
@@ -321,7 +322,9 @@
    {:class (when (= page (session/get :page)) "active")}
    [:a.nav-link
     {:href uri
-     :on-click #(cond (= page :create-blog) (create-default-blog)
+     :on-click #(cond (= page :create-blog)
+                      (create-default-blog
+                       (fn [] (set! (.. js/window -location -href) (api-root ""))))
                       (= page :logout) (reset! api-token "")
                       :else
                       (reset! collapsed? true))} title]])
@@ -358,9 +361,9 @@
         [:a.navbar-brand {:href "#/"} "jimw-clj"]
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
+         [nav-link "#/show" "Show" :show collapsed?]
          [nav-link "#/about" "About" :about collapsed?]
-         ;; TODOS: 增加一个Blog创建的单独页面
-         #_[nav-link "#/" "NewBlog" :create-blog collapsed?]
+         [nav-link "#/" "New" :create-blog collapsed?]
          [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
 
 (defn about-page []
@@ -539,11 +542,18 @@
          (:content (last blog)))])
      [:h3.please-login "please login"])])
 
+(defn show-page []
+  [:div.container.app-margin
+   [:h1 "show blog: 111"]
+   ]
+  )
+
 ;; 新增路由区域, 配合navbar使用
 (def pages
   {:home #'home-page
    :about #'about-page
-   :logout #'logout-page})
+   :logout #'logout-page
+   :show #'show-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -560,6 +570,9 @@
 
 (secretary/defroute "/logout" []
   (session/put! :page :logout))
+
+(secretary/defroute "/show" []
+  (session/put! :page :show))
 
 ;; -------------------------
 ;; History
