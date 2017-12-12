@@ -544,9 +544,60 @@
 
 (defn show-page []
   [:div.container.app-margin
-   [:h1 "show blog: 111"]
+   [:h1 
+    {:on-click #(let [elem (.getElementById js/document "app")]
+                  (get-blog-wctags
+        28258
+        (fn [wctags]
+          (window.WordCloud
+           elem
+           (clj->js
+            {:list wctags}))))
+                  )
+     }
+    "show 28258 blog"
+    ]
    ]
   )
+
+
+(defn word-cloud-did-mount [this]
+  (get-blog-wctags
+   28258
+   (fn [wctags]
+     #_(window.WordCloud
+        elem
+        (clj->js
+         {:list wctags}))
+     (window.WordCloud
+      (r/dom-node this)
+      (clj->js { :list wctags })
+      #(do
+         (js/alert %)
+         )
+      )
+     ))  
+  )
+  
+
+(defn word-cloud-create-class []
+  (r/create-class {:reagent-render
+                   (fn []
+                     [:div
+                      {:style
+                       {
+                        ;;:min-width "310px"
+                        ;;:max-width "800px"
+                        ;;:height    "400px"
+                        
+                        :height    "1000px"
+                        :margin    "0 auto"}}])
+                   :component-did-mount
+                   (fn [this]
+                     (word-cloud-did-mount this))}))
+
+#_(r/render-component [word-cloud-create-class]
+                    (. js/document (getElementById "wordcloud")))
 
 ;; 新增路由区域, 配合navbar使用
 (def pages
