@@ -322,12 +322,16 @@
    {:class (when (= page (session/get :page)) "active")}
    [:a.nav-link
     {:href uri
-     :on-click #(cond (= page :create-blog)
-                      (create-default-blog
-                       (fn [] (set! (.. js/window -location -href) (api-root ""))))
-                      (= page :logout) (reset! api-token "")
-                      :else
-                      (reset! collapsed? true))} title]])
+     :on-click #(do
+                  (if (= page :show)
+                    (set! (.-display (.-style (. js/document (getElementById "wordcloud")))) "block")
+                    (set! (.-display (.-style (. js/document (getElementById "wordcloud")))) "none"))
+                  (cond (= page :create-blog)
+                        (create-default-blog
+                         (fn [] (set! (.. js/window -location -href) (api-root ""))))
+                        (= page :logout) (reset! api-token "")
+                        :else
+                        (reset! collapsed? true)))} title]])
 
 (defn searchbar []
   (let [search-str (r/atom "")]
