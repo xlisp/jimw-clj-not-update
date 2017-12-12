@@ -464,7 +464,7 @@
           (js/alert "Unauthorized !")))))
 
 (defn get-blog-wctags
-  [id op-fn]
+  [id op-fn scaling show-count]
   (go (let [{:keys [status body]}
             (<!
              (http/get (api-root "/get-blog-wctags")
@@ -472,11 +472,8 @@
                         :headers {"jimw-clj-token" @api-token}
                         :query-params {:id id}}))]
         (if (= status 200)
-          ;; TODOS: 调节放大图像的倍数
-          (op-fn (vec (map (fn [item] (vector (name (first item)) (* (last item) 5))) 
-                           ;; TODOS: 调节总的个数
-                           (take 30 (:data body))
-                           )))
+          (op-fn (vec (map (fn [item] (vector (name (first item)) (* (last item) scaling)))
+                           (take show-count (:data body)))))
           (js/alert "Unauthorized !")))))
 
 (defn md-render [id name content]
@@ -525,7 +522,7 @@
                          (window.WordCloud
                           elem
                           (clj->js
-                           {:list wctags})))))} "WordCloud"]]
+                           {:list wctags}))) 5 30))} "WordCloud"]]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:canvas.wcanvas {:id (str "wordcloud-" id)}]
@@ -542,62 +539,44 @@
          (:content (last blog)))])
      [:h3.please-login "please login"])])
 
-(defn show-page []
-  [:div.container.app-margin
-   [:h1 
-    {:on-click #(let [elem (.getElementById js/document "app")]
-                  (get-blog-wctags
-        28258
-        (fn [wctags]
-          (window.WordCloud
-           elem
-           (clj->js
-            {:list wctags}))))
-                  )
-     }
-    "show 28258 blog"
-    ]
-   ]
-  )
 
 
 (defn word-cloud-did-mount [this]
   (get-blog-wctags
-   28258
+   25125
    (fn [wctags]
-     #_(window.WordCloud
-        elem
-        (clj->js
-         {:list wctags}))
      (window.WordCloud
       (r/dom-node this)
       (clj->js { :list wctags })
       #(do
-         (js/alert %)
-         )
-      )
-     ))  
-  )
-  
+         (js/alert %)))) 50 30))
 
 (defn word-cloud-create-class []
   (r/create-class {:reagent-render
                    (fn []
                      [:div
                       {:style
-                       {
-                        ;;:min-width "310px"
-                        ;;:max-width "800px"
-                        ;;:height    "400px"
-                        
-                        :height    "1000px"
+                       {:height    "2500px"
                         :margin    "0 auto"}}])
                    :component-did-mount
                    (fn [this]
                      (word-cloud-did-mount this))}))
 
-#_(r/render-component [word-cloud-create-class]
-                    (. js/document (getElementById "wordcloud")))
+(defn update-wordcloud-component []
+  (set! (.-innerHTML (. js/document (getElementById "wordcloud"))) "")
+  (r/render-component [word-cloud-create-class]
+                      (. js/document (getElementById "wordcloud"))))
+
+(defn show-page []
+  [:div.container.app-margin
+   [:h1 
+    {:on-click #(do
+                  (update-wordcloud-component))
+     }
+    "show 28258 blog"
+    ]
+   ]
+  )
 
 ;; 新增路由区域, 配合navbar使用
 (def pages
