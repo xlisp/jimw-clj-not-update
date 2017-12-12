@@ -433,10 +433,10 @@
          (->
           (shell/sh "find"
                     (if project
-                      (str "lib/jimw-clj/" (first project))
+                      (str "lib/jimw-code/" (first project))
                       "lib") "-name" "*.clj*") :out
           (clojure.string/split #"\n"))
-         (remove #(= % "lib/jimw-clj/clojure/test/clojure/test_clojure/reader.cljc")))
+         (remove #(= % "lib/jimw-code/clojure/test/clojure/test_clojure/reader.cljc")))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
