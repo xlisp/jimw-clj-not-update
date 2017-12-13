@@ -571,13 +571,33 @@
   (r/render-component [word-cloud-create-class]
                       (. js/document (getElementById "wordcloud"))))
 
+(defonce scaling (r/atom 30))
+(defonce show-count (r/atom 50))
+
 (defn show-page []
   [:div.container.app-margin
+   [:div.row
+    [:div.col-sm-2
+     [:h6 "文章"]
+     [:input {:type "number"}]]
+    [:div.col-sm-5
+     [:h6 "放大倍数 " @scaling]
+     [:input {:type "range" :min 5 :max 50
+              :style {:width "100%"}
+              :on-change (fn [e] (reset! scaling (.. e -target -value)))}]
+     [:h6 "最大显示词数量 " @show-count]
+     [:input {:type "range" :min 10 :max 100
+              :style {:width "100%"}
+              ;;:show-count @show-count
+              :on-change (fn [e] (reset! show-count (.. e -target -value)))}]]
+    [:div.col-sm-2
+     [:button.btn.btn-primary "Generate"]]]
    [:h1 
     {:on-click #(do
+                  (js/alert (str "====" @scaling "====" @show-count))
                   (update-wordcloud-component))
      }
-    "show 28258 blog"
+    "."
     ]
    ]
   )
