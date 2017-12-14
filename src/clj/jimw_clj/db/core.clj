@@ -563,3 +563,14 @@
   [filename start end]
   (:out
    (shell/sh "sed" "-n" (str start "," end "p") filename)))
+
+(defn import-sql-dot-table
+  [filename]
+  (let [dots (get-sql-dot-index-number filename)]
+    (for [dot dots]
+      (jc1 conn
+           (-> (h/insert-into :sqldots)
+               (h/values [{:name (first dot)
+                           :content  (get-table-content-index
+                                      filename (nth dot 1) (last dot))
+                           :dot_type "TABLE"}]))))))
