@@ -540,3 +540,20 @@
            (->  (h/update :todos)
                 (h/sset {:sort_id (last item)})
                 (h/where [:= :id (first item)]))))))
+
+;; (get-sql-dot-index-number "lib/his_graph.dot")
+;; => (["accounts" "7" "10"] ["billing_modes" "12" "15"] ... ...)
+(defn get-sql-dot-index-number
+  [filename]
+  (->>
+   (map
+    #(-> (re-find #":(\d+):(.*)" %) rest)
+    (->
+     (shell/sh "./bin/grepdot.sh" filename)
+     :out
+     (clojure.string/split #"\n")
+     rest))
+   flatten
+   (partition-by #(= % "  ];"))
+   (remove #(= % (list "  ];")))
+   (map #(vector (last (re-find #"\"(.*)\"" (nth % 1))) (first %) (last %)))))
