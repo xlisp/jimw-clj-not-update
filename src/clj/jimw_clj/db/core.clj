@@ -557,3 +557,9 @@
    (partition-by #(= % "  ];"))
    (remove #(= % (list "  ];")))
    (map #(vector (last (re-find #"\"(.*)\"" (nth % 1))) (first %) (last %)))))
+
+;; (get-table-content-index "lib/his_graph.dot" 7 10)
+(defn get-table-content-index
+  [filename start end]
+  (:out
+   (shell/sh "sed" "-n" (str start "," end "p") filename)))
