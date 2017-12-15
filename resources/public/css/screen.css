@@ -1107,3 +1107,9 @@ ul.nav > li.brand > a {
 .about-margin {
     margin-top: 50px;
 }
+
+.viz-search-logo {
+    left: 0;
+    position: absolute;
+    padding-left: 33px;
+}

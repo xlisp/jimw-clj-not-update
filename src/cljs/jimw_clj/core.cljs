@@ -476,10 +476,10 @@
   [q op-fn]
   (go (let [{:keys [status body]}
             (<!
-             (http/post (api-root "/search-sqldots")
-                        {:with-credentials? false
-                         :headers {"jimw-clj-token" @api-token}
-                         :query-params {:q q}}))]
+             (http/get (api-root "/search-sqldots")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {:q q}}))]
         (if (= status 200)
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
@@ -622,7 +622,7 @@
 (defonce search-viz-str (atom ""))
 
 (defn viz-page []
-  (let [viz-fn #(let [graph (.querySelector js/document "gv-output-sql")
+  (let [viz-fn #(let [graph (.querySelector js/document "#gv-output-sql")
                       svg (.querySelector graph "svg")]
                   (do
                     (if svg (.removeChild graph svg) ())
@@ -633,7 +633,8 @@
                         graph
                         (viz-string digraph-str))))))]
     [:div.container.app-margin
-     [:h2 "Viz search"]
+     [:div.viz-search-logo
+      [:h2 "Viz🔍"]]
      [:div#adv-search.input-group.search-margin
       [:input {:type "text", :class "form-control", :placeholder "Search"
                :on-change #(reset! search-viz-str (-> % .-target .-value))
@@ -643,12 +644,11 @@
       [:div {:class "input-group-btn"}
        [:div {:class "btn-group", :role "group"}
         [:div {:class "dropdown dropdown-lg"}]
-        [:button {:type "button", :class "btn btn-primary"
+        #_[:button {:type "button", :class "btn btn-primary"
                   :on-click #(viz-fn @search-viz-str)}
          [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
      [:br]
-     [:div.gvoutput {:id "gv-output-sql"}]
-     ]))
+     [:div.gvoutput {:id "gv-output-sql"}]]))
 
 ;; 新增路由区域, 配合navbar使用
 (def pages
