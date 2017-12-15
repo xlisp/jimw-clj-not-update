@@ -622,3 +622,12 @@
              (str/replace "\n```" "")
              read-string
              rest rest rest rest))))
+
+(defn get-model-key-val
+  [model]
+  (->>
+   model
+   (keep-indexed #(if (string? %2) [(dec %1) %2]))
+   (map
+    #(vector (nth model (first %))  (last %)))))
+
