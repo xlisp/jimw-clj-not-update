@@ -605,3 +605,20 @@
                                         [:like :name (str "%" % "%")]
                                         [:like :content (str "%" % "%")])
                                       q-list))))))))
+
+(defn get-all-defmodel
+  [db]
+  (->>
+   (jconn db
+          (-> (h/select :id :name :content :created_at :updated_at)
+              (h/from :blogs)
+              (h/order-by [:id :desc])
+              (h/where
+               [:and
+                [:not-like :name "%_test.clj%"]
+                [:like :content "%(defmodel%"]])))
+   (map #(-> % :content
+             (str/replace "```clojure\n" "")
+             (str/replace "\n```" "")
+             read-string
+             rest rest rest rest))))
