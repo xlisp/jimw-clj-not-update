@@ -163,7 +163,11 @@
          (clojure.string/join
           "\n"
           (map :content
-               (db/search-sqldots {:db db/conn :q q})))
+               (db/search-sqldots
+                {:db db/conn :q
+                 (if (seq q)
+                   (clojure.string/replace q #"-" "_")
+                   "")})))
          "\n}")}))
   
 (defroutes api-routes
