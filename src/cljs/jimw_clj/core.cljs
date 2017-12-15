@@ -607,12 +607,31 @@
    ]
   )
 
+(defn viz-page []
+  [:div.container.app-margin
+   [:h2 "Viz search"]
+   [:div#adv-search.input-group.search-margin
+    [:input {:type "text", :class "form-control", :placeholder "Search"
+             ;; :on-change #(reset! search-str (-> % .-target .-value))
+             }]
+    [:div {:class "input-group-btn"}
+     [:div {:class "btn-group", :role "group"}
+      [:div {:class "dropdown dropdown-lg"}]
+      [:button {:type "button", :class "btn btn-primary"
+                ;;:on-click search-fn
+                ;;:on-key-down #(case (.-which %)
+                ;;                13 (search-fn)
+                ;;                nil)
+                }
+       [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]])
+
 ;; 新增路由区域, 配合navbar使用
 (def pages
   {:home #'home-page
    :about #'about-page
    :logout #'logout-page
-   :show #'show-page})
+   :show #'show-page
+   :viz #'viz-page})
 
 (defn page []
   [(pages (session/get :page))])
@@ -632,6 +651,9 @@
 
 (secretary/defroute "/show" []
   (session/put! :page :show))
+
+(secretary/defroute "/viz" []
+  (session/put! :page :viz))
 
 ;; -------------------------
 ;; History
