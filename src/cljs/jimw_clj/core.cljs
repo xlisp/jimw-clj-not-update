@@ -632,9 +632,9 @@
                        (.appendChild
                         graph
                         (viz-string digraph-str))))))]
-    [:div.container.app-margin
-     [:div.viz-search-logo
-      [:h2 "Viz🔍"]]
+    [:div.viz-container
+     #_[:div.viz-search-logo
+        [:h2 "Viz"]]
      [:div#adv-search.input-group.search-margin
       [:input {:type "text", :class "form-control", :placeholder "Search"
                :on-change #(reset! search-viz-str (-> % .-target .-value))
@@ -645,8 +645,8 @@
        [:div {:class "btn-group", :role "group"}
         [:div {:class "dropdown dropdown-lg"}]
         #_[:button {:type "button", :class "btn btn-primary"
-                  :on-click #(viz-fn @search-viz-str)}
-         [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+                    :on-click #(viz-fn @search-viz-str)}
+           [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
      [:br]
      [:div.gvoutput {:id "gv-output-sql"}]]))
 

@@ -1113,3 +1113,6 @@ ul.nav > li.brand > a {
     position: absolute;
     padding-left: 33px;
 }
+.viz-container{
+    width: 100%;
+}
