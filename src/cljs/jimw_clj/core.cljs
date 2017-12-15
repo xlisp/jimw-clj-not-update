@@ -347,15 +347,15 @@
     (fn []
       [:div#adv-search.input-group.search-margin
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
-                :on-change #(reset! search-str (-> % .-target .-value))}]
+                :on-change #(reset! search-str (-> % .-target .-value))
+                :on-key-down #(case (.-which %)
+                                13 (search-fn)
+                                nil)}]
        [:div {:class "input-group-btn"}
         [:div {:class "btn-group", :role "group"}
          [:div {:class "dropdown dropdown-lg"}]
          [:button {:type "button", :class "btn btn-primary"
-                   :on-click search-fn
-                   :on-key-down #(case (.-which %)
-                                   13 (search-fn)
-                                   nil)}
+                   :on-click search-fn}
           [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]])))
 
 (defn navbar []
