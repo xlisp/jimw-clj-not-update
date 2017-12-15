@@ -472,6 +472,18 @@
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
 
+(defn search-sqldots
+  [q op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/post (api-root "/search-sqldots")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" @api-token}
+                         :query-params {:q q}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
 (defn get-blog-wctags
   [id op-fn scaling show-count]
   (go (let [{:keys [status body]}
@@ -607,23 +619,36 @@
    ]
   )
 
+(defonce search-viz-str (atom ""))
+
 (defn viz-page []
-  [:div.container.app-margin
-   [:h2 "Viz search"]
-   [:div#adv-search.input-group.search-margin
-    [:input {:type "text", :class "form-control", :placeholder "Search"
-             ;; :on-change #(reset! search-str (-> % .-target .-value))
-             }]
-    [:div {:class "input-group-btn"}
-     [:div {:class "btn-group", :role "group"}
-      [:div {:class "dropdown dropdown-lg"}]
-      [:button {:type "button", :class "btn btn-primary"
-                ;;:on-click search-fn
-                ;;:on-key-down #(case (.-which %)
-                ;;                13 (search-fn)
-                ;;                nil)
-                }
-       [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]])
+  (let [viz-fn #(let [graph (.querySelector js/document "gv-output-sql")
+                      svg (.querySelector graph "svg")]
+                  (do
+                    (if svg (.removeChild graph svg) ())
+                    (search-sqldots
+                     %
+                     (fn [digraph-str]
+                       (.appendChild
+                        graph
+                        (viz-string digraph-str))))))]
+    [:div.container.app-margin
+     [:h2 "Viz search"]
+     [:div#adv-search.input-group.search-margin
+      [:input {:type "text", :class "form-control", :placeholder "Search"
+               :on-change #(reset! search-viz-str (-> % .-target .-value))
+               :on-key-down #(case (.-which %)
+                               13 (viz-fn @search-viz-str)
+                               nil)}]
+      [:div {:class "input-group-btn"}
+       [:div {:class "btn-group", :role "group"}
+        [:div {:class "dropdown dropdown-lg"}]
+        [:button {:type "button", :class "btn btn-primary"
+                  :on-click #(viz-fn @search-viz-str)}
+         [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+     [:br]
+     [:div.gvoutput {:id "gv-output-sql"}]
+     ]))
 
 ;; 新增路由区域, 配合navbar使用
 (def pages
