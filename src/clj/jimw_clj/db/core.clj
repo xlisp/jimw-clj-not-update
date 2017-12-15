@@ -617,11 +617,12 @@
                [:and
                 [:not-like :name "%_test.clj%"]
                 [:like :content "%(defmodel%"]])))
-   (map #(-> % :content
-             (str/replace "```clojure\n" "")
-             (str/replace "\n```" "")
-             read-string
-             rest rest rest rest))))
+   (map #(let [lis (-> % :content
+                       (str/replace "```clojure\n" "")
+                       (str/replace "\n```" "")
+                       read-string
+                       rest)]
+           {:defmodel (str (first lis)) :defmodel-desc (nth lis 1) :model-key-val (-> lis rest rest rest)}))))
 
 (defn get-model-key-val
   [model]
