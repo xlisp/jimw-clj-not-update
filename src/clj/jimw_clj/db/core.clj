@@ -588,3 +588,20 @@
                (h/values [{:name filename
                            :content dot
                            :dot_type "RELATION"}]))))))
+
+#_(distinct
+   (map :name
+        (search-sqldots {:db conn :q "aaa patients"})))
+;;=> ("aaa" "lib/his_graph.dot" "ooopatients" "patients")
+(defn search-sqldots [{:keys [db q]}]
+  (jconn db
+         (-> (h/select :id :name :content :created_at :updated_at)
+             (h/from :sqldots)
+             (h/where (when (seq q)
+                        (let [q-list (clojure.string/split q #" ")]
+                          (apply conj [:or]
+                                 (map #(vector
+                                        :or
+                                        [:like :name (str "%" % "%")]
+                                        [:like :content (str "%" % "%")])
+                                      q-list))))))))

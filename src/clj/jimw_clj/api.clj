@@ -155,6 +155,17 @@
     (if res (ok {:data (sort-by (fn [item] (* (last item) -1)) (:wctags res))})
         (not-found))))
 
+(defn search-sqldots
+  [{{:keys [q]} :params}]
+  (ok
+   {:data
+    (str "digraph g { graph [ rankdir = \"LR\" ]; \n"
+         (clojure.string/join
+          "\n"
+          (map :content
+               (db/search-sqldots {:db db/conn :q q})))
+         "\n}")}))
+  
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -169,4 +180,5 @@
   (POST  "/tree-todo-generate-new" [] (check-api-token tree-todo-generate-new))
   (POST "/record-event" [] (check-api-token record-event))
   (POST "/update-todo-sort" [] (check-api-token update-todo-sort))
-  (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags)))
+  (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags))
+  (GET "/search-sqldots" [] (check-api-token search-sqldots)))
