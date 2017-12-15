@@ -334,7 +334,16 @@
                         (reset! collapsed? true)))} title]])
 
 (defn searchbar []
-  (let [search-str (r/atom "")]
+  (let [search-str (r/atom "")
+        search-fn (fn []
+                    (do
+                      (reset! blog-list (sorted-map-by >))
+                      (reset! page-offset 0)
+                      (reset! search-key @search-str)
+                      (get-blog-list
+                       @search-str @page-offset
+                       (fn [data]
+                         (swap-blog-list data)))))]
     (fn []
       [:div#adv-search.input-group.search-margin
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
@@ -343,15 +352,10 @@
         [:div {:class "btn-group", :role "group"}
          [:div {:class "dropdown dropdown-lg"}]
          [:button {:type "button", :class "btn btn-primary"
-                   :on-click (fn []
-                               (do
-                                 (reset! blog-list (sorted-map-by >))
-                                 (reset! page-offset 0)
-                                 (reset! search-key @search-str)
-                                 (get-blog-list
-                                  @search-str @page-offset
-                                  (fn [data]
-                                    (swap-blog-list data)))))}
+                   :on-click search-fn
+                   :on-key-down #(case (.-which %)
+                                   13 (search-fn)
+                                   nil)}
           [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]])))
 
 (defn navbar []
@@ -366,6 +370,7 @@
         [:ul.nav.navbar-nav
          [nav-link "#/" "Home" :home collapsed?]
          [nav-link "#/show" "Show" :show collapsed?]
+         [nav-link "#/viz" "Viz" :viz collapsed?]
          [nav-link "#/about" "About" :about collapsed?]
          [nav-link "#/" "New" :create-blog collapsed?]
          [nav-link "#/logout" "Logout" :logout collapsed?]]]])))
