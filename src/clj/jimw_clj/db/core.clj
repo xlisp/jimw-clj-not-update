@@ -632,3 +632,77 @@
    (map
     #(vector (nth model (first %))  (last %)))))
 
+(defn to-clj-style
+  [st]
+  (str/replace st "_" "-"))
+
+(defn to-sql-style
+  [st]
+  (str/replace st "-" "_"))
+
+(defn replace-jimw
+  [a b st]
+  (prn (str "***************" a "----" b  "+++++" st))
+  (str/replace
+   (if (nil? st) "" st)
+   (if (nil? a) "" a)
+   (if (nil? b) "" b))
+  )
+
+(defmacro list->>
+  [x forms]
+  (loop [x x, forms forms]
+    (if forms
+      (let [form (first forms)
+            _ (prn form)
+            threaded (if (seq? form)
+                       (with-meta `(~@(conj form 'replace-jimw) ~x) (meta form))
+                       (list form x))]
+        (recur threaded (next forms)))
+      x)))
+
+#_(update-sqldots-zh
+   conn
+   "medicine-stocktakings"
+   "表描述"
+   (get-model-key-val
+    (:model-key-val
+     (first
+      (filter #(= (:defmodel %) "medicine-stocktakings") (get-all-defmodel conn))))))
+(defn update-sqldots-zh
+  [db model-name defmodel-desc model-key-val]
+  (let [{:keys [id content]}
+        (jconn1 db
+                (-> (h/select :*)
+                    (h/from :sqldots)
+                    (h/where [:and
+                              [:= :name (to-sql-style model-name)]
+                              [:= :dot_type (sql/call :cast "TABLE" :dot_type)]])))
+        replace-key-pair (map
+                          (fn [item]
+                            (list
+                             (str " <" (to-sql-style (name (first item))) "> ")
+                             (str " <" (to-sql-style (name (first item))) (last item) "> ")))
+                          model-key-val)
+        updated-content (-> (eval `(list->> ~content ~replace-key-pair))
+                            (str/replace
+                             (str "\"<" (to-sql-style model-name) "> ")
+                             (str "\"<" (to-sql-style model-name) defmodel-desc "> ")))]
+    (jc1 db
+         (->  (h/update :sqldots)
+              (h/sset {:content updated-content})
+              (h/where [:= :id id])))))
+
+(defn updateall-sqldots-zh
+  [db]
+  (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel conn)]
+    (do
+      (prn (str "===>>> Update " defmodel " sqldots info"))
+      (try
+        (update-sqldots-zh
+         db
+         defmodel
+         defmodel-desc
+         (get-model-key-val model-key-val))
+        (catch Throwable e
+          (prn (str "Error!" defmodel ", " e)))))))
