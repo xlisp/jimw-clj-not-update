@@ -307,7 +307,7 @@
 
 (set!
  js/window.onscroll
- #(if (and (is-page-end-m-pc) @is-end)
+ #(if (and (is-page-end-m-pc) @is-end (= (session/get :page) :home))
     (do
       (swap! page-offset inc)
       (reset! is-end false)
