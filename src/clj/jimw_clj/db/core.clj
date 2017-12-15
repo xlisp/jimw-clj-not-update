@@ -565,12 +565,26 @@
    (shell/sh "sed" "-n" (str start "," end "p") filename)))
 
 (defn import-sql-dot-table
-  [filename]
+  [db filename]
   (let [dots (get-sql-dot-index-number filename)]
     (for [dot dots]
-      (jc1 conn
+      (jc1 db
            (-> (h/insert-into :sqldots)
                (h/values [{:name (first dot)
                            :content  (get-table-content-index
                                       filename (nth dot 1) (last dot))
                            :dot_type "TABLE"}]))))))
+
+(defn import-sql-dot-relation
+  [db filename]
+  (let [dots (filter
+              #(re-matches #"(.*)->(.*)" %)
+              (->
+               (slurp filename)
+               (clojure.string/split #"\n")))]
+    (for [dot dots]
+      (jc1 db
+           (-> (h/insert-into :sqldots)
+               (h/values [{:name filename
+                           :content dot
+                           :dot_type "RELATION"}]))))))

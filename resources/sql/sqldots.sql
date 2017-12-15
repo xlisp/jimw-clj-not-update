@@ -17,7 +17,7 @@ CREATE TABLE sqldots (
 );
 
 CREATE SEQUENCE sqldots_new_id_seq
-    START WITH 4859
+    START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
