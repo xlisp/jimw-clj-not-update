@@ -134,6 +134,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 ## 当你有气无力的时候,你可以文学编程或者只是录音切割识别
 * 录音切割识别整合到jimwclj上面
+* 不管是什么天马行空的想法全部都转为文本,慢慢排序选择有趣的来做,至少今天是有意思的一天
+* 买个iPhone手机
 
 ## License
 
