@@ -682,17 +682,21 @@
                           (fn [item]
                             (list
                              (str " <" (to-sql-style (name (first item))) "> ")
-                             (str " <" (to-sql-style (name (first item))) (last item) "> ")))
+                             (str " <" (to-sql-style (name (first item))) "> " (last item) " ")))
                           model-key-val)
         updated-content (-> (eval `(list->> ~content ~replace-key-pair))
                             (str/replace
                              (str "\"<" (to-sql-style model-name) "> ")
-                             (str "\"<" (to-sql-style model-name) defmodel-desc "> ")))]
+                             (str "\"<" (to-sql-style model-name) "> "  defmodel-desc " ")))]
     (jc1 db
          (->  (h/update :sqldots)
               (h/sset {:content updated-content})
               (h/where [:= :id id])))))
 
+;; 分别导入,以免conn连接太长
+;; 1. (import-sql-dot-table conn "lib/his_graph.dot")
+;; 2. (import-sql-dot-relation conn "lib/his_graph.dot")
+;; 3. (updateall-sqldots-zh conn)
 (defn updateall-sqldots-zh
   [db]
   (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel conn)]
