@@ -425,7 +425,7 @@
       (create-blog {:db conn :name file-name :content (content-fn file-name)}))))
 
 ;; 测试新的项目导入是否解析报错:
-;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "clojure")
+;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "leiningen")
 (defn read-string-for-pro
   [op-fn & project]
   (let [file-names
@@ -436,7 +436,9 @@
                       (str "lib/jimw-code/" (first project))
                       "lib") "-name" "*.clj*") :out
           (clojure.string/split #"\n"))
-         (remove #(= % "lib/jimw-code/clojure/test/clojure/test_clojure/reader.cljc")))
+         (remove #(or
+                   (= % "lib/jimw-code/clojure/test/clojure/test_clojure/reader.cljc")
+                   (= % "lib/jimw-code/clojure/test/clojure/test_clojure/java_interop.clj"))))
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))

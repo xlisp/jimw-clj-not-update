@@ -137,6 +137,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 不管是什么天马行空的想法全部都转为文本,慢慢排序选择有趣的来做,至少今天是有意思的一天
 * 买个iPhone手机
 
+* 导入Clojure伟大项目代码分析搜索: ` (read-string-for-pro (fn [code-list file-name] (map first code-list)) "leiningen") ` 
+* defenum每新加一个项目,都加一个enum给它
+
 ## License
 
 Copyright © 2017 FIXME
