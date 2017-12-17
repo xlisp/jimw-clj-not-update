@@ -264,7 +264,7 @@
                 "\"" " -> "
                 "\"" (replace-tree-enter (:content
                                           (if (= (:done idd) true) {:content "done"} idd))) "\"\n")))
-        blog-nav-sum (get-nav-count {:db conn :blog blog})]
+        blog-nav-sum (get-nav-count {:db db :blog blog})]
     (str "digraph G {\n"
          (->> (tree-fn-new
                (:id (first-nav {:db db :blog blog}))
@@ -414,7 +414,7 @@
               (h/where [:= :username username]))))
 
 (defn import-project-file-to-blog
-  []
+  [db]
   (let [file-names
         (->
          (shell/sh "find" "lib" "-name" "*.clj*")
@@ -422,7 +422,7 @@
          (clojure.string/split #"\n"))
         content-fn (fn [file-name] (str "```clojure\n" (slurp file-name) "\n```"))]
     (for [file-name file-names]
-      (create-blog {:db conn :name file-name :content (content-fn file-name)}))))
+      (create-blog {:db db :name file-name :content (content-fn file-name)}))))
 
 ;; 测试新的项目导入是否解析报错:
 ;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "leiningen")
@@ -498,7 +498,7 @@
       (split-code file-name))))
 
 (defn import-project-s-exp-to-blog
-  [& project]
+  [db & project]
   (let [content-fn
         (fn [content]
           (str "```clojure\n"
@@ -509,7 +509,7 @@
        (do
          (prn (str file-name " >>>>>>"))
          (map
-          (fn [content] (do (create-blog {:db conn :name file-name :content (content-fn content)}) (first content)))
+          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
           code-list)))
      (if project (first project) nil))))
 
@@ -701,7 +701,7 @@
 ;; 3. (updateall-sqldots-zh conn)
 (defn updateall-sqldots-zh
   [db]
-  (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel conn)]
+  (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel db)]
     (do
       (prn (str "===>>> Update " defmodel " sqldots info"))
       (try
