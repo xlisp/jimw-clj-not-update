@@ -140,6 +140,10 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 导入Clojure伟大项目代码分析搜索: ` (read-string-for-pro (fn [code-list file-name] (map first code-list)) "leiningen") ` 
 * defenum每新加一个项目,都加一个enum给它
 
+## 添加待机语音输入控制搜索,以及语音反馈: 把jimwclj作为一个背后厉害的朋友, 语音反馈网络
+* 自动语音切割 ①
+* 自我设计语音识别引擎, 深度学习GPU, 自我十个小时以上的语音标注训练: 需购买一台`GTX1080 TI`的主机
+
 ## License
 
 Copyright © 2017 FIXME
