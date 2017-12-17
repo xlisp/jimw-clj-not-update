@@ -7,6 +7,7 @@
     [mount.core :refer [defstate]]
     [honeysql.core :as sql]
     [honeysql.helpers :as h]
+    [honeysql-postgres.helpers :as hp]
     [taoensso.timbre :refer [error debug info]]
     [buddy.hashers :as hashers]
     [jimw-clj.config :as config]
@@ -699,10 +700,15 @@
 
 ;; (create-enzh {:db conn :en_name "apple" :zh_name "苹果"})
 (defn create-enzh [{:keys [db en_name zh_name]}]
-  (jc1 db
-       (->  (h/insert-into :enzhs)
-            (h/values [{:en_name en_name
-                        :zh_name zh_name}]))))
+  (try
+    (jc1 db
+         (->  (h/insert-into :enzhs)
+              (h/values [{:en_name en_name
+                          :zh_name zh_name}])
+              (hp/upsert (-> (hp/on-conflict :en_name :zh_name)
+                             (hp/do-nothing)))))
+    (catch SQLException ex
+      (prn "ERROR: duplicate key value violates unique constraint"))))
 
 ;; 分别导入,以免conn连接太长
 ;; 1. (import-sql-dot-table conn "lib/his_graph.dot")

@@ -34,6 +34,7 @@
                  [secretary "1.2.3"]
                  [selmer "1.10.7"]
                  [honeysql "0.9.1"]
+                 [nilenso/honeysql-postgres "0.2.3"]
                  [cheshire "5.8.0"]
                  [ring/ring-json "0.4.0"]
                  [com.taoensso/timbre "4.10.0"]
