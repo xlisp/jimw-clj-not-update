@@ -25,7 +25,9 @@
             BatchUpdateException
             Date
             Timestamp
-            PreparedStatement]))
+            PreparedStatement]
+           [java.sql SQLException]
+           [java.lang IndexOutOfBoundsException]))
 
 ;; Load R lib & function
 (def r-lib
@@ -706,6 +708,7 @@
 ;; 1. (import-sql-dot-table conn "lib/his_graph.dot")
 ;; 2. (import-sql-dot-relation conn "lib/his_graph.dot")
 ;; 3. (updateall-sqldots-zh conn)
+;; 4. (updateall-enzh conn)
 (defn updateall-sqldots-zh
   [db]
   (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel db)]
@@ -713,10 +716,28 @@
       (prn (str "===>>> Update " defmodel " sqldots info"))
       (try
         (let [key-val (get-model-key-val model-key-val)]
-          (update-sqldots-zh
-           db
-           defmodel
-           defmodel-desc
-           key-val))
+          (do
+            (update-sqldots-zh
+             db
+             defmodel
+             defmodel-desc
+             key-val)))
         (catch Throwable e
           (prn (str "Error!" defmodel ", " e)))))))
+
+(defn updateall-enzh
+  [db]
+  (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel db)]
+    (do
+      (let [key-val (get-model-key-val model-key-val)]
+        (do
+          (for [item key-val]
+            (try
+              (create-enzh {:db db :en_name (name (first item)) :zh_name (last item)})
+              (catch SQLException e
+                (prn (str "Error! create-enzh " e ", " (name (first item)))))
+              (catch IndexOutOfBoundsException e
+                (prn (str "Error! create-enzh IndexOutOfBound " e)))
+              (catch Exception e
+                (prn (str "Error! create-enzh Exception" e)))
+              )))))))
