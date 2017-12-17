@@ -695,6 +695,13 @@
               (h/sset {:content updated-content})
               (h/where [:= :id id])))))
 
+;; (create-enzh {:db conn :en_name "apple" :zh_name "苹果"})
+(defn create-enzh [{:keys [db en_name zh_name]}]
+  (jc1 db
+       (->  (h/insert-into :enzhs)
+            (h/values [{:en_name en_name
+                        :zh_name zh_name}]))))
+
 ;; 分别导入,以免conn连接太长
 ;; 1. (import-sql-dot-table conn "lib/his_graph.dot")
 ;; 2. (import-sql-dot-relation conn "lib/his_graph.dot")
@@ -705,10 +712,11 @@
     (do
       (prn (str "===>>> Update " defmodel " sqldots info"))
       (try
-        (update-sqldots-zh
-         db
-         defmodel
-         defmodel-desc
-         (get-model-key-val model-key-val))
+        (let [key-val (get-model-key-val model-key-val)]
+          (update-sqldots-zh
+           db
+           defmodel
+           defmodel-desc
+           key-val))
         (catch Throwable e
           (prn (str "Error!" defmodel ", " e)))))))
