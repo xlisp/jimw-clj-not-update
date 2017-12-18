@@ -710,6 +710,13 @@
     (catch SQLException ex
       (prn "ERROR: duplicate key value violates unique constraint"))))
 
+;; (get-enzh {:db conn :en_name "apple"})
+(defn get-enzh [{:keys [db en_name]}]
+  (jconn1 db
+          (-> (h/select :*)
+              (h/from :enzhs)
+              (h/where [:= :en_name en_name]))))
+
 ;; 分别导入,以免conn连接太长
 ;; 1. (import-sql-dot-table conn "lib/his_graph.dot")
 ;; 2. (import-sql-dot-relation conn "lib/his_graph.dot")
@@ -737,13 +744,20 @@
     (do
       (let [key-val (get-model-key-val model-key-val)]
         (do
+          (try
           (for [item key-val]
             (try
-              (create-enzh {:db db :en_name (name (first item)) :zh_name (last item)})
+              (if (get-enzh {:db conn :en_name (name (first item))})
+                nil
+                (create-enzh {:db db :en_name (name (first item))
+                              :zh_name (last item)}))
               (catch SQLException e
                 (prn (str "Error! create-enzh " e ", " (name (first item)))))
               (catch IndexOutOfBoundsException e
                 (prn (str "Error! create-enzh IndexOutOfBound " e)))
               (catch Exception e
                 (prn (str "Error! create-enzh Exception" e)))
-              )))))))
+              ))
+          (catch IndexOutOfBoundsException e
+            (prn (str "Error!  IndexOutOfBound " e)))
+          ))))))
