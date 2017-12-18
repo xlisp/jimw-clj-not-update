@@ -738,26 +738,33 @@
         (catch Throwable e
           (prn (str "Error!" defmodel ", " e)))))))
 
+;; (def error-test (atom ""))
+;; (for [item (get-model-key-val @error-test)] (prn item) )
+
 (defn updateall-enzh
   [db]
   (for [{:keys [defmodel defmodel-desc model-key-val]} (get-all-defmodel db)]
     (do
+      (prn (str "*******1111" defmodel "------" model-key-val))
+      ;;(reset! error-test model-key-val)
       (let [key-val (get-model-key-val model-key-val)]
         (do
           (try
-          (for [item key-val]
-            (try
-              (if (get-enzh {:db conn :en_name (name (first item))})
-                nil
-                (create-enzh {:db db :en_name (name (first item))
-                              :zh_name (last item)}))
-              (catch SQLException e
-                (prn (str "Error! create-enzh " e ", " (name (first item)))))
-              (catch IndexOutOfBoundsException e
-                (prn (str "Error! create-enzh IndexOutOfBound " e)))
-              (catch Exception e
-                (prn (str "Error! create-enzh Exception" e)))
-              ))
-          (catch IndexOutOfBoundsException e
-            (prn (str "Error!  IndexOutOfBound " e)))
-          ))))))
+            (prn (str "*******1.1.1.1.1." (count key-val)))
+            (for [item key-val]
+              (try
+                (prn (str "*******222222" item))
+                (if (get-enzh {:db conn :en_name (name (first item))})
+                  nil
+                  (create-enzh {:db db :en_name (name (first item))
+                                :zh_name (last item)}))
+                (catch SQLException e
+                  (prn (str "Error! create-enzh " e ", " (name (first item)))))
+                (catch IndexOutOfBoundsException e
+                  (prn (str "Error! create-enzh IndexOutOfBound " e)))
+                (catch Exception e
+                  (prn (str "Error! create-enzh Exception" e)))
+                ))
+            (catch IndexOutOfBoundsException e
+              (prn (str "Error!  IndexOutOfBound " e)))
+            ))))))

@@ -3,9 +3,9 @@ CREATE TABLE enzhs (
   en_name TEXT NOT NULL,
   zh_name TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   -- 一个英文可以有多个中文词直译
-  -- UNIQUE(en_name, zh_name)
+  UNIQUE(en_name, zh_name)
 );
 
 CREATE SEQUENCE enzhs_new_id_seq
