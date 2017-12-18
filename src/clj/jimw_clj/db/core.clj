@@ -630,7 +630,10 @@
          (-> (h/select :id :name :content :created_at :updated_at)
              (h/from :sqldots)
              (h/where (when (seq q)
-                        (let [q-list (clojure.string/split (map->en db q) #" ")]
+                        (let [q-list (clojure.string/split
+                                      (str/replace
+                                       (map->en db q) "-" "_")
+                                      #" ")]
                           (apply conj [:or]
                                  (map #(vector
                                         :or
