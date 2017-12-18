@@ -150,7 +150,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 ## 顺着中线兴趣而下,Lisp原力释放可以发挥到极致
 * 不要在项目瓶子里编程,而是在repl中自由的翱翔
-* 中文搜索sqldot,做成英文的搜索下拉提示,on-change input的时候,就去map->en,look v3
+* 中文搜索sqldot,做成英文的搜索下拉提示,on-change input的时候,就去map->en,look v3 => 最简单粗暴的方法,实现Lisp高速大脑流: 先简单做一个atom,直接显示li列表就行,点击填入到输入框,input的change都会修改这个atom
 
 ## License
 
