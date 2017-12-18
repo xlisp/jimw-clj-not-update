@@ -146,6 +146,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 ## jimw-clj的把通用的纯函数独立出去,变成库
 * 先作为不同的文件,然后再作为纯函数组合模块独立出去
+* 清空自己的思想,每天push不同的repository
 
 ## License
 
