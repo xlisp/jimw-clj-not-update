@@ -211,7 +211,7 @@
         [:button.destroy {:on-click
                           (fn []
                             (delete-todo
-                             id
+                             sort_id
                              (fn [data]
                                (swap! blog-list update-in
                                       [blog-id :todos] #(dissoc % id)))))}]
