@@ -168,11 +168,16 @@
     (fn [x] x (= (last x) id)) items)
    first last))
 
-(defn todo-parid-input [parid-val on-blur]
+(defn todo-parid-input [{:keys [parid-val on-blur on-save]}]
   [:input {:type "number"
            :value @parid-val
            :on-blur on-blur
-           :on-change #(reset! parid-val (-> % .-target .-value))}])
+           :on-change #(reset! parid-val (-> % .-target .-value))
+           :on-key-down #(case (.-which %)
+                           13 (on-save)
+                           ;;27 (stop)
+                           nil)
+           }])
 
 (defn todo-item []
   (let [editing (r/atom false)]
@@ -231,8 +236,9 @@
           [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
           [:label.input-parid {:id (str "input-parid-id-" id)}
            [todo-parid-input
-            parid-val
-            #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")]]]
+            {:parid-val parid-val
+             :on-save #(js/alert sort_id)
+             :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")}]]]
          (when @editing
            [todo-edit {:class "edit" :content content
                        :on-save
