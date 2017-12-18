@@ -225,6 +225,8 @@
 (def api-token (local-storage (r/atom "") :api-token))
 (defonce search-key (r/atom ""))
 
+(defonce search-viz-en (r/atom (sorted-map-by >)))
+
 ;; (viz-string "digraph { a -> b; }")
 ;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
 ;; (let [graph (.querySelector js/document "#gv-output-9845")] (.appendChild graph (viz-string "digraph { a -> b; }")))
@@ -621,6 +623,20 @@
 
 (defonce search-viz-str (atom ""))
 
+(defn search-mapen 
+  [q op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/get (api-root "/search-mapen")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {:q q}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
+(defonce mapen-show (atom ""))
+
 (defn viz-page []
   (let [viz-fn #(let [graph (.querySelector js/document "#gv-output-sql")
                       svg (.querySelector graph "svg")]
@@ -637,10 +653,15 @@
         [:h2 "Viz"]]
      [:div#adv-search.input-group.search-margin
       [:input {:type "text", :class "form-control", :placeholder "Search"
-               :on-change #(reset! search-viz-str (-> % .-target .-value))
+               :on-change #(do
+                             (reset! search-viz-str (-> % .-target .-value))
+                             (search-mapen @search-viz-str (fn [data] (reset! search-viz-en data))))
                :on-key-down #(case (.-which %)
                                13 (viz-fn @search-viz-str)
                                nil)}]
+      [:ul
+       (for [item @search-viz-en]
+         [:li (str (last item))])]
       [:div {:class "input-group-btn"}
        [:div {:class "btn-group", :role "group"}
         [:div {:class "dropdown dropdown-lg"}]
