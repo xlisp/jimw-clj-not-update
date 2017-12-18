@@ -180,69 +180,67 @@
          todo-target todo-begin origins]
       (let [parid-val (r/atom "")
             _ (reset! parid-val parid)]
-      [:li {:class (str (if done "completed ")
-                        (if @editing "editing"))
-            :draggable true
-            :on-drag-start #(do (prn (str "开始拖动" sort_id))
-                                (reset! todo-begin sort_id))
-            :on-drag-end (fn []
-                           (do
-                             (prn (str "目标位置" @todo-target))
-                             (update-todo-sort
-                              (vec origins)
-                              @todo-begin
-                              (get-todo-sort-id @todo-target (vec origins))
-                              (fn [data]
-                                (count
-                                 (str 
-                                  (for [mdata data]
-                                    (swap! blog-list update-in
-                                           [blog-id :todos]
-                                           #(assoc % (:sort_id mdata) {:id (:sort_id mdata)
-                                                                       :sort_id (:id mdata)
-                                                                       :parid (:parid mdata)
-                                                                       :content (:content mdata)})))))))))
-            ;; 一直打印出来: TODOS修改经过上方的颜色
-            :on-drag-over #(reset! todo-target id)}
-       [:div.view
-        [:input.toggle-checkbox
-         {:type "checkbox"
-          :checked done
-          :on-change
-          (fn []
-            (let [done-stat (if (true? done) false true)]
-              (swap! blog-list update-in
-                     [blog-id :todos id :done] (fn [x] done-stat))
-              (update-todo
-               sort_id nil blog-id done-stat
-               #(prn %))))}]
-        [:label.todo-front-size {:on-double-click #(reset! editing true)} content]
-        [:button.destroy {:on-click
-                          (fn []
-                            (delete-todo
-                             sort_id
-                             (fn [data]
-                               (swap! blog-list update-in
-                                      [blog-id :todos] #(dissoc % id)))))}]
-        [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
-        [:div.input-label {:id (str "input-label-id-" id)}
-         (new-todo-par sort_id blog-list blog-id
-                       #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]
-        [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
-        [:label.input-parid {:id (str "input-parid-id-" id)}
-         [todo-parid-input
-          parid-val
-          #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")]]]
-       (when @editing
-         [todo-edit {:class "edit" :content content
-                     :on-save
-                     (fn [content]
-                       (update-todo
-                        sort_id content blog-id nil
-                        #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
-                     :on-stop #(reset! editing false)}])])
-    )
-    ))
+        [:li {:class (str (if done "completed ")
+                          (if @editing "editing"))
+              :draggable true
+              :on-drag-start #(do (prn (str "开始拖动" sort_id))
+                                  (reset! todo-begin sort_id))
+              :on-drag-end (fn []
+                             (do
+                               (prn (str "目标位置" @todo-target))
+                               (update-todo-sort
+                                (vec origins)
+                                @todo-begin
+                                (get-todo-sort-id @todo-target (vec origins))
+                                (fn [data]
+                                  (count
+                                   (str 
+                                    (for [mdata data]
+                                      (swap! blog-list update-in
+                                             [blog-id :todos]
+                                             #(assoc % (:sort_id mdata) {:id (:sort_id mdata)
+                                                                         :sort_id (:id mdata)
+                                                                         :parid (:parid mdata)
+                                                                         :content (:content mdata)})))))))))
+              ;; 一直打印出来: TODOS修改经过上方的颜色
+              :on-drag-over #(reset! todo-target id)}
+         [:div.view
+          [:input.toggle-checkbox
+           {:type "checkbox"
+            :checked done
+            :on-change
+            (fn []
+              (let [done-stat (if (true? done) false true)]
+                (swap! blog-list update-in
+                       [blog-id :todos id :done] (fn [x] done-stat))
+                (update-todo
+                 sort_id nil blog-id done-stat
+                 #(prn %))))}]
+          [:label.todo-front-size {:on-double-click #(reset! editing true)} content]
+          [:button.destroy {:on-click
+                            (fn []
+                              (delete-todo
+                               sort_id
+                               (fn [data]
+                                 (swap! blog-list update-in
+                                        [blog-id :todos] #(dissoc % id)))))}]
+          [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
+          [:div.input-label {:id (str "input-label-id-" id)}
+           (new-todo-par sort_id blog-list blog-id
+                         #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]
+          [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
+          [:label.input-parid {:id (str "input-parid-id-" id)}
+           [todo-parid-input
+            parid-val
+            #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")]]]
+         (when @editing
+           [todo-edit {:class "edit" :content content
+                       :on-save
+                       (fn [content]
+                         (update-todo
+                          sort_id content blog-id nil
+                          #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
+                       :on-stop #(reset! editing false)}])]))))
 
 (defn new-todo [blog-list blog-id items parid-first-id]
   [todo-input {:id "new-todo"
