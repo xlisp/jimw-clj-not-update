@@ -116,6 +116,7 @@
 (def todo-edit (with-meta todo-input
                  {:component-did-mount #(.focus (r/dom-node %))}))
 
+
 (defn todo-stats [{:keys [filt active done]}]
   (let [props-for (fn [name]
                     {:class (if (= name @filt) "selected")
@@ -167,10 +168,18 @@
     (fn [x] x (= (last x) id)) items)
    first last))
 
+(defn todo-parid-input [parid-val on-blur]
+  [:input {:type "number"
+           :value @parid-val
+           :on-blur on-blur
+           :on-change #(reset! parid-val (-> % .-target .-value))}])
+
 (defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done content sort_id]} blog-list blog-id
+    (fn [{:keys [id done content sort_id parid]} blog-list blog-id
          todo-target todo-begin origins]
+      (let [parid-val (r/atom "")
+            _ (reset! parid-val parid)]
       [:li {:class (str (if done "completed ")
                         (if @editing "editing"))
             :draggable true
@@ -219,12 +228,11 @@
         [:div.input-label {:id (str "input-label-id-" id)}
          (new-todo-par sort_id blog-list blog-id
                        #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]
-        ;;
         [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
         [:label.input-parid {:id (str "input-parid-id-" id)}
-         [:input {:type "number"
-                  :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")}]]
-        ]
+         [todo-parid-input
+          parid-val
+          #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")]]]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save
@@ -232,7 +240,9 @@
                        (update-todo
                         sort_id content blog-id nil
                         #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
-                     :on-stop #(reset! editing false)}])])))
+                     :on-stop #(reset! editing false)}])])
+    )
+    ))
 
 (defn new-todo [blog-list blog-id items parid-first-id]
   [todo-input {:id "new-todo"
