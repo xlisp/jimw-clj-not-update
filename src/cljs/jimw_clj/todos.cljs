@@ -218,7 +218,13 @@
         [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
         [:div.input-label {:id (str "input-label-id-" id)}
          (new-todo-par sort_id blog-list blog-id
-                       #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]]
+                       #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]
+        ;;
+        [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
+        [:label.input-parid {:id (str "input-parid-id-" id)}
+         [:input {:type "number"
+                  :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")}]]
+        ]
        (when @editing
          [todo-edit {:class "edit" :content content
                      :on-save

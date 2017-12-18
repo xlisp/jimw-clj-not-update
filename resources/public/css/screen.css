@@ -398,17 +398,6 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
-#todo-list li .input-label {
-  display: none;
-}
-#todo-list li .input-par {
-    width: 80%;
-    margin-left: 60px;
-    border-radius: 5px;
-    height: 50px;
-    font-size: 15px;
-}
-
 #todo-list li .destroy:hover {
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);
@@ -423,6 +412,58 @@ label[for='toggle-all'] {
 
 #todo-list li:hover .destroy {
 	display: block;
+}
+
+/* */
+#todo-list li .button-parid {
+	display: none;
+	position: absolute;
+	top: 0;
+	right: 10px;
+	bottom: 0;
+	width: 40px;
+	height: 40px;
+	margin: auto 0;
+	font-size: 22px;
+	color: #a88a8a;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+        margin-right: 6%;
+}
+
+#todo-list li .button-parid:hover {
+	text-shadow: 0 0 1px #000,
+				 0 0 10px rgba(199, 107, 107, 0.8);
+	-webkit-transform: scale(1.3);
+	-ms-transform: scale(1.3);
+	transform: scale(1.3);
+}
+
+#todo-list li .button-parid:after {
+	content: '☯';
+}
+
+#todo-list li:hover .button-parid {
+	display: block;
+}
+
+
+#todo-list li .input-label {
+  display: none;
+}
+
+#todo-list li .input-parid {
+    display: none;
+    border: 1px solid #dedbd7;
+    width: 70%;
+}
+
+#todo-list li .input-par {
+    width: 80%;
+    margin-left: 60px;
+    border-radius: 5px;
+    height: 50px;
+    font-size: 15px;
 }
 
 #todo-list li .edit {
@@ -1116,3 +1157,13 @@ ul.nav > li.brand > a {
 .viz-container{
     width: 100%;
 }
+
+/*
+.input-parid {
+    float: right;
+    width: 10%;
+    margin-right: 15%;
+    border-radius: 3px;
+    display: none;
+}
+*/
