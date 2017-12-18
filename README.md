@@ -148,6 +148,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 先作为不同的文件,然后再作为纯函数组合模块独立出去
 * 清空自己的思想,每天push不同的repository
 
+## 顺着中线兴趣而下,Lisp原力释放可以发挥到极致
+* 不要在项目瓶子里编程,而是在repl中自由的翱翔
+
 ## License
 
 Copyright © 2017 FIXME
