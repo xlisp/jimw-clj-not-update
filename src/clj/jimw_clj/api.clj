@@ -172,7 +172,17 @@
                    (clojure.string/replace q #"-" "_")
                    "")})))
          "\n}")}))
-  
+
+(defn search-mapen
+  [{{:keys [q]} :params}]
+  (ok
+   {:data
+    (into
+     {}
+     (map-indexed
+      vector
+      (clojure.string/split (db/map->en db/conn q) #" ")))}))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET "/test-api" [] (check-api-token test-api))
@@ -188,4 +198,5 @@
   (POST "/record-event" [] (check-api-token record-event))
   (POST "/update-todo-sort" [] (check-api-token update-todo-sort))
   (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags))
-  (GET "/search-sqldots" [] (check-api-token search-sqldots)))
+  (GET "/search-sqldots" [] (check-api-token search-sqldots))
+  (GET "/search-mapen" [] (check-api-token search-mapen)))
