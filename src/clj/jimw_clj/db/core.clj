@@ -603,7 +603,7 @@
          (-> (h/select :id :name :content :created_at :updated_at)
              (h/from :sqldots)
              (h/where (when (seq q)
-                        (let [q-list (clojure.string/split q #" ")]
+                        (let [q-list (clojure.string/split (map->en db q) #" ")]
                           (apply conj [:or]
                                  (map #(vector
                                         :or
@@ -768,3 +768,29 @@
             (catch IndexOutOfBoundsException e
               (prn (str "Error!  IndexOutOfBound " e)))
             ))))))
+
+;; (map :en_name (search-enzh {:db conn :zh_name "操作"}))
+;;=> ("operator" "operation")
+(defn search-enzh [{:keys [db zh_name]}]
+  (jconn db
+         (-> (h/select :*)
+             (h/from :enzhs)
+             (h/where [:like :zh_name (str "%" zh_name "%")]))))
+
+;; (map->en conn "操作") ;; => "operator operation"
+;; (map->en conn "operator apple") ;;=> "operator apple"
+(defn map->en
+  [db q]
+  (if (seq q)
+    (let [q-list (clojure.string/split q #" ")]
+      (->>
+       (map
+        (fn [q-item]
+          (if (re-matches #"(.*)[\u4e00-\u9fa5](.*)" q-item)
+            (let [res
+                  (map :en_name (search-enzh {:db db :zh_name q-item}))]
+              (if (empty? res)
+                "" res))
+            q-item))
+        q-list)
+       flatten (clojure.string/join " "))) ""))
