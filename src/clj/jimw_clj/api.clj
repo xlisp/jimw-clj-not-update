@@ -79,12 +79,15 @@
 
 (defn update-todo
   [{{:keys [id parid blog content done]} :params}]
-  (let [res (db/update-todo {:db db/conn
-                             :id (Integer/parseInt id)
-                             ;; :parid (Integer/parseInt parid)
-                             :blog (Integer/parseInt blog)
-                             :done done
-                             :content content})]
+  (let [res (db/update-todo
+             (merge
+              {:db db/conn
+               :id (Integer/parseInt id)
+               :blog (Integer/parseInt blog)
+               :done done
+               :content content}
+              (if (seq parid)
+                {:parid (Integer/parseInt parid)} {})))]
     (if res
       (ok res) (not-found))))
 

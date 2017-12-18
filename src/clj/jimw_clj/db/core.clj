@@ -386,7 +386,7 @@
 (defn update-todo [{:keys [db id parid blog content done]}]
   (jc1 db
        (->  (h/update :todos)
-            (h/sset (->> {;;:parid    (when (pos? parid) parid)
+            (h/sset (->> {:parid  parid
                           :content (when (seq content) content)
                           :blog (when (pos? blog) blog)
                           :done (let [ndone (if (string? done) (Boolean/valueOf done) done)]

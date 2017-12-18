@@ -3,8 +3,7 @@
   (:require [reagent.core :as r :refer [atom]]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
-            [cemerick.url :refer (url url-encode)]
-            #_[cljsjs.jquery]))
+            [cemerick.url :refer (url url-encode)]))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -52,6 +51,18 @@
                         (if (nil? done)
                           {:content text :blog blog}
                           {:content text #_:parid #_parid :blog blog :done done})}))]
+        (if (= (:status response) 200)
+          (op-fn (:body response))
+          (js/alert "Update todo failure!")))))
+
+(defn update-todo-parid [blog id parid op-fn]
+  (go (let [response
+            (<!
+             (http/put (str (api-root "/update-todo/") id)
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" (memoized-api-token)}
+                        :query-params
+                        {:parid parid :blog blog}}))]
         (if (= (:status response) 200)
           (op-fn (:body response))
           (js/alert "Update todo failure!")))))
@@ -174,10 +185,9 @@
            :on-blur on-blur
            :on-change #(reset! parid-val (-> % .-target .-value))
            :on-key-down #(case (.-which %)
-                           13 (on-save)
-                           ;;27 (stop)
-                           nil)
-           }])
+                           13 (on-save @parid-val)
+                           27 (on-save @parid-val)
+                           nil)}])
 
 (defn todo-item []
   (let [editing (r/atom false)]
@@ -237,7 +247,7 @@
           [:label.input-parid {:id (str "input-parid-id-" id)}
            [todo-parid-input
             {:parid-val parid-val
-             :on-save #(js/alert sort_id)
+             :on-save #(update-todo-parid blog-id sort_id % (fn [] (set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")))
              :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")}]]]
          (when @editing
            [todo-edit {:class "edit" :content content
