@@ -144,6 +144,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 自动语音切割 ①
 * 自我设计语音识别引擎, 深度学习GPU, 自我十个小时以上的语音标注训练: 需购买一台`GTX1080 TI`的主机
 
+## jimw-clj的把通用的纯函数独立出去,变成库
+* 先作为不同的文件,然后再作为纯函数组合模块独立出去
+
 ## License
 
 Copyright © 2017 FIXME
