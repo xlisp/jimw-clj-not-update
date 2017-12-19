@@ -297,10 +297,17 @@
              [:section#main
               [:ul#todo-list
                (for [todo (filter
-                           (case @filt
-                             :active (complement :done)
-                             :done :done
-                             :all identity) items)]
+                           (fn [item]
+                             (let [stat (case @filt
+                                          :active (complement :done)
+                                          :done :done
+                                          :all identity)]
+                               (and
+                                (not (re-matches #"\d" (:content item)))
+                                (stat item))
+                               )
+                             )
+                           items)]
                  ^{:key (:id todo)} [todo-item todo blog-list blog-id
                                      todo-target todo-begin origins])]]
              [:footer#footer
