@@ -169,6 +169,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ;; jimN 可以自由表达通讯
 (...)
 ```
+* 分开后保存的S表达式,可以重新组合成S文件: 简单粗暴的办法就是再保存一次S文件到jimdb,可以跳转到该文件查看,类型分别问文件类型和S表达式类型
 
 ## License
 
