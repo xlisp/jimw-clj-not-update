@@ -7,7 +7,8 @@
    [jimw-clj.env :refer [defaults]]
    [mount.core :as mount]
    [jimw-clj.middleware :as middleware]
-   [jimw-clj.api :as api]))
+   [jimw-clj.api :as api]
+   [jimw-clj.msg]))
 
 (mount/defstate init-app
   :start ((or (:init defaults) identity))

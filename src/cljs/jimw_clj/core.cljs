@@ -192,7 +192,11 @@
             [jimw-clj.todos :as todos]
             [alandipert.storage-atom :refer [local-storage]]
             [myexterns.viz]
-            [myexterns.wordcloud])
+            [myexterns.wordcloud]
+            [jimw-clj.events :as msg-events]
+            [jimw-clj.subs :as subs]
+            [jimw-clj.views :as views]
+            [re-frame.core :as re-frame])
   (:import goog.History))
 
 (.setOptions js/marked
@@ -718,9 +722,12 @@
 (defn mount-components []
   (r/render [#'navbar] (.getElementById js/document "navbar"))
   (r/render [#'searchbar] (.getElementById js/document "searchbar"))
-  (r/render [#'page] (.getElementById js/document "app")))
+  (r/render [#'page] (.getElementById js/document "app"))
+  (r/render [views/main-view] (.getElementById js/document "msg")))
 
 (defn init! []
   (load-interceptors!)
   (hook-browser-navigation!)
+  (re-frame/dispatch-sync [:db/initialize])
+  (re-frame/dispatch-sync [:sente/connect])
   (mount-components))
