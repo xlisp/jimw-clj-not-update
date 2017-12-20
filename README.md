@@ -152,6 +152,12 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 不要在项目瓶子里编程,而是在repl中自由的翱翔
 * 中文搜索sqldot,做成英文的搜索下拉提示,on-change input的时候,就去map->en,look v3 => 最简单粗暴的方法,实现Lisp高速大脑流: 先简单做一个atom,直接显示li列表就行,点击填入到输入框,input的change都会修改这个atom
 
+## 如何快速开发一个新的未知的功能? 不能支持多次代码搜索递进,直到成功测试: 项目代码搜索到代码构建
+* 完成re-frame某某功能
+* 完成websocket某某功能
+* repl执行S数据及结果, log的分析
+* 项目例子的某一个功能的极简部分自动提取
+
 ## License
 
 Copyright © 2017 FIXME
