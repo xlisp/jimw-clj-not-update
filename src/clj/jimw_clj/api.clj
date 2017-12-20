@@ -18,10 +18,23 @@
    [taoensso.timbre :refer [error debug info]]
    [jimw-clj.config :as config]
    [clojure.java.io :as io]
-   [clj-jri.R :as R])
+   [clj-jri.R :as R]
+   [taoensso.sente :as sente]
+   [taoensso.sente.server-adapters.immutant :refer (get-sch-adapter)])
   (:import (org.apache.commons.codec.binary Base64)
            (org.apache.commons.io IOUtils))
   (:gen-class))
+
+(let [{:keys [ch-recv send-fn connected-uids
+              ajax-post-fn ajax-get-or-ws-handshake-fn]}
+      (sente/make-channel-socket! (get-sch-adapter) {})]
+  (def ring-ajax-get-or-ws-handshake ajax-get-or-ws-handshake-fn)
+  (def ring-ajax-post                ajax-post-fn)
+  ;;
+  (def ch-chsk                       ch-recv) ; ChannelSocket's receive channel
+  (def chsk-send!                    send-fn) ; ChannelSocket's send API fn
+  (def connected-uids                connected-uids) ; Watchable, read-only atom
+  )
 
 (defn token-sign
   [ids]
@@ -185,6 +198,8 @@
 
 (defroutes api-routes
   (POST "/login" [] login)
+  (GET  "/chsk" req (ring-ajax-get-or-ws-handshake req))
+  (POST "/chsk" req (ring-ajax-post                req))
   (GET "/test-api" [] (check-api-token test-api))
   (GET "/blogs" [] (check-api-token get-blogs))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
