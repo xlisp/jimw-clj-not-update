@@ -28,6 +28,7 @@
                  [org.webjars/webjars-locator-jboss-vfs "0.1.0"]
                  [reagent "0.6.1"]
                  [reagent-utils "0.2.1"]
+                 [re-frame "0.10.2"]
                  [ring-webjars "0.1.1"]
                  [ring/ring-core "1.6.0"]
                  [ring/ring-defaults "0.3.0"]
