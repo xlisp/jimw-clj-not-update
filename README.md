@@ -158,6 +158,17 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * repl执行S数据及结果, log的分析
 * 项目例子的某一个功能的极简部分自动提取
 * 预测版本+搜索S数据 和 实际版本: 机器学习就像代码调研一样,特征数据挖掘, 减少实际的样子和你预测的样子的差距
+* 需要一个jim0,jim1,jim2,jim3...jimN的一个过程注意力板: 每一个版尽量是成功的,也可以允许是错误的+你想要的特性,如: ==>> 特别适合功能特性演进和回归, 算法的演算组合
+```clojure
+;; jim0 只是创建一个Socket,什么都不干,只能连接它
+(import [java.net ServerSocket])
+(ServerSocket. 3000 0 nil)
+;; jim1 尝试实时通讯
+(...)
+...
+;; jimN 可以自由表达通讯
+(...)
+```
 
 ## License
 
