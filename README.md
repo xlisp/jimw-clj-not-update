@@ -157,6 +157,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 完成websocket某某功能
 * repl执行S数据及结果, log的分析
 * 项目例子的某一个功能的极简部分自动提取
+* 预测版本+搜索S数据 和 实际版本: 机器学习就像代码调研一样,特征数据挖掘, 减少实际的样子和你预测的样子的差距
 
 ## License
 
