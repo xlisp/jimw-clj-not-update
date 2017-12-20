@@ -171,6 +171,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ```
 * 分开后保存的S表达式,可以重新组合成S文件: 简单粗暴的办法就是再保存一次S文件到jimdb,可以跳转到该文件查看,类型分别问文件类型和S表达式类型
 * 登录过期后,websocket提醒
+* 电脑端jimw-clj和手机jimw-clj和网页语音标记阅读APP,文章或者todo修改了增加了都互相同步: 他们都订阅了文章或者todo的消息
 
 ## License
 
