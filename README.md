@@ -177,6 +177,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ## Websocket视频流化CLJS应用: CLJS图形驱动流的最高境界
 * Websocket视频聊天jimw-clj,比HTTP快多了,而且不用三次握手,直接byte,不用base64
 * Github关注的人的事件提醒数据流处理,用Kafka数据流
+* Jimwclj的微信扫码登录: Websocket
 
 ## License
 
