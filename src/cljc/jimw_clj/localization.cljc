@@ -3,7 +3,7 @@
 (def defaults
   {:page-title "Search notepad"
    :loading "Please wait while the app is loading"
-   :tiko-msg "TIKO-MSG"
+   :tiko-msg "Search notepad"
    :new-msg "New MSG"})
 
 (defn tr

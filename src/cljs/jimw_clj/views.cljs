@@ -33,6 +33,6 @@
 (defn main-view
   []
   [:div.msg-container
-   [:h1.msg-title (tr :tiko-msg)]
+   #_[:h1.msg-title (tr :tiko-msg)]
    [new-msg-input]
    [msg-list]])
