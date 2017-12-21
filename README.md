@@ -178,6 +178,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * Websocket视频聊天jimw-clj,比HTTP快多了,而且不用三次握手,直接byte,不用base64
 * Github关注的人的事件提醒数据流处理,用Kafka数据流
 * Jimwclj的微信扫码登录: Websocket
+* 最先支持Java和JS代码搜索,也可以Ruby代码搜索: 多维度的学习, Java和JS的资源最多
 
 ## License
 
