@@ -178,7 +178,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * Websocket视频聊天jimw-clj,比HTTP快多了,而且不用三次握手,直接byte,不用base64
 * Github关注的人的事件提醒数据流处理,用Kafka数据流
 * Jimwclj的微信扫码登录: Websocket
-* 最先支持Java和JS代码搜索,也可以Ruby代码搜索: 多维度的学习, Java和JS的资源最多
+* 最先支持Java和JS代码搜索,也可以Ruby代码搜索: 多维度的学习, Java和JS的资源最多 => 面向对象没有函数式那么好切割代码,参照目标语言编译器或者解释器部分,是如何解析的
+* 目标语言的机器学习切割: 需要一定的语法规则训练,需要一些source-map的规则,对应回原来的文件的地方,就像CoffeeScript一样
 
 ## License
 
