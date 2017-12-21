@@ -187,6 +187,10 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 比如Github搜索`GQL_CONNECTION_INIT`很多的示例代码, 把GQL_CONNECTION_INIT相关的上下文全部提取出来
 * Issue某个AAA问题回答BBB是正确的,那么就可以用BBB训练AAA问题
 * 工程和ML的高度融合,无处不在ML: 做一个jimwclj网页的WebSocket的repl,就像ruby的byebug一样,可以网页repl,把所有的repl记录做分析
+* 每天的Google浏览和搜索的数据分析: Chrome插件,油猴李志
+* 是上下关系还是平行关系===>> 代码搜索的最重要的指标之一 ===>> 贝叶斯分类,两种分类
+* 代码的对比修改很重要
+* 就像物理学家做实验一样,统计不同因素多次实验和多次相同实验取平均值: 机器学习就是要机器发现海量数据流中的自我价值规律,统计数学家的数学实验
 
 ## License
 
