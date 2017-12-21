@@ -181,7 +181,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 最先支持Java和JS代码搜索,也可以Ruby代码搜索: 多维度的学习, Java和JS的资源最多 => 面向对象没有函数式那么好切割代码,参照目标语言编译器或者解释器部分,是如何解析的
 * 目标语言的机器学习切割: 需要一定的语法规则训练,需要一些source-map的规则,对应回原来的文件的地方,就像CoffeeScript一样
 * 就像HMM给汉语分词标注词性一样,不同的词性的切割方式是不一样的: 汉语的分词词性标注=>代码分割
-* Github的搜索结果的导入到jimw-clj:   特征向量化: 相关的全部列出来到一个清单,然后jimw-clj把这些token化,找到中线的关键词是哪些 => 向量化预测: 然后用这些中线的关键词特征向量,找到目标项目背后的源代码的位置和上下文,提供给Emacs自动提示
+
+# 如何运用Github和Google来机器学习训练jimwclj代码搜索分析能力？
+## Github的搜索结果的导入到jimw-clj:   特征向量化: 相关的全部列出来到一个清单,然后jimw-clj把这些token化,找到中线的关键词是哪些 => 向量化预测: 然后用这些中线的关键词特征向量,找到目标项目背后的源代码的位置和上下文,提供给Emacs自动提示
+* 比如Github搜索`GQL_CONNECTION_INIT`很多的示例代码, 把GQL_CONNECTION_INIT相关的上下文全部提取出来
+* Issue某个AAA问题回答BBB是正确的,那么就可以用BBB训练AAA问题
 
 ## License
 
