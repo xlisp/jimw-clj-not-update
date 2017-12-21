@@ -174,6 +174,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 电脑端jimw-clj和手机jimw-clj和网页语音标记阅读APP,文章或者todo修改了增加了都互相同步: 他们都订阅了文章或者todo的消息 ==>> 就像网页微信,电脑微信,手机微信的消息同步一样
 * jimw-clj和wechat4u的网页微信的消息同步① , 流式数据分析
 
+## Websocket视频流化CLJS应用: CLJS图形驱动流的最高境界
+* Websocket视频聊天jimw-clj,比HTTP快多了,而且不用三次握手,直接byte,不用base64
+
 ## License
 
 Copyright © 2017 FIXME
