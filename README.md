@@ -186,6 +186,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ## Github的搜索结果的导入到jimw-clj:   特征向量化: 相关的全部列出来到一个清单,然后jimw-clj把这些token化,找到中线的关键词是哪些 => 向量化预测: 然后用这些中线的关键词特征向量,找到目标项目背后的源代码的位置和上下文,提供给Emacs自动提示
 * 比如Github搜索`GQL_CONNECTION_INIT`很多的示例代码, 把GQL_CONNECTION_INIT相关的上下文全部提取出来
 * Issue某个AAA问题回答BBB是正确的,那么就可以用BBB训练AAA问题
+* 工程和ML的高度融合,无处不在ML: 做一个jimwclj网页的WebSocket的repl,就像ruby的byebug一样,可以网页repl,把所有的repl记录做分析
 
 ## License
 
