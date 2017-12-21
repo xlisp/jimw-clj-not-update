@@ -180,6 +180,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * Jimwclj的微信扫码登录: Websocket
 * 最先支持Java和JS代码搜索,也可以Ruby代码搜索: 多维度的学习, Java和JS的资源最多 => 面向对象没有函数式那么好切割代码,参照目标语言编译器或者解释器部分,是如何解析的
 * 目标语言的机器学习切割: 需要一定的语法规则训练,需要一些source-map的规则,对应回原来的文件的地方,就像CoffeeScript一样
+* 就像HMM给汉语分词标注词性一样,不同的词性的切割方式是不一样的: 汉语的分词词性标注=>代码分割
 
 ## License
 
