@@ -10,3 +10,7 @@ for file in ` find $rbpath -name "*.rb" `; do echo "======"$file ; ruby-parse $f
 
 echo "AST file count: " ` find $rbpath -name '*.ast' | wc -l `
 echo "Ruby file count: " ` find $rbpath -name '*.rb' | wc -l `
+
+## 只有几个测试文件才有这样的错误解析, TODOS: 变成AST之前,就要过滤掉 "\xBE"
+ag "error: literal contains escape sequences incompatible with UTF-8" | awk -F":" '{print $1}' | xargs -I file rm file
+
