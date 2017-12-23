@@ -198,6 +198,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 统计手机事件: 统计每次玩手机的时间长度,流量分析
 
 * read-string非法规则的机器学习: 提取已经导入成功的代码的特征,过滤掉报错的read-string特征,最后剩下非法的read-string特征
+* 统计学思维: 统一收集错误,统一解决, 如果Clojure无法catch住的错误,那么把列表交给上一层的Shell去处理
 
 ## License
 
