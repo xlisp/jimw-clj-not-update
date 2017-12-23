@@ -192,6 +192,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 代码的对比修改很重要
 * 就像物理学家做实验一样,统计不同因素多次实验和多次相同实验取平均值: 机器学习就是要机器发现海量数据流中的自我价值规律,统计数学家的数学实验
 
+## 以PG数据流改变为核心的流式分析
+* Async(像Kafka一样强大)订阅给数据分析应用和数据采集应用等
+
 ## License
 
 Copyright © 2017 FIXME
