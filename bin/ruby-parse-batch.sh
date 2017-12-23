@@ -7,4 +7,6 @@ rbpath=$1
 echo "Clear AST file..."
 find $rbpath -name '*.ast' | xargs -I file rm file
 for file in ` find $rbpath -name "*.rb" `; do echo "======"$file ; ruby-parse $file > $file.ast; done
-# => lib/ruby-jimw-code/rails//activemodel/lib/active_model/validations/clusivity.rb.ast
+
+echo "AST file count: " ` find $rbpath -name '*.ast' | wc -l `
+echo "Ruby file count: " ` find $rbpath -name '*.rb' | wc -l `
