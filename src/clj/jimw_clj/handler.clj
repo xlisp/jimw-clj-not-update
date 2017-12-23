@@ -8,7 +8,8 @@
    [mount.core :as mount]
    [jimw-clj.middleware :as middleware]
    [jimw-clj.api :as api]
-   [jimw-clj.msg]))
+   [jimw-clj.msg]
+   [jimw-clj.db.streaming :as streaming]))
 
 (mount/defstate init-app
   :start ((or (:init defaults) identity))

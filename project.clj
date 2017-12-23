@@ -49,7 +49,8 @@
                  [cljsjs/jquery "3.2.1-0"]
                  [clj-jri "0.1.1-SNAPSHOT"]
                  [hikari-cp "1.8.2"]
-                 [com.taoensso/sente "1.12.0"]]
+                 [com.taoensso/sente "1.12.0"]
+                 [me.raynes/conch "0.8.0"]]
 
   :min-lein-version "2.0.0"
 
