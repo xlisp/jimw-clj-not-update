@@ -197,6 +197,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * Async(像Kafka一样强大)订阅给数据分析应用和数据采集应用等
 * 统计手机事件: 统计每次玩手机的时间长度,流量分析
 
+* read-string非法规则的机器学习: 提取已经导入成功的代码的特征,过滤掉报错的read-string特征,最后剩下非法的read-string特征
+
 ## License
 
 Copyright © 2017 FIXME
