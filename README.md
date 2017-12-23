@@ -81,6 +81,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 每个文件都是一篇文章 -> 每个函数都是一篇文章
 * jimw-clj的代码语义搜索 ①  (语义网未实现meta主谓宾) 
 * 代码语义搜索,结构搜索,释放Lisp强大的原力(参考王垠的ydiff项目,如何写一个解释器,bbatsov/rubocop)
+* Git Diff导入变成,ydiff结构化对比: 用机器学习算法来 帮助学习 超大规模  代码, 用机器学习算法来 重新 看待 原来的 东西 ==>> 对比jim0,jim1,jim2,jim3的结构演变,建立一个Git然后每次jim修改jim+n,都commit一次,自动生成结构对比搜索
 * 方便Markdown的todo和todo列表转换,todo做好了,可以导入成md文章(md的todo文章,可以转为todo列表,打钩编辑单条等): `*`标签的文章,批量导入到todos的功能,以及把todos只有一级的导出到`*`标签的文章
 * 所有的事件操作都有操作异步记录, 以便做`数据可视化`,树形网络,曲线,地图等等, 自我数据分析分析为元,自画像为中线打机器学习
 * 搜索下拉推荐提示,自动补全提示
