@@ -194,6 +194,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 ## 以PG数据流改变为核心的流式分析
 * Async(像Kafka一样强大)订阅给数据分析应用和数据采集应用等
+* 统计手机事件: 统计每次玩手机的时间长度,流量分析
 
 ## License
 
