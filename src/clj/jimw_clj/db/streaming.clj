@@ -32,5 +32,11 @@
 
 ;; (data-stream) ;; => #object[clojure.core.async.impl.channels.ManyToManyChannel 0x6bca2a18 "clojure.core.async.impl.channels.ManyToManyChannel@6bca2a18"]
 
-;; 只能监听一次的DB变化
+;; jim0: 只能监听一次的DB变化
 ;; (prn (<!! stream-source))
+
+;; jim1: 监听多次的DB变化
+#_(a/go-loop []
+    (let [x (<!! stream-source)]
+      (println "Got a value in this loop:" x))
+    (recur))
