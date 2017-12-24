@@ -7,7 +7,8 @@
             [cider.nrepl :refer [cider-nrepl-handler]]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
-            [mount.core :as mount])
+            [mount.core :as mount]
+            [jimw-clj.db.ruby :as ruby])
   (:gen-class))
 
 (def cli-options
@@ -49,6 +50,11 @@
 
 (defn -main [& args]
   (cond
+    (some #{"rubytest"} args)
+    (do
+      (ruby/read-string-for-pro (fn [code-list file-name] (map first code-list)) "rails")
+      (System/exit 0)
+      )
     (some #{"migrate" "rollback"} args)
     (do
       (mount/start #'jimw-clj.config/env)
