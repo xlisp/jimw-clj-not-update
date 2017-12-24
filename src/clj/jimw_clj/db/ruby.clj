@@ -4,6 +4,17 @@
    [clojure.java.shell :as shell]
    [taoensso.timbre :refer [error debug info]]))
 
+(def remove-invalid-token
+  (fn [st]
+    (-> st
+        (str/replace #":@" ":at-rb")
+        (str/replace #":\[\]" ":arra-rb")
+        (str/replace #":\"(.*)\"" ":rb-symst-$1")
+        (str/replace ":*" ":rbstar")
+        (str/replace ":<<" ":rbleftleft")
+        (str/replace ":%" ":rbbaifen")
+        )))
+
 ;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "rails")
 (defn read-string-for-pro
   [op-fn & project]
@@ -27,16 +38,6 @@
         split-code
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
-                remove-invalid-token
-                (fn [st]
-                  (-> st
-                      (str/replace #":@" ":at-rb")
-                      (str/replace #":\[\]" ":arra-rb")
-                      (str/replace #":\"(.*)\"" ":rb-symst-$1")
-                      (str/replace ":*" ":rbstar")
-                      (str/replace ":<<" ":rbleftleft")
-                      (str/replace ":%" ":rbbaifen")
-                      ))
                 ;; TODOS catch 不了read-string的错误,以及语法和参数错误
                 code-list
                 (try
@@ -70,6 +71,9 @@
   (catch Exception e
     ()))
 
+;;(read-string "(aa :==)") ;; => (aa :==)
+;;(read-string "(aa :>)") ;;  => (aa :>)
+
 ;; (read-string (slurp "lib/ruby-jimw-code/rails/actionpack/lib/action_controller/metal/parameter_encoding.rb.ast"))
 
 ;; => (module (const nil :ActionController) ok呀
@@ -90,3 +94,11 @@
   (str/replace #":\[\]" ":arra-rb")
   )
  )
+
+
+(def ruby-ast
+  (remove-invalid-token
+   (slurp
+    "lib/ruby-jimw-code/rails/actionpack/lib/action_controller/metal/http_authentication.rb.ast")))
+
+
