@@ -200,6 +200,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * read-string非法规则的机器学习: 提取已经导入成功的代码的特征,过滤掉报错的read-string特征,最后剩下非法的read-string特征
 * 统计学思维: 统一收集错误,统一解决, 如果Clojure无法catch住的错误,那么把列表交给上一层的Shell去处理统计
 * 语言AST分解法则: 函数的定义和其他分开就可以了
+* 任何语言都在数据库中都只是保存AST或者S表达式,以便进一步做结构化的搜索,但是显示出来的语言原来的语法
 
 ## License
 
