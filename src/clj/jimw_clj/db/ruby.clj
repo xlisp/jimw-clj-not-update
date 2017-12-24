@@ -2,6 +2,7 @@
   (:require
    [clojure.string :as str]
    [clojure.java.shell :as shell]
+   [clojure.pprint :as pp]
    [taoensso.timbre :refer [error debug info]]))
 
 (defn remove-invalid-token [st]
@@ -38,3 +39,17 @@
             (op-fn code-list file-name)))]
     (for [file-name file-names]
       (split-code file-name))))
+
+;; (import-ruby-def-and-other ruby-ast "file-name" #(print %) #(print %))
+(defn import-ruby-def-and-other
+  [ruby-ast file-name save-def-fn save-other-fn]
+  (let [res (clojure.walk/postwalk
+             #(if (coll? %)
+                (do
+                  (if (is-rb-def %)
+                    (do
+                      (save-def-fn (pp/write % :dispatch pp/code-dispatch :stream nil))
+                      (list :def-ruby-function (second %)))
+                    %))  %) ruby-ast)]
+    (save-other-fn
+     (pp/write res :dispatch pp/code-dispatch :stream nil))))
