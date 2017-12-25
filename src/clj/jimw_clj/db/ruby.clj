@@ -40,6 +40,8 @@
     (for [file-name file-names]
       (split-code file-name))))
 
+;; (def ruby-ast (-> "lib/ruby-jimw-code/rails/actionpack/lib/action_controller/metal/http_authentication.rb.ast" slurp remove-invalid-token read-string))
+  
 ;; (import-ruby-def-and-other ruby-ast "file-name" #(print %) #(print %))
 (defn import-ruby-def-and-other
   [ruby-ast file-name save-def-fn save-other-fn]
