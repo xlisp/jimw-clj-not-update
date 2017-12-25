@@ -20,7 +20,7 @@ def translate(node_or_literal):
 def translate_literal(literal):
     "Translate a Python literal into a Lisp literal."
     if isinstance(literal, str):
-        return "\"" + literal + "\""
+        return "\"" + literal.replace("\"", "\\\"") + "\""
     elif isinstance(literal, bytes):
         return "#(%s)" % " ".join(map(str, literal))
     elif literal is None:
