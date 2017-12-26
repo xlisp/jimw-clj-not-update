@@ -203,6 +203,10 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 任何语言都在数据库中都只是保存AST或者S表达式,以便进一步做结构化的搜索,但是显示出来的语言原来的语法
 * 支持MMA和Elisp语言分解搜索
 
+## 代码语义搜索主要设计
+* ydiff的S通用: C++也可以S对比
+* 人可以通过实例来学习代码库,机器学习也可以: 通过实例或者文档wiki来机器学习,代码向量,通过实例的算法机器学习,来搜索识别隐藏在海量代码中的算法应用
+
 ## License
 
 Copyright © 2017 FIXME
