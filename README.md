@@ -212,6 +212,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 * 添加一张表监听Chrome的收藏文章,Websocket同步到"网页语音标记阅读"APP里面: 听王垠的文章
 * 加入搜索tag补全: `幽默六病` & 代码项目tag
+* 导入大规模的C代码搜索: 像Linux内核一样的代码=>重写一个Linux
 
 ## License
 
