@@ -202,8 +202,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 语言AST分解法则: 函数的定义和其他分开就可以了
 * 任何语言都在数据库中都只是保存AST或者S表达式,以便进一步做结构化的搜索,但是显示出来的语言原来的语法
 * 支持MMA和Elisp语言分解搜索
+* 导入ydiff的racket代码,以及fp-book的scheme代码,做代码搜索,导入racket官方的代码,scheme官方的代码
 
-## 代码语义搜索主要设计
+## 代码语义搜索主要设计: 基于ydiff的通用解析来做,进行扩展
 * ydiff的S通用: C++也可以S对比
 * 人可以通过实例来学习代码库,机器学习也可以: 通过实例或者文档wiki来机器学习,代码向量,通过实例的算法机器学习,来搜索识别隐藏在海量代码中的算法应用
 * PRML机器学习的意义在于模式识别,算法也是一种模式: https://github.com/chanshunli/fp-book/tree/master/algorithms将算法新解融入机器学习当中来
