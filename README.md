@@ -211,6 +211,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 参考里面的python的S表达式提取,转给postwalk去瘦身: https://github.com/racket-china/psydiff
 
 * 添加一张表监听Chrome的收藏文章,Websocket同步到"网页语音标记阅读"APP里面: 听王垠的文章
+* 加入搜索tag补全: `幽默六病` & 代码项目tag
 
 ## License
 
