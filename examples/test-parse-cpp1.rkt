@@ -1,0 +1,51 @@
+(list
+ (Node
+  'program
+  0
+  17
+  (list
+   (Node
+    'variable-definition
+    0
+    17
+    (list
+     (Node
+      'type
+      0
+      3
+      (list
+       (Node
+        'identifier
+        0
+        3
+        (list (Node 'id 0 3 (list (Node 'token 0 3 "int" #f #f)) #f #f))
+        #f
+        #f))
+      #f
+      #f)
+     (Node
+      'variable-declaration
+      4
+      16
+      (list
+       (Node
+        'identifier
+        4
+        9
+        (list (Node 'id 4 9 (list (Node 'token 4 9 "abcde" #f #f)) #f #f))
+        #f
+        #f)
+       (Node
+        'initializer
+        12
+        16
+        (list
+         (Node 'comma 12 16 (list (Node 'token 12 16 "8888" #f #f)) #f #f))
+        #f
+        #f))
+      #f
+      #f))
+    #f
+    #f))
+  #f
+  #f))
