@@ -209,6 +209,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 人可以通过实例来学习代码库,机器学习也可以: 通过实例或者文档wiki来机器学习,代码向量,通过实例的算法机器学习,来搜索识别隐藏在海量代码中的算法应用
 * PRML机器学习的意义在于模式识别,算法也是一种模式: https://github.com/chanshunli/fp-book/tree/master/algorithms将算法新解融入机器学习当中来
 
+* 添加一张表监听Chrome的收藏文章,Websocket同步到"网页语音标记阅读"APP里面: 听王垠的文章
+
 ## License
 
 Copyright © 2017 FIXME
