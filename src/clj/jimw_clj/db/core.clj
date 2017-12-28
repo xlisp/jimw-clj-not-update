@@ -800,6 +800,7 @@
               (prn (str "Error!  IndexOutOfBound " e)))
             ))))))
 
+;; (scheme/read-string-for-pro (fn [code-list file-name] (map first code-list)) "ydiff")
 ;; (import-cpp-s-exp-to-blog conn "ydiff")
 (defn import-cpp-s-exp-to-blog
   [db & project]
