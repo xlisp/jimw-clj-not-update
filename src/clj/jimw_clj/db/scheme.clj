@@ -49,7 +49,7 @@
     (for [file-name file-names]
       (split-code file-name))))
 
-(def scheme-ast-eg (first (read-string-for-pro (fn [code-list file-name] code-list) "ydiff")))
+;; (def scheme-ast-eg (first (read-string-for-pro (fn [code-list file-name] code-list) "ydiff")))
 
 (defn is-rkt-define
   [li]

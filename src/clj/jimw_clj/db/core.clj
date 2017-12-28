@@ -17,7 +17,8 @@
     [clojure.pprint :as pp]
     [clj-jri.R :as R]
     [cheshire.core :as cjson]
-    [clojure.core.async :as async])
+    [clojure.core.async :as async]
+    [jimw-clj.db.scheme :as scheme])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -798,3 +799,20 @@
             (catch IndexOutOfBoundsException e
               (prn (str "Error!  IndexOutOfBound " e)))
             ))))))
+
+;; (import-cpp-s-exp-to-blog conn "ydiff")
+(defn import-cpp-s-exp-to-blog
+  [db & project]
+  (let [content-fn
+        (fn [content]
+          (str "```scheme\n"
+               content
+               "\n```"))]
+    (scheme/read-string-for-pro
+     (fn [code-list file-name]
+       (do
+         (prn (str file-name " >>>>>>"))
+         (map
+          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          code-list)))
+     (if project (first project) nil))))
