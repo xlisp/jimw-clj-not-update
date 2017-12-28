@@ -58,8 +58,8 @@
                 remove-invalid-token
                 (fn [st]
                   (-> st
-                      (str/replace "i) #\\/)" "i) -back-slant28-que-")
-                      (str/replace "#\\" "-back-slant27-que-")
+                      ;;(str/replace "i) #\\/)" "i) -back-slant28-que-")
+                      ;;(str/replace "#\\" "-back-slant27-que-")
                       (str/replace "#lang racket" "")
                       (str/replace "#\\/" "-back-slant28-que-")
                       (str/replace "#:" "-back-slant29-que-")
@@ -68,7 +68,7 @@
                       (str/replace "=>" "back-slant29-que")
                       (str/replace "#t" "sharp-tttttt")
                       (str/replace "#\\_" "back-slant30-que")
-                      (str/replace "\\'" "back-slant31-que")
+                      ;;(str/replace "\\'" "back-slant31-que")
                       (str/replace "^" "-back-slant32-que")
                       (str/replace "#\\." "-back-slant33-que")
                       (str/replace "#\\\"" "-back-slant34-que")
