@@ -806,7 +806,7 @@
   (let [content-fn
         (fn [content]
           (str "```scheme\n"
-               content
+               (pp/write content :dispatch pp/code-dispatch :stream nil)
                "\n```"))]
     (scheme/read-string-for-pro
      (fn [code-list file-name]
