@@ -216,6 +216,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 把postwalk做成一个结构搜索: 搜索define结构, **复合算法结构  ①  ①
 * 在代码结构搜索的基础上实现: 流式的代码修改就像流式的数据管道修改一样容易,即简单的修改不可变数据沿路的纯函数都跟着数据改变而改变=>最小力气修改重复代码工作
 
+## ① jimw-clj开始无限连接安卓了
+
 ## License
 
 Copyright © 2017 FIXME
