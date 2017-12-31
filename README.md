@@ -217,6 +217,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 在代码结构搜索的基础上实现: 流式的代码修改就像流式的数据管道修改一样容易,即简单的修改不可变数据沿路的纯函数都跟着数据改变而改变=>最小力气修改重复代码工作
 
 ## ① jimw-clj开始无限连接安卓了
+* Websocket同步多个应用和多个设备,不用刷新了①
+* 太多任务了,自动排序简单和有趣和影响力大的①
+* 导入readme的todo到分布式的todo里面
 
 ## License
 
