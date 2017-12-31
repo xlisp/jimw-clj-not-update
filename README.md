@@ -219,7 +219,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ## ① jimw-clj开始无限连接安卓了
 * Websocket同步多个应用和多个设备,不用刷新了①
 * 太多任务了,自动排序简单和有趣和影响力大的①
-* 导入readme的todo到分布式的todo里面
+* 导入readme的todo到分布式的todo里面: 用更新todos来更新jimw-clj目录①
 
 ## License
 
