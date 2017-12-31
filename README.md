@@ -220,6 +220,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * Websocket同步多个应用和多个设备,不用刷新了①
 * 太多任务了,自动排序简单和有趣和影响力大的①
 * 导入readme的todo到分布式的todo里面: 用更新todos来更新jimw-clj目录①
+* 复杂算法就像his_graph.dot的组合一样,复杂算法的自动搜索分解也是这样的①, 只是关注每一个联系层面的算法(一个维度),其他的不显示就好了(其他的维度)
 
 ## License
 
