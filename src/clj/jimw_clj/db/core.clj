@@ -36,24 +36,22 @@
 
 (def segmenter (JiebaSegmenter.))
 
-;; (jieba-seg "这是一个伸手不见五指的黑夜。我叫Steve，我爱北京")
-;; => [[这是 0 2] [一个 2 4] [伸手不见五指 4 10] [的 10 11] [黑夜 11 13] [。 13 14] [我 14 15] [叫 15 16] [steve 16 21] [， 21 22] [我 22 23] [爱 23 24] [北京 24 26]]
+;;=> (["这是" 0 2] ["一个" 2 4] ["伸手不见五指" 4 10] ["的" 10 11] ["黑夜" 11 13] ["。" 13 14] ["我" 14 15] ["叫" 15 16] ["steve" 16 21] ["，" 21 22] ["我" 22 23] ["爱" 23 24] ["北京" 24 26])
 (defn jieba-seg [st]
-  (->
-   segmenter
-   (.process st JiebaSegmenter$SegMode/SEARCH)
-   .toString
-   read-string))
+  (map
+   (fn [seg] (vector (.word seg) (.startOffset seg) (.endOffset seg)))
+   (->
+    segmenter
+    (.process st JiebaSegmenter$SegMode/SEARCH))))
 
 ;; (jieba-wordcloud "这是一个伸手不见五指的黑夜。我叫Steve，我爱北京, 我爱Clojure")
-;; => ([我 3] [爱 2] [叫 1] [伸手不见五指 1] [27 1] [五指 1] [steve 1] [这是 1] [一个 1] [。 1] [黑夜 1] [北京 1] [不见 1] [clojure 1] [， 1] [26 1] [伸手 1] [的 1])
+;; => (["我" 3] ["爱" 2] ["clojure" 1] ["黑夜" 1] ["这是" 1] ["一个" 1] ["不见" 1] ["伸手不见五指" 1] ["的" 1] ["北京" 1] ["伸手" 1] ["," 1] ["steve" 1] ["。" 1] ["，" 1] ["叫" 1] [" " 1] ["五指" 1])
 (defn jieba-wordcloud [st]
   (->>
    (->
     segmenter
-    (.process st JiebaSegmenter$SegMode/INDEX)
-    .toString
-    read-string)
+    (.process st JiebaSegmenter$SegMode/INDEX))
+   (map (fn [seg] (vector (.word seg) (.startOffset seg) (.endOffset seg))))
    (map first)
    (group-by identity)
    (map (fn [x] (vector (first x) (count (last x)))))
@@ -212,14 +210,16 @@
 
 (def tree-out-puts (atom ()))
 
-;; TODO: 机器学习,自动分行,断句,连接词和介词换行
+;; (replace-tree-enter "这是一个伸手不见五指的黑夜。我叫Steve，我爱北京, 我爱Clojure")
+;; => "这是一个伸手不见五指\n的黑夜。\n我叫steve\n，我爱\n北京, \n我爱clojure"
 (defn replace-tree-enter
   [st]
-  (-> st
-      (clojure.string/replace #",|\.|，|。| |:|=>" "\n")
-      (clojure.string/replace "的" "的\n")
-      (clojure.string/replace "和" "和\n")
-      (clojure.string/replace "以" "以\n")))
+  (->> st
+       jieba-seg
+       (map first)
+       (partition 3 3 [""])
+       (map (fn [x] (clojure.string/join "" x)))
+       (clojure.string/join "\n")))
   
 ;; (tree-todo-generate {:db conn :blog 4859})
 (defn tree-todo-generate
