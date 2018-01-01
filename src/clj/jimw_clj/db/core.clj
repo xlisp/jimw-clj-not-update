@@ -45,6 +45,20 @@
    .toString
    read-string))
 
+;; (jieba-wordcloud "这是一个伸手不见五指的黑夜。我叫Steve，我爱北京, 我爱Clojure")
+;; => ([我 3] [爱 2] [叫 1] [伸手不见五指 1] [27 1] [五指 1] [steve 1] [这是 1] [一个 1] [。 1] [黑夜 1] [北京 1] [不见 1] [clojure 1] [， 1] [26 1] [伸手 1] [的 1])
+(defn jieba-wordcloud [st]
+  (->>
+   (->
+    segmenter
+    (.process st JiebaSegmenter$SegMode/INDEX)
+    .toString
+    read-string)
+   (map first)
+   (group-by identity)
+   (map (fn [x] (vector (first x) (count (last x)))))
+   (sort-by #(* -1 (last %)))))
+
 ;; Load R lib & function
 (def r-lib
   ["library(tm)"
