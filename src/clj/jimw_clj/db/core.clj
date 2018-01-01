@@ -29,7 +29,21 @@
             Timestamp
             PreparedStatement]
            [java.sql SQLException]
-           [java.lang IndexOutOfBoundsException]))
+           [java.lang IndexOutOfBoundsException]
+           [com.huaban.analysis.jieba JiebaSegmenter]
+           ;; 对于JiebaSegmenter类里面的`static enum SegMode`的引用
+           [com.huaban.analysis.jieba JiebaSegmenter$SegMode]))
+
+(def segmenter (JiebaSegmenter.))
+
+;; (jieba-seg "这是一个伸手不见五指的黑夜。我叫Steve，我爱北京")
+;; => [[这是 0 2] [一个 2 4] [伸手不见五指 4 10] [的 10 11] [黑夜 11 13] [。 13 14] [我 14 15] [叫 15 16] [steve 16 21] [， 21 22] [我 22 23] [爱 23 24] [北京 24 26]]
+(defn jieba-seg [st]
+  (->
+   segmenter
+   (.process st JiebaSegmenter$SegMode/SEARCH)
+   .toString
+   read-string))
 
 ;; Load R lib & function
 (def r-lib
