@@ -222,7 +222,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 导入readme的todo到分布式的todo里面: 用更新todos来更新jimw-clj目录①
 * 复杂算法就像his_graph.dot的组合一样,复杂算法的自动搜索分解也是这样的①, 只是关注每一个联系层面的算法(一个维度),其他的不显示就好了(其他的维度)
 * 专门做一个Websocket页面来实时更新全屏展示GraphViz: 就像GraphViz.app一样,然后可以展示各个todo进度,还有做决策树训练 ① 
-* 以tree-fn-new函数为核心,连接S代码分开保存的上下节点,递归连接可展现整个程序,就像ydiff一样有数字标记树中的位置,可以做代码更改jim0,jim1的对比等 ==>> 分开来才可以方便加各种维度特征进去,做代码语义搜索机器学习①
+* 好的艺术家窃取想法,差的艺术家抄袭作品: 以tree-fn-new函数为核心,连接S代码分开保存的上下节点,递归连接可展现整个程序,就像ydiff一样有数字标记树中的位置,可以做代码更改jim0,jim1的对比等 ==>> 分开来才可以方便加各种维度特征进去,做代码语义搜索机器学习①
 
 ## License
 
