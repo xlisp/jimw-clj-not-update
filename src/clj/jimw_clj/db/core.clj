@@ -845,3 +845,17 @@
           (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
           code-list)))
      (if project (first project) nil))))
+
+
+(defn export-todo-itemsets []
+  (let [todo-itemsets (map
+                       (fn [{:keys [content]}]
+                         (str (clojure.string/join "," (map first (jieba-seg content))) "\n")
+                         )
+                       (jconn conn
+                              (-> (h/select :content)
+                                  (h/from :todos))))]
+    (with-open [wtr (clojure.java.io/writer
+                     (str "resources/public/todo-itemsets.csv"))]
+      (doseq [line todo-itemsets]
+        (.write wtr line)))))
