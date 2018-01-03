@@ -861,3 +861,29 @@
                      (str "resources/public/todo-itemsets.csv"))]
       (doseq [line todo-itemsets]
         (.write wtr line)))))
+
+#_(map get-eng-name-word
+       (-> (shell/sh "bin/jieba-test.py") :out cjson/parse-string))
+(defn get-eng-name-word [items]
+  (map
+   first
+   (filter
+    (fn [x]
+      (or (re-matches #"n(.*)" (last x))
+          (= "eng" (last x)))) items)))
+
+(defn export-jieba-name-todo-itemsets []
+  (let [todo-itemsets (map
+                       (fn [{:keys [content]}]
+                         (str (clojure.string/join
+                               ","
+                               (first
+                                (map get-eng-name-word
+                                     (-> (shell/sh "bin/jieba.py" content) :out cjson/parse-string))))))
+                       (jconn conn
+                              (-> (h/select :content)
+                                  (h/from :todos))))]
+    (with-open [wtr (clojure.java.io/writer
+                     (str "resources/public/todo-itemsets-new.csv"))]
+      (doseq [line todo-itemsets]
+        (.write wtr line)))))
