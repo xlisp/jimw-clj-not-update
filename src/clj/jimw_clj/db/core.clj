@@ -18,7 +18,8 @@
     [clj-jri.R :as R]
     [cheshire.core :as cjson]
     [clojure.core.async :as async]
-    [jimw-clj.db.scheme :as scheme])
+    [jimw-clj.db.scheme :as scheme]
+    [hanlping.core :as han])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
