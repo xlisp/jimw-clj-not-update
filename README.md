@@ -226,6 +226,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * jim-emacs-fun-r-lisp/todos-apriori.R特征提取问题: todos任务关联规则, todo分词之后需要制定一个' 东西'类别或者一个名词'洗澡,洗衣服'等,提高关联规则识别率, 最简单粗暴的方法可以提取todo的名词作为一个todoitem ①
 * 一个分布式todo代码的commit系统: jimw-clj和jim-emacs-fun-r-lisp同时commit
 * com.huaban/jieba-analysis不支持词性标注,只能采用Hanlp或者第一版jieba(C++和Python)
+```bash
+## 不行, 还是会死掉, hanlp太消耗内存了
+##  (time (han/to-seg-list "你看过穆赫兰道吗" " )西鄱阳湖干枯")
+## OutOfMemoryError Java heap space  java.nio.HeapByteBuffer.<init> (HeapByteBuffer.java:57)
+```
 
 ## License
 
