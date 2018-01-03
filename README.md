@@ -225,6 +225,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 好的艺术家窃取想法,差的艺术家抄袭作品: 以tree-fn-new函数为核心,连接S代码分开保存的上下节点,递归连接可展现整个程序,就像ydiff一样有数字标记树中的位置,可以做代码更改jim0,jim1的对比等 ==>> 分开来才可以方便加各种维度特征进去,做代码语义搜索机器学习①
 * jim-emacs-fun-r-lisp/todos-apriori.R特征提取问题: todos任务关联规则, todo分词之后需要制定一个' 东西'类别或者一个名词'洗澡,洗衣服'等,提高关联规则识别率, 最简单粗暴的方法可以提取todo的名词作为一个todoitem ①
 * 一个分布式todo代码的commit系统: jimw-clj和jim-emacs-fun-r-lisp同时commit
+* com.huaban/jieba-analysis不支持词性标注,只能采用Hanlp或者第一版jieba(C++和Python)
 
 ## License
 
