@@ -223,6 +223,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 复杂算法就像his_graph.dot的组合一样,复杂算法的自动搜索分解也是这样的①, 只是关注每一个联系层面的算法(一个维度),其他的不显示就好了(其他的维度)
 * 专门做一个Websocket页面来实时更新全屏展示GraphViz: 就像GraphViz.app一样,然后可以展示各个todo进度,还有做决策树训练 ① 
 * 好的艺术家窃取想法,差的艺术家抄袭作品: 以tree-fn-new函数为核心,连接S代码分开保存的上下节点,递归连接可展现整个程序,就像ydiff一样有数字标记树中的位置,可以做代码更改jim0,jim1的对比等 ==>> 分开来才可以方便加各种维度特征进去,做代码语义搜索机器学习①
+* jim-emacs-fun-r-lisp/todos-apriori.R特征提取问题: todos任务关联规则, todo分词之后需要制定一个' 东西'类别或者一个名词'洗澡,洗衣服'等,提高关联规则识别率, 最简单粗暴的方法可以提取todo的名词作为一个todoitem ①
 
 ## License
 
