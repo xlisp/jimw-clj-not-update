@@ -875,7 +875,7 @@
 (defn export-jieba-name-todo-itemsets [db]
   (let [todo-list (map
                    (fn [{:keys [content]}] content)
-                   (jconn conn
+                   (jconn db
                           (-> (h/select :content)
                               (h/from :todos))))
         todo-itemsets
@@ -886,4 +886,30 @@
     (with-open [wtr (clojure.java.io/writer
                      (str "resources/public/todo-itemsets-new.csv"))]
       (doseq [line todo-itemsets]
+        (.write wtr line)))))
+
+;; 生成todo list itemsets程序, (generate-todos-json-for-python conn) => (generate-todo-itemsets)
+(defn generate-todos-json-for-python [db]
+  (let [todo-json
+        (cjson/generate-string
+         (map
+          (fn [{:keys [content]}] content)
+          (jconn db
+                 (-> (h/select :content)
+                     (h/from :todos)))))]
+    (with-open [wtr (clojure.java.io/writer
+                     (str "todos.json"))]
+      (.write wtr todo-json))))
+
+(defn generate-todo-itemsets []
+  (let [name-eng-list
+        (map
+         (fn [x]
+           (str (clojure.string/join "," x) "\n"))
+         (map get-eng-name-word
+              (-> (shell/sh "python2.7" "/home/clojure/jieba_cut.py")
+                  :out cjson/parse-string)))]
+    (with-open [wtr (clojure.java.io/writer
+                     (str "todo-itemsets-new.csv"))]
+      (doseq [line name-eng-list]
         (.write wtr line)))))
