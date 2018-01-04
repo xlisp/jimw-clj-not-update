@@ -873,16 +873,16 @@
           (= "eng" (last x)))) items)))
 
 (defn export-jieba-name-todo-itemsets [db]
-  (let [todo-itemsets (map
-                       (fn [{:keys [content]}]
-                         (str (clojure.string/join
-                               ","
-                               (first
-                                (map get-eng-name-word
-                                     (-> (shell/sh "python2.7" "/home/clojure/jieba_cut.py" content) :out cjson/parse-string))))))
-                       (jconn db
-                              (-> (h/select :content)
-                                  (h/from :todos))))]
+  (let [todo-list (map
+                   (fn [{:keys [content]}] content)
+                   (jconn conn
+                          (-> (h/select :content)
+                              (h/from :todos))))
+        todo-itemsets
+        (map
+         (fn [x]
+           (str (clojure.string/join "," x)))
+         (apply shell/sh (apply conj todo-list (list "python2.7" "/home/clojure/jieba_cut.py"))))]
     (with-open [wtr (clojure.java.io/writer
                      (str "resources/public/todo-itemsets-new.csv"))]
       (doseq [line todo-itemsets]
