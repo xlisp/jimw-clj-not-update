@@ -849,12 +849,12 @@
      (if project (first project) nil))))
 
 
-(defn export-todo-itemsets []
+(defn export-todo-itemsets [db]
   (let [todo-itemsets (map
                        (fn [{:keys [content]}]
                          (str (clojure.string/join "," (map first (jieba-seg content))) "\n")
                          )
-                       (jconn conn
+                       (jconn db
                               (-> (h/select :content)
                                   (h/from :todos))))]
     (with-open [wtr (clojure.java.io/writer
@@ -862,8 +862,8 @@
       (doseq [line todo-itemsets]
         (.write wtr line)))))
 
-#_(map get-eng-name-word
-       (-> (shell/sh "bin/jieba-test.py") :out cjson/parse-string))
+;; (map get-eng-name-word (-> (shell/sh "python2.7" "/home/clojure/jieba_cut.py" "我爱北京" "我爱北京天安门" "我爱Clojure") :out cjson/parse-string))
+;; ["我爱北京", "我爱北京天安门", "我爱Clojure"] => (("北京") ("北京" "天安门") ("Clojure"))
 (defn get-eng-name-word [items]
   (map
    first
@@ -872,15 +872,15 @@
       (or (re-matches #"n(.*)" (last x))
           (= "eng" (last x)))) items)))
 
-(defn export-jieba-name-todo-itemsets []
+(defn export-jieba-name-todo-itemsets [db]
   (let [todo-itemsets (map
                        (fn [{:keys [content]}]
                          (str (clojure.string/join
                                ","
                                (first
                                 (map get-eng-name-word
-                                     (-> (shell/sh "bin/jieba.py" content) :out cjson/parse-string))))))
-                       (jconn conn
+                                     (-> (shell/sh "python2.7" "/home/clojure/jieba_cut.py" content) :out cjson/parse-string))))))
+                       (jconn db
                               (-> (h/select :content)
                                   (h/from :todos))))]
     (with-open [wtr (clojure.java.io/writer
