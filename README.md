@@ -227,6 +227,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 一个分布式todo代码的commit系统: jimw-clj和jim-emacs-fun-r-lisp同时commit
 * com.huaban/jieba-analysis不支持词性标注,只能采用Hanlp或者第一版jieba(C++和Python) => hanlp太消耗内存了(1G会OutOfMemoryError) , 线上使用`bin/jieba.py`可以低内存运行
 * 增强todos相互之间的引用能力: 就像库环境一样,快速开发新的todo, 增加todo的多维度数据
+* 用postwalk搜索来做一个算法新解的算法搜索应用的应用,推出去到开源给大家用,然后再做一个广义的算法搜索工具,用于机器学习和深度学习的算法中去,利于大部分人随时随地学习算法
 
 ## License
 
