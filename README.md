@@ -227,7 +227,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 一个分布式todo代码的commit系统: jimw-clj和jim-emacs-fun-r-lisp同时commit
 * com.huaban/jieba-analysis不支持词性标注,只能采用Hanlp或者第一版jieba(C++和Python) => hanlp太消耗内存了(1G会OutOfMemoryError) , 线上使用`bin/jieba.py`可以低内存运行
 * 增强todos相互之间的引用能力: 就像库环境一样,快速开发新的todo, 增加todo的多维度数据
-* 用postwalk搜索来做一个算法新解的算法搜索应用的应用,推出去到开源给大家用,然后再做一个广义的算法搜索工具,用于机器学习和深度学习的算法中去,利于大部分人随时随地学习算法
+
+## 用postwalk搜索来做一个算法新解的算法搜索应用的应用,推出去到开源给大家用,然后再做一个广义的算法搜索工具,用于机器学习和深度学习的算法中去,利于大部分人随时随地学习算法 ①
+* 个人的学习能力和公司和学校是无关的,就像好的学校照样出来学渣一样: 无限的运用自身和身边的资源的创造力,把自己的能力网络和世界联通起来
+* 以List作为核心的数据类型,算法只是不同的List数据组合而已,就像业务的数据表关系Viz一样,只是展示了其中一种组合的业务模式
+* A算法分解成独立的List小块,通过一定的结构搜索,可以把A算法重新组合起来: 以组合搜索为核心
 
 ## License
 
