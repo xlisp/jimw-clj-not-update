@@ -234,7 +234,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * A算法分解成独立的List小块,通过一定的结构搜索,可以把A算法重新组合起来: 以组合搜索为核心
 * 不管是枯燥的还是不喜欢的,一切皆是桥,来度化你的: 脱离了世界的网络,一个人反而很难建立起来真正实用的jimw-clj来, 需要挑战思考时快速λ演算,没有什么思路时就完成一些不用脑子的任务或者事情
 
-* Google搜索`clojure regex match mutil line` => 自动更正拼写和语义: ` clojure regex match multiline ` ① jimwclj的搜索自动更正拼写和语义
+* Google搜索`clojure regex match mutil line` => 自动更正拼写和语义: ` clojure regex match multiline ` ① jimwclj的搜索自动更正拼写和语义 ==>> `Fixed search:regex match mutil line start end => Match inclusive between start and end over multiple lines`
 
 ## License
 
