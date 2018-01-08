@@ -18,7 +18,7 @@
     [clj-jri.R :as R]
     [cheshire.core :as cjson]
     [clojure.core.async :as async]
-    [jimw-clj.db.scheme :as scheme]
+    [jimw-clj.db.racket :as racket]
     ;;[hanlping.core :as han]
     )
   (:import org.postgresql.util.PGobject
@@ -830,16 +830,16 @@
               (prn (str "Error!  IndexOutOfBound " e)))
             ))))))
 
-;; (scheme/read-string-for-pro (fn [code-list file-name] (map first code-list)) "ydiff")
+;; (racket/read-string-for-pro (fn [code-list file-name] (map first code-list)) "ydiff")
 ;; (import-cpp-s-exp-to-blog conn "ydiff")
 (defn import-cpp-s-exp-to-blog
   [db & project]
   (let [content-fn
         (fn [content]
-          (str "```scheme\n"
+          (str "```racket\n"
                (pp/write content :dispatch pp/code-dispatch :stream nil)
                "\n```"))]
-    (scheme/read-string-for-pro
+    (racket/read-string-for-pro
      (fn [code-list file-name]
        (do
          (prn (str file-name " >>>>>>"))

@@ -1,4 +1,4 @@
-(ns jimw-clj.db.scheme
+(ns jimw-clj.db.racket
   (:require
    [clojure.string :as str]
    [clojure.java.shell :as shell]
@@ -13,7 +13,7 @@
          (->
           (shell/sh "find"
                     (if project
-                      (str "lib/scheme-jimw-code/" (first project))
+                      (str "lib/racket-jimw-code/" (first project))
                       "lib") "-name" "*.rkt") :out
           (clojure.string/split #"\n")))
         split-code
@@ -48,7 +48,7 @@
     (for [file-name file-names]
       (split-code file-name))))
 
-;; (read-string-for-file (fn [code-list file-name] (map first code-list)) "lib/scheme-jimw-code/ydiff/parse-lisp.rkt")
+;; (read-string-for-file (fn [code-list file-name] (map first code-list)) "lib/racket-jimw-code/ydiff/parse-lisp.rkt")
 (defn read-string-for-file
   [op-fn file-name]
   (let [split-code
@@ -83,24 +83,24 @@
             (op-fn code-list file-name)))]
     (split-code file-name)))
 
-;; (slurp "lib/scheme-jimw-code/ydiff/aaa")
-;; (def scheme-ast-eg (first (read-string-for-pro (fn [code-list file-name] code-list) "ydiff")))
+;; (slurp "lib/racket-jimw-code/ydiff/aaa")
+;; (def racket-ast-eg (first (read-string-for-pro (fn [code-list file-name] code-list) "ydiff")))
 
 (defn is-rkt-define
   [li]
   (= (first li) (symbol "define")))
 
 ;; TODOS: 把postwalk做成一个结构搜索: 搜索define结构, **复合算法结构
-;; (search-scheme-def-and-other scheme-ast-eg "file-name" #(print %) #(print (str "======" %)))
-(defn search-scheme-def-and-other
-  [scheme-ast file-name save-def-fn save-other-fn]
+;; (search-racket-def-and-other racket-ast-eg "file-name" #(print %) #(print (str "======" %)))
+(defn search-racket-def-and-other
+  [racket-ast file-name save-def-fn save-other-fn]
   (let [res (clojure.walk/postwalk
              #(if (coll? %)
                 (do
                   (if (is-rkt-define %) #_(is-rkt-def %)
                       (do
                         (save-def-fn (pp/write % :dispatch pp/code-dispatch :stream nil))
-                        (list :def-scheme-function (second %)))
-                      %))  %) scheme-ast)]
+                        (list :def-racket-function (second %)))
+                      %))  %) racket-ast)]
     (save-other-fn
      (pp/write res :dispatch pp/code-dispatch :stream nil))))
