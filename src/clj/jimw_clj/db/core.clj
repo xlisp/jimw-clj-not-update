@@ -832,8 +832,8 @@
             ))))))
 
 ;; (racket/read-string-for-pro (fn [code-list file-name] (map first code-list)) "ydiff")
-;; (import-cpp-s-exp-to-blog conn "ydiff")
-(defn import-cpp-s-exp-to-blog
+;; (import-racket-s-exp-to-blog conn "ydiff")
+(defn import-racket-s-exp-to-blog
   [db & project]
   (let [content-fn
         (fn [content]
@@ -849,6 +849,23 @@
           code-list)))
      (if project (first project) nil))))
 
+;; (scheme/read-string-for-pro (fn [code-list file-name] (map first code-list)) "AlgoXY")
+;; (import-scheme-s-exp-to-blog conn "AlgoXY")
+(defn import-scheme-s-exp-to-blog
+  [db & project]
+  (let [content-fn
+        (fn [content]
+          (str "```scheme\n"
+               (pp/write content :dispatch pp/code-dispatch :stream nil)
+               "\n```"))]
+    (scheme/read-string-for-pro
+     (fn [code-list file-name]
+       (do
+         (prn (str file-name " >>>>>>"))
+         (map
+          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          code-list)))
+     (if project (first project) nil))))
 
 (defn export-todo-itemsets [db]
   (let [todo-itemsets (map
