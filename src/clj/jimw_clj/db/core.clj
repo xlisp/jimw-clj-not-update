@@ -19,6 +19,7 @@
     [cheshire.core :as cjson]
     [clojure.core.async :as async]
     [jimw-clj.db.racket :as racket]
+    [jimw-clj.db.scheme :as scheme]
     ;;[hanlping.core :as han]
     )
   (:import org.postgresql.util.PGobject

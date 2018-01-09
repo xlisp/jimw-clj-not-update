@@ -10,11 +10,12 @@
       (str/replace #"(?s)[#\|]+(.*?)\|#" "")
       (str/replace "#f" "sharp-function")))
 
-(def scheme-s-list-eg
+;; (scheme-s-list-eg "lib/scheme-jimw-code/AlgoXY/datastruct/elementary/queue/src/lazy-queue.scm")
+(defn scheme-s-list-eg [file]
   (read-string
    (str "(list "
         (->>
-         (slurp "lib/scheme-jimw-code/AlgoXY/datastruct/elementary/queue/src/lazy-queue.scm")
+         (slurp file)
          remove-invalid-token) ")")))
 
 ;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "AlgoXY")
