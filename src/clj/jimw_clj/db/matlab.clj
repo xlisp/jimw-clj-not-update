@@ -60,3 +60,28 @@ SYMBOL = #'[\\pL_$&/=+~:<>|§?*-][\\pL\\p{Digit}_$&/=+~.:<>|§?*-]*'
 ;; => [:comment "#| dasdsadsa \n dsadsa \n dasdas |#"]
 (def test-parser
   (insta/parser "comment = #'(?s)[#\\|]+(.*?)\\|#'"))
+
+;; => (test2-parser "{dsadas}") ;;=> [:comment "{dsadas}"]
+(def test2-parser
+  (insta/parser "comment = #'(?s)[{]+(.*?)}'"))
+
+;;(re-find #"function[ ]+[\w]+" "function aaa") ;; => "function aaa"
+;;(re-find #"function[ ]+[\w]+[ ]?\([\w]+\)[ ]?" "function aaa(bbb)") ;; => "function aaa(bbb)"
+(def test3-parser
+  (insta/parser "funhead = #'function[ ]+[\\w]+'
+funbody = #'(?s)[{]+(.*?)}'
+"))
+;; (test3-parser "function aaa") ;;=> [:funhead "function aaa"]
+
+#_(re-find #"function(?s)[\(]+(.*?)\)(?s)[{]+(.*?)}"
+         "function(dasdas\n dasdas){dsadas\n dasds32321 }")
+;; => ["function(dasdas\n dasdas){dsadas\n dasds32321 }" "dasdas\n dasdas" "dsadas\n dasds32321 "]
+
+#_(re-find #"function[ ]+[\w]+[ ]?(?s)[\(]+(.*?)\)[ ]?(?s)[{]+(.*?)}"
+         "function aaa (dasdas){dsadas\n dasds32321 }")
+;;=> ["function aaa (dasdas){dsadas\n dasds32321 }" "dasdas" "dsadas\n dasds32321 "]
+
+;; 所以必须所有的{}括号和()都要被识别是什么类型的表达式才行, 否则只会匹配到了一只就放弃匹配了, 而是要递归的匹配结构
+#_(re-find #"function[ ]+[\w]+[ ]?(?s)[\(]+(.*?)\)[ ]?(?s)[{]+(.*?)}"
+         "function aaa (dasdas){dsadas\n dasds32321{dsadsadsa} 32132321 \n  }")
+;; => ["function aaa (dasdas){dsadas\n dasds32321{dsadsadsa}" "dasdas" "dsadas\n dasds32321{dsadsadsa"]
