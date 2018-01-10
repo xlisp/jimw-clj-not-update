@@ -131,3 +131,17 @@ SYMBOL = #'[\\w]+'
 ;; (test8-parser "(dasdas)") ;;=> ([:LIST [:SYMBOL "dasdas"]])
 ;; (test8-parser "(dasdas dasdsa)") ;; 错误
 ;; (test8-parser "((dasdas))") ;;=> ([:LIST [:LIST [:SYMBOL "dasdas"]]])
+
+(def test9-parser
+  (insta/parser "
+<SEXP> = (DEFUN / SYMBOL / ARGS / BODY)
+DEFUN = DEFUN_KEYWORD space+ SYMBOL ARGS BODY
+SYMBOL = #'[\\w]+'
+DEFUN_KEYWORD = 'function'
+<space> = <#'[ ]+'>
+ARGS = <'('> SEXP <')'>
+BODY = <'{'> SEXP <'}'>
+"))
+
+;; (test9-parser "function dsadsa(dasdsa){({uuiijj})}")
+;; => ([:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"] [:ARGS [:SYMBOL "dasdsa"]] [:BODY [:ARGS [:BODY [:SYMBOL "uuiijj"]]]]])
