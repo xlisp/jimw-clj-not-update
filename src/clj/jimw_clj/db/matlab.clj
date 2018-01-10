@@ -145,3 +145,21 @@ BODY = <'{'> SEXP <'}'>
 
 ;; (test9-parser "function dsadsa(dasdsa){({uuiijj})}")
 ;; => ([:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"] [:ARGS [:SYMBOL "dasdsa"]] [:BODY [:ARGS [:BODY [:SYMBOL "uuiijj"]]]]])
+
+(def js-parser
+  (insta/parser "
+<SEXP> = (DEFUN / SYMBOL / ARGS / BODY / CALL / space+)
+DEFUN = ARGS BODY
+SYMBOL = #'[\\w]+'
+DEFUN_KEYWORD = 'function'
+<space> = <#'[ ]+'>
+CALL = SYMBOL <'('> SEXP <')'>
+ARGS = DEFUN_KEYWORD space+ SYMBOL <'('> SEXP <')'>
+BODY = <'{'> space? SEXP space? <'}'>
+"))
+
+;;(js-parser "function hello(xyz){ alert(abcde) }")
+;;=>
+#_[:DEFUN
+ [:ARGS [:DEFUN_KEYWORD "function"] [:SYMBOL "hello"] [:SYMBOL "xyz"]]
+ [:BODY [:CALL [:SYMBOL "alert"] [:SYMBOL "abcde"]]]]
