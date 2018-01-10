@@ -115,3 +115,19 @@ DEFUN_KEYWORD = 'function'
 ARGS = #'(?s)[\\(]+(.*?)\\)'
 BODY = #'(?s)[{]+(.*?)}'
 "))
+
+;; (test7-parser "function dsadsa(dasdsa){dasdsadsa\ndsads (dasdas) \n dasds321321}")
+;;  => [:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"] [:ARGS "(dasdsa)"] [:BODY "{dasdsadsa\ndsads (dasdas) \n dasds321321}"]]
+
+;; (test7-parser "function dsadsa(dasdsa){dasdsadsa\ndsads (dasdas) \n dasds321321 {dasdas \n dasdsa321312} }") ;;=> 解析失败
+
+(def test8-parser
+  (insta/parser "
+<SEXP> = (LIST / SYMBOL)
+LIST = <'('> SEXP <')'>
+SYMBOL = #'[\\w]+'
+"))
+
+;; (test8-parser "(dasdas)") ;;=> ([:LIST [:SYMBOL "dasdas"]])
+;; (test8-parser "(dasdas dasdsa)") ;; 错误
+;; (test8-parser "((dasdas))") ;;=> ([:LIST [:LIST [:SYMBOL "dasdas"]]])
