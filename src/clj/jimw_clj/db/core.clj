@@ -20,6 +20,7 @@
     [clojure.core.async :as async]
     [jimw-clj.db.racket :as racket]
     [jimw-clj.db.scheme :as scheme]
+    [jimw-clj.db.matlab :as matlab]
     ;;[hanlping.core :as han]
     )
   (:import org.postgresql.util.PGobject
