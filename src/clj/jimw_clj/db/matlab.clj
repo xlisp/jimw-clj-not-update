@@ -85,3 +85,33 @@ funbody = #'(?s)[{]+(.*?)}'
 #_(re-find #"function[ ]+[\w]+[ ]?(?s)[\(]+(.*?)\)[ ]?(?s)[{]+(.*?)}"
          "function aaa (dasdas){dsadas\n dasds32321{dsadsadsa} 32132321 \n  }")
 ;; => ["function aaa (dasdas){dsadas\n dasds32321{dsadsadsa}" "dasdas" "dsadas\n dasds32321{dsadsadsa"]
+
+
+;; (test5-parser "functiondsadsa") ;;=> [:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"]]
+(def test5-parser
+  (insta/parser "
+DEFUN = DEFUN_KEYWORD SYMBOL
+SYMBOL = #'[\\w]+'
+DEFUN_KEYWORD = 'function'
+"))
+
+;; (test6-parser "function dsadsa") ;;=> [:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"]]
+(def test6-parser
+  (insta/parser "
+DEFUN = DEFUN_KEYWORD space+ SYMBOL
+SYMBOL = #'[\\w]+'
+DEFUN_KEYWORD = 'function'
+<space> = <#'[ ]+'>
+"))
+
+;; (test7-parser "function dsadsa(dasdsa){dasdsadsa\ndsads}")
+;; => [:DEFUN [:DEFUN_KEYWORD "function"] [:SYMBOL "dsadsa"] [:ARGS "(dasdsa)"] [:BODY "{dasdsadsa\ndsads}"]]
+(def test7-parser
+  (insta/parser "
+DEFUN = DEFUN_KEYWORD space+ SYMBOL ARGS BODY
+SYMBOL = #'[\\w]+'
+DEFUN_KEYWORD = 'function'
+<space> = <#'[ ]+'>
+ARGS = #'(?s)[\\(]+(.*?)\\)'
+BODY = #'(?s)[{]+(.*?)}'
+"))
