@@ -238,8 +238,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 用EmacsLisp和read-string写一个工具遍历检查每个list的错误非常字符 ① ①
 * 对于不支持AST的语言的通用解决办法: 用Elisp主编辑模式脚本或者简单粗暴的办法正则表达式分解语言的每一部分
 * AST支持的语言,实现定义跳转,通过AST的静态分析
-* 用clojure的instaparse,而不是用lex/yacc(CoffeeScript就是用yacc写的语法解析器)来解析任意语言: 来分解MATLAB的代码 ① ①
-
+* 用clojure的instaparse,而不是用lex/yacc(CoffeeScript就是用yacc写的语法解析器)来解析任意语言: 来分解MATLAB的代码 ① ① ===>> instaparse建立在良好的正则表达式基础上和SICP元解释器基础上
 ## License
 
 Copyright © 2017 FIXME

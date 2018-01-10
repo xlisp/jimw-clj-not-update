@@ -8,6 +8,8 @@
 
 ;; (bodol-parser "(map (λ a → (+ a 1)))")
 ;; => ([:LIST [:SYMBOL "map"] [:LAMBDA [:CLAUSE [:ARGS [:SYMBOL "a"]] [:BODY [:LIST [:SYMBOL "+"] [:SYMBOL "a"] [:NUMBER "1"]]]]]])
+;; (bodol-parser " ") ;;  => Parse error
+;; (bodol-parser "dasdas") ;; => ([:SYMBOL "dasdas"])
 (def bodol-parser
   (insta/parser
    "
@@ -38,3 +40,23 @@ STRING = '\\\"' #'([^\"\\\\]|\\\\.)*' '\\\"'
 SYMBOL = #'[\\pL_$&/=+~:<>|§?*-][\\pL\\p{Digit}_$&/=+~.:<>|§?*-]*'
 <SPACE> = <#'[ \t\n,]+'>
 "))
+
+;; (js-parser "function onLine(line)")
+;; (js-parser "function") ;; => [:DEFUN_KEYWORD "function"]
+;; (js-parser "sdadsa")
+;; (js-parser "function aaa(bbb){return(123)}")
+;; (def js-parser
+;;   (insta/parser
+;;    "
+;; DEFUN = #'^function \\s*\\(\\)\\s*\\{\\s*return\\s*([\\s\\S]*);\\s*\\}'
+;; "))
+;; 
+;; (js-parser "function onLine(line) {line}")
+;;DEFUN = <DEFUN_KEYWORD> SPACE SYMBOL <'('> SYMBOL <')'> SPACE <'{'> SYMBOL <'}'>
+
+;;(str "AAAAAA" (slurp "bbb") "BBBBBB")
+
+;; (test-parser "#| dasdsadsa \n dsadsa \n dasdas |#")
+;; => [:comment "#| dasdsadsa \n dsadsa \n dasdas |#"]
+(def test-parser
+  (insta/parser "comment = #'(?s)[#\\|]+(.*?)\\|#'"))
