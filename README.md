@@ -236,6 +236,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 * Google搜索`clojure regex match mutil line` => 自动更正拼写和语义: ` clojure regex match multiline ` ① jimwclj的搜索自动更正拼写和语义 ==>> `Fixed search:regex match mutil line start end => Match inclusive between start and end over multiple lines`
 * 用EmacsLisp和read-string写一个工具遍历检查每个list的错误非常字符 ① ①
+* 对于不支持AST的语言的通用解决办法: 用Elisp主编辑模式脚本或者简单粗暴的办法正则表达式分解语言的每一部分
+* AST支持的语言,实现定义跳转,通过AST的静态分析
 
 ## License
 
