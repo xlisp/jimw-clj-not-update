@@ -852,6 +852,7 @@
 
 ;; (scheme/read-string-for-pro (fn [code-list file-name] (map first code-list)) "AlgoXY")
 ;; (import-scheme-s-exp-to-blog conn "AlgoXY")
+;; (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%scheme-jimw-code/AlgoXY%"])))) ;; => 283
 (defn import-scheme-s-exp-to-blog
   [db & project]
   (let [content-fn
