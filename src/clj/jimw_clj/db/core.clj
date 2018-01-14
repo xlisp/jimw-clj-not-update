@@ -921,6 +921,7 @@
                      (str "todos.json"))]
       (.write wtr todo-json))))
 
+;; ` cp /home/clojure/jimw-clj/bin/jieba_cut.py  /home/clojure/jieba_cut.py `
 (defn generate-todo-itemsets []
   (let [name-eng-list
         (map
@@ -933,3 +934,7 @@
                      (str "todo-itemsets-new.csv"))]
       (doseq [line name-eng-list]
         (.write wtr line)))))
+
+;;(-> (shell/sh "python2.7" "/home/clojure/jieba_cli.py" "clojure我爱"))
+
+;; (-> (shell/sh "python2.7" "./bin/jieba_cli_clj.py" "clojure我爱" "我爱Lisp"))
