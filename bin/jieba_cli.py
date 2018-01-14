@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 #-*-coding:utf-8 -*-
 ## python2.7 bin/jieba_cli.py 我爱北京 我爱Clojure
 import jieba.posseg as pseg
