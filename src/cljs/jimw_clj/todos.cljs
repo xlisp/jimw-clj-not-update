@@ -100,7 +100,10 @@
     (fn [{:keys [id class placeholder]}]
       [:input {:type "text" :value @val
                :id id :class class :placeholder placeholder
-               :on-blur save
+               :on-blur #(do (save)
+                             (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "none"))
+               :on-focus #(let [bdsug-stat (->> "bdsug-search" getElementById (. js/document) .-style .-display)]
+                            (if (= bdsug-stat "none") (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "block")))
                :on-change #(reset! val (-> % .-target .-value))
                :on-key-down #(case (.-which %)
                                13 (save)
@@ -292,6 +295,16 @@
          [:section#todoapp
           [:header#header
            (new-todo blog-list blog-id items parid-first-id)]
+          [:div {:class "bdsug" :id "bdsug-search"}
+           [:ul 
+            [:li {:data-key "哒哒加速器", :class "bdsug-overflow"}
+             "哒哒加速器"] 
+            [:li {:data-key "大道争锋", :class "bdsug-overflow"}
+             "大道争锋"] 
+            [:li {:data-key "哒哒英语", :class "bdsug-overflow"}
+             "哒哒英语"] 
+            [:li {:data-key "达达外卖", :class "bdsug-overflow"}
+             "达达外卖"]]]
           (when (-> items count pos?)
             [:div
              [:section#main

@@ -1183,4 +1183,28 @@ table td {
     border: 1px solid #dedede;
     padding: 0 10px;
 }
+/*
+.bdsug {
+    height: auto;
+    position: absolute;
+    z-index: 1;
+    width: 538px;
+    background: #fff;
+    border: 1px solid #ccc;
+    _overflow: hidden;
+    box-shadow: 1px 1px 3px #ededed;
+    -webkit-box-shadow: 1px 1px 3px #ededed;
+    -moz-box-shadow: 1px 1px 3px #ededed;
+    -o-box-shadow: 1px 1px 3px #ededed;
+}
 
+.bdsug li {
+    width: 522px;
+    color: #000;
+    font: 14px arial;
+    line-height: 22px;
+    padding: 0 8px;
+    position: relative;
+    cursor: default;
+}
+*/
