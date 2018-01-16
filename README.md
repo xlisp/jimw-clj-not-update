@@ -246,6 +246,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 更新了父级id,无法更新todo的atom的bug
 * 运用了统计学,才可以真正借力"批处理"的力量: 把相关的都自动收集到各自的一个集合里面
 
+* jimwclj的app的更新功能: 保存录音,可以矫正识别的错误,数据同步到jimw-clj上面,消息系统和Websocket相连接
+
 ## License
 
 Copyright © 2017 FIXME
