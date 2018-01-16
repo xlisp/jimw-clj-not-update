@@ -240,7 +240,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * AST支持的语言,实现定义跳转,通过AST的静态分析
 * 用clojure的instaparse,而不是用lex/yacc(CoffeeScript就是用yacc写的语法解析器)来解析任意语言: 来分解MATLAB的代码 ① ① ===>> instaparse建立在良好的正则表达式基础上和SICP元解释器基础上
 
-* 像StackOverflow一样,每一篇文章都是一条文字链接,而不是用id作为链接,做最高频率的前十个单词作为链接名,不可重复,重复就加-1,-2,...
+* 像StackOverflow一样,每一篇文章都是一条文字链接,而不是用id作为链接,做最高频率的前十个单词作为链接名,不可重复,重复就加-1,-2,... ===> 不用单独弄一个show出来,当搜索文章的这个链接的时候,就只能出来一篇文章, 标签云当搜索文章搜索结果是一条的时候,就用div画图,否则都是用canvas画图; Viz树也是一样处理
 
 ## License
 
