@@ -244,6 +244,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 然后html的title是文章的文字链接,可以优化为更简短的关键词
 * todos级别的切换: 树越深,Active的切换的点数越大: `All Active Completed 1 2 3`
 * 更新了父级id,无法更新todo的atom的bug
+* 运用了统计学,才可以真正借力"批处理"的力量: 把相关的都自动收集到各自的一个集合里面
 
 ## License
 
