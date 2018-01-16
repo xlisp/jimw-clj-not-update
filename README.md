@@ -243,6 +243,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 像StackOverflow一样,每一篇文章都是一条文字链接,而不是用id作为链接,做最高频率的前十个单词作为链接名,不可重复,重复就加-1,-2,... ===> 不用单独弄一个show出来,当搜索文章的这个链接的时候,就只能出来一篇文章, 标签云当搜索文章搜索结果是一条的时候,就用div画图,否则都是用canvas画图; Viz树也是一样处理
 * 然后html的title是文章的文字链接,可以优化为更简短的关键词
 * todos级别的切换: 树越深,Active的切换的点数越大: `All Active Completed 1 2 3`
+* 更新了父级id,无法更新todo的atom的bug
 
 ## License
 
