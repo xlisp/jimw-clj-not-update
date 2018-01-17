@@ -511,14 +511,15 @@
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id]
       [:div
-       #_[:button.btn.tree-btn
+       ;; 打开本地的Viz临时使用局部树
+       [:button.btn.tree-btn
         {:on-click
          #(do (js/alert "Update...")
               (tree-todo-generate id))} "Generate"]
-       #_[:a.btn.margin-download
+       [:a.btn.margin-download
         {:href (str "/todos-" id ".gv")
          :download (str "past_" id "_navs.zip")} "Download"]
-       #_[:button.btn.margin-download
+       [:button.btn.margin-download
         {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))
                           svg (.querySelector graph "svg")]
                       (do
@@ -528,6 +529,7 @@
                                        (.appendChild
                                         graph
                                         (viz-string digraph-str))))))} "Viz"]
+       ;; 
        ;; 生产环境测试viz.js已ok
        [:button.btn.margin-download
         {:on-click #(let [graph (.querySelector js/document (str "#gv-output-" id))
