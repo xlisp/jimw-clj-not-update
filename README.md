@@ -248,6 +248,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 * jimwclj的app的更新功能: 保存录音,可以矫正识别的错误,数据同步到jimw-clj上面,消息系统和Websocket相连接
 * ① ① 任何东西,只有真正用到了自己身上生活中了,自我设计了,才能真正领悟它的高层境界,否则只是完成工作是很难觉醒的: 做一个问答的驱动jimwclj,提问,然后微信分发给不同的高手高手,最后整合数据流
+* 用中线腰的力量打出去,才可以本能的去反应对手,而不是只是工作要求的驱动编程, 可微分编程驱动Lisp开发
 
 ## License
 
