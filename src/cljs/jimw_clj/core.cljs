@@ -355,7 +355,9 @@
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
                 :on-change #(reset! search-str (-> % .-target .-value))
                 :on-key-down #(case (.-which %)
-                                13 (search-fn)
+                                13 (do
+                                     (search-fn)
+                                     (set! (.-title js/document) @search-str))
                                 nil)}]
        [:div {:class "input-group-btn"}
         [:div {:class "btn-group", :role "group"}
