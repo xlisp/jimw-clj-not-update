@@ -339,6 +339,17 @@
                         :else
                         (reset! collapsed? true)))} title]])
 
+(defn record-event
+  [event_name event_data op-fn]
+  (go (let [response
+            (<!
+             (http/post (api-root "/record-event")
+                        {:headers {"jimw-clj-token" @api-token}
+                         :json-params
+                         {:event_name event_name :event_data event_data}}))]
+        (let [data (:body response)]
+          (op-fn data)))))
+
 (defn searchbar []
   (let [search-str (r/atom "")
         search-fn (fn []
@@ -350,7 +361,8 @@
                        @search-str @page-offset
                        (fn [data]
                          (swap-blog-list data)))
-                      (set! (.-title js/document) @search-str)))]
+                      (set! (.-title js/document) @search-str)
+                      (record-event "search-blog-event" @search-str identity)))]
     (fn []
       [:div#adv-search.input-group.search-margin
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
