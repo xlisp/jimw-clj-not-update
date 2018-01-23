@@ -349,15 +349,14 @@
                       (get-blog-list
                        @search-str @page-offset
                        (fn [data]
-                         (swap-blog-list data)))))]
+                         (swap-blog-list data)))
+                      (set! (.-title js/document) @search-str)))]
     (fn []
       [:div#adv-search.input-group.search-margin
        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
                 :on-change #(reset! search-str (-> % .-target .-value))
                 :on-key-down #(case (.-which %)
-                                13 (do
-                                     (search-fn)
-                                     (set! (.-title js/document) @search-str))
+                                13 (search-fn)
                                 nil)}]
        [:div {:class "input-group-btn"}
         [:div {:class "btn-group", :role "group"}
