@@ -295,7 +295,7 @@
          [:section#todoapp
           [:header#header
            (new-todo blog-list blog-id items parid-first-id)]
-          #_[:div {:class "bdsug" :id "bdsug-search"}
+          [:div {:class "bdsug" :id "bdsug-search"}
            [:ul 
             [:li {:data-key "哒哒加速器", :class "bdsug-overflow"}
              "哒哒加速器"] 
