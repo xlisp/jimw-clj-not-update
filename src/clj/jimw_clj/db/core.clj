@@ -461,7 +461,10 @@
       (create-blog {:db db :name file-name :content (content-fn file-name)}))))
 
 ;; 测试新的项目导入是否解析报错:
-;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "leiningen")
+;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "foreclojure-android")
+;; (import-project-s-exp-to-blog conn "foreclojure-android")
+;; (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"]))))
+;; (jconn conn (-> (h/delete-from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"])))
 (defn read-string-for-pro
   [op-fn & project]
   (let [file-names
@@ -511,6 +514,7 @@
                       (str/replace "\\<" "-back-slant24-que-")
                       (str/replace "\\!" "-back-slant25-que-")
                       (str/replace "\\+" "-back-slant26-que-")
+                      (str/replace "#="  "")
                       (str/replace "#clojure.test_clojure.protocols.RecordToTestBoolHint" "")
                       (str/replace "#clojure.test_clojure.protocols.RecordToTestLongHint" "")
                       (str/replace "#clojure.test_clojure.protocols.TestNode" "")
