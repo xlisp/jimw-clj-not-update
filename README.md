@@ -259,6 +259,9 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 保存数据就像todos递归的prn一样,保存到多个记录里面,然后join出来看就行了: 不用那么复杂,而是每一步都打印转为保存到数据库
 * 语义搜索增强,增加阅读标注,根据S表达式的选中来标注说明: 复制网页或者是代码到自己的jimw-clj上面,然后做选中阅读标记,自动生成S表达式选中框选中标记: 支持S表达式最优先
 
+## 任何文档,数据,书籍,项目的Lisp化,任何媒体可微分化为神经网络 ① ① 2018
+* 只有这样才可以无穷无尽的强大自性的能量
+
 ## License
 
 Copyright © 2017 FIXME
