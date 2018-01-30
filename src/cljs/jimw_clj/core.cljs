@@ -352,6 +352,8 @@
 
 (defn searchbar []
   (let [search-str (r/atom "")
+        google-q (r/atom "")
+        github-q (r/atom "")
         search-fn (fn []
                     (do
                       (reset! blog-list (sorted-map-by >))
@@ -364,18 +366,37 @@
                       (set! (.-title js/document) @search-str)
                       (record-event "search-blog-event" @search-str identity)))]
     (fn []
-      [:div#adv-search.input-group.search-margin
-       [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
-                :on-change #(reset! search-str (-> % .-target .-value))
-                :on-key-down #(case (.-which %)
-                                13 (search-fn)
-                                nil)}]
-       [:div {:class "input-group-btn"}
-        [:div {:class "btn-group", :role "group"}
-         [:div {:class "dropdown dropdown-lg"}]
-         [:button {:type "button", :class "btn btn-primary"
-                   :on-click search-fn}
-          [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]])))
+      [:div
+       [:div#adv-search.input-group.search-margin
+        [:input {:type "text", :class "form-control", :placeholder "Search for blogs"
+                 :on-change #(reset! search-str (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (search-fn)
+                                 nil)}]
+        [:div {:class "input-group-btn"}
+         [:div {:class "btn-group", :role "group"}
+          [:div {:class "dropdown dropdown-lg"}]
+          [:button {:type "button", :class "btn btn-primary"
+                    :on-click search-fn}
+           [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+       [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
+        [:input {:type "text"
+                 :on-change #(reset! google-q (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (record-event "search-google-event" @google-q identity)
+                                 nil)
+                 :name "q"}] 
+        [:input {:type "submit", :value "Google"}]]
+       [:p]
+       [:form {:target "_blank", :action "https://github.com/search?utf8=✓", :method "get"} 
+        [:input {:type "text"
+                 :on-change #(reset! github-q (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (record-event "search-github-event" @github-q identity)
+                                 nil)
+                 :name "q"}] 
+        [:input {:type "submit" :value "Github"}]]
+       [:p]])))
 
 (defn navbar []
   (let [collapsed? (r/atom true)]
