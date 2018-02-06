@@ -83,6 +83,11 @@
   (let [res (db/create-blog {:db db/conn :name name :content content})]
     (ok res)))
 
+(defn create-blog-and-root
+  [{{:keys [name content]} :params}]
+  (let [res (db/create-blog-and-root {:db db/conn :name name :content content})]
+    (ok res)))
+
 (defn get-todos
   [{{:keys [q blog]
      :or   {q ""}} :params}]
@@ -217,6 +222,7 @@
   (GET "/blogs" [] (check-api-token get-blogs))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
   (POST "/create-blog" [] (check-api-token create-blog))
+  (POST "/create-blog-and-root" [] (check-api-token create-blog-and-root))
   (GET "/todos" [] (check-api-token get-todos))
   (PUT "/update-todo/:id" [] (check-api-token update-todo))
   (POST "/create-todo" [] (check-api-token create-todo))

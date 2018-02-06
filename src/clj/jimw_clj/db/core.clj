@@ -393,6 +393,19 @@
                                      :content content}])))]
     res))
 
+;; (create-blog-and-root {:db conn :name "测试" :content "aaaaabbbccc"})
+;;  => {:blog 37576, :todo 120}
+(defn create-blog-and-root [{:keys [db name content]}]
+  (let [blog (jc1 db (->  (h/insert-into :blogs)
+                          (h/values [{:name name
+                                      :content content}])))
+        todo (jc1 db
+                  (->  (h/insert-into :todos)
+                       (h/values [{:content "root"
+                                   :parid   1
+                                   :blog    (:id blog)}])))]
+    {:blog (:id blog) :todo (:id todo)}))
+
 ;; (search-todos {:db conn :q "a" :blog 4857})
 (defn search-todos [{:keys [db blog q]}]
   (jconn db
