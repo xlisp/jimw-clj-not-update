@@ -112,7 +112,7 @@
 
 (defn create-todo-app
   [{{:keys [parid blog content
-            app_id file islast percent begin end]} :params}]
+            app_id file islast percent begin mend]} :params}]
   (let [res (db/create-todo-app
              {:db db/conn
               :parid (Integer/parseInt parid)
@@ -123,7 +123,7 @@
               :islast  (Boolean/valueOf islast)
               :percent (Integer/parseInt percent)
               :begin   (Integer/parseInt begin)
-              :end     (Integer/parseInt end)})]
+              :mend     (Integer/parseInt mend)})]
     (ok res)))
 
 (defn delete-todo

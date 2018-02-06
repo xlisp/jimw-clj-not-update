@@ -412,7 +412,7 @@
                         :blog    blog}]))))
 
 (defn create-todo-app [{:keys [db parid blog content
-                               app_id file islast percent begin end]}]
+                               app_id file islast percent begin mend]}]
   (jc1 db
        (->  (h/insert-into :todos)
             (h/values [{:content content
@@ -423,7 +423,7 @@
                         :islast  islast  
                         :percent percent 
                         :begin   begin   
-                        :end     end}]))))
+                        :mend     mend}]))))
 
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
