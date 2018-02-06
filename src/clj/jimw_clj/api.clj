@@ -110,6 +110,22 @@
                              :content content})]
     (ok res)))
 
+(defn create-todo-app
+  [{{:keys [parid blog content
+            app_id file islast percent begin end]} :params}]
+  (let [res (db/create-todo-app
+             {:db db/conn
+              :parid (Integer/parseInt parid)
+              :blog (Integer/parseInt blog)
+              :content content
+              :app_id  (Integer/parseInt app_id)
+              :file    file    
+              :islast  (Boolean/valueOf islast)
+              :percent (Integer/parseInt percent)
+              :begin   (Integer/parseInt begin)
+              :end     (Integer/parseInt end)})]
+    (ok res)))
+
 (defn delete-todo
   [{{:keys [id]} :params}]
   (let [res (db/delete-todo {:db db/conn
@@ -204,6 +220,7 @@
   (GET "/todos" [] (check-api-token get-todos))
   (PUT "/update-todo/:id" [] (check-api-token update-todo))
   (POST "/create-todo" [] (check-api-token create-todo))
+  (POST "/create-todo-app" [] (check-api-token create-todo-app))
   (DELETE "/delete-todo" [] (check-api-token delete-todo))
   (POST "/tree-todo-generate" [] (check-api-token tree-todo-generate))
   (POST  "/tree-todo-generate-new" [] (check-api-token tree-todo-generate-new))

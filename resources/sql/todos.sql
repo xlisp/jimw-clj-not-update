@@ -9,8 +9,23 @@ CREATE TABLE todos (
   sort_id INT,
   wctags JSONB NOT NULL DEFAULT '{}';
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  app_id INT,
+  file TEXT,
+  islast BOOLEAN
+  percent INT,
+  begin INT,
+  end INT
 );
+
+/*
+ALTER TABLE todos ADD COLUMN  app_id INT;
+ALTER TABLE todos ADD COLUMN  file TEXT;
+ALTER TABLE todos ADD COLUMN  islast BOOLEAN;
+ALTER TABLE todos ADD COLUMN  percent INT;
+ALTER TABLE todos ADD COLUMN  begin INT;
+ALTER TABLE todos ADD COLUMN  end INT;
+*/
 
 CREATE SEQUENCE todos_new_id_seq
     START WITH 1
@@ -38,3 +53,5 @@ ALTER TABLE todos_sort_id_seq OWNER TO jim;
 ALTER SEQUENCE todos_sort_id_seq OWNED BY todos.sort_id;
 
 ALTER TABLE ONLY todos ALTER COLUMN sort_id SET DEFAULT nextval('todos_sort_id_seq'::regclass);
+
+
