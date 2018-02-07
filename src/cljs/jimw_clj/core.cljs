@@ -302,7 +302,10 @@
                      {:id (:id li) :name (:name li) :content (:content li)
                       :todos (into
                               (sorted-map-by >)
-                              (map (fn [x] (vector (:id x) x)) (:todos li)))})
+                              (map (fn [x] (vector (:id x)
+                                                   (merge x {:search true})
+                                                   ;;x
+                                                   )) (:todos li)))})
               (:id li))) data) str prn)))
 
 (defonce blog-list-init
@@ -767,3 +770,12 @@
   (re-frame/dispatch-sync [:db/initialize])
   (re-frame/dispatch-sync [:sente/connect])
   (mount-components))
+
+
+#_(for [item (get-in @blog-list [37581 :todos])]
+  (do
+    (let [{:keys [content id] :as todo} (last item)]
+      (prn content)
+      )
+    )
+  )

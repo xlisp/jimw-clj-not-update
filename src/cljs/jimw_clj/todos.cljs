@@ -3,7 +3,8 @@
   (:require [reagent.core :as r :refer [atom]]
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
-            [cemerick.url :refer (url url-encode)]))
+            [cemerick.url :refer (url url-encode)]
+            [clojure.string :as str]))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -90,7 +91,7 @@
           (op-fn (:body response))
           (js/alert "Update todo sort failure!")))))
 
-(defn todo-input [{:keys [content on-save on-stop]}]
+(defn todo-input [{:keys [content on-save on-stop search-fn]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -104,7 +105,14 @@
                              (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "none"))
                :on-focus #(let [bdsug-stat (->> "bdsug-search" getElementById (. js/document) .-style .-display)]
                             (if (= bdsug-stat "none") (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "block")))
-               :on-change #(reset! val (-> % .-target .-value))
+               :on-change #(do
+                             (let [valu (-> % .-target .-value)]
+                               (if (fn? search-fn)
+                                 (prn (search-fn valu)) nil)
+                               #_(if search-text
+                                   (reset! search-text valu))
+                               (reset! val valu))
+                             )
                :on-key-down #(case (.-which %)
                                13 (save)
                                27 (stop)
@@ -261,9 +269,10 @@
                           #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                        :on-stop #(reset! editing false)}])]))))
 
-(defn new-todo [blog-list blog-id items parid-first-id]
+(defn new-todo [blog-list blog-id items parid-first-id search-fn]
   [todo-input {:id "new-todo"
-               :placeholder "What needs to be done?"
+               :placeholder "Search todo"
+               :search-fn search-fn
                :on-save
                (fn [content]
                  (create-todo
@@ -276,8 +285,21 @@
                            #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
                                                       :parid (:parid data) :content (:content data)})))))}])
 
+;; (search-match-fn "完成websocket某某功能" "完成 功能") ;; => true
+;; (search-match-fn "完成websocket某某功能" "完成 功能 aaa") ;; => false
+(defn search-match-fn [item search-text]
+  (if (empty? search-text)
+    true
+    (every?
+     true?
+     (map
+      (fn [x]
+        (if (re-matches (re-pattern (str "(.*)" x "(.*)")) item) true false))
+      (str/split search-text " ")))))
+
 (defn todo-app [blog-list blog-id]
-  (let [filt (r/atom :all)]
+  (let [filt (r/atom :all)
+        search-text (r/atom "")]
     (fn []
       (let [items (vals (get-in @blog-list [blog-id :todos]))
             parid-first-id (-> (if (= (count items) 0) 1
@@ -288,15 +310,31 @@
             active (- (count items) done)
             todo-target (atom 0)
             todo-begin (atom 0)
-            origins (map #(vector (:sort_id %) (:id %)) items)]
+            origins (map #(vector (:sort_id %) (:id %)) items)
+            set-search-fn (fn [id true-or-false]
+                            (swap! blog-list update-in
+                                   [blog-id :todos id :search] (fn [x] true-or-false)))
+            search-fn #(do
+                         (reset! search-text %)
+                         ;;
+                         (->
+                          (for [{:keys [content id] :as todo} items]
+                            (do
+                              (prn (str "====" content "," id))
+                              (prn (set-search-fn id (search-match-fn content @search-text)))
+                              )
+                           ) str prn)
+                         #_(prn "AAAAAAAA")
+                         ;;
+                         @search-text)]
         [:div
          #_[todo-stats-tmp {:active active :done done :filt filt}]
          #_[:br]
          [:section#todoapp
           [:header#header
-           (new-todo blog-list blog-id items parid-first-id)]
+           (new-todo blog-list blog-id items parid-first-id search-fn)]
           [:div {:class "bdsug" :id "bdsug-search"}
-           [:ul 
+           #_[:ul 
             [:li {:data-key "哒哒加速器", :class "bdsug-overflow"}
              "哒哒加速器"] 
             [:li {:data-key "大道争锋", :class "bdsug-overflow"}
@@ -311,13 +349,24 @@
               [:ul#todo-list
                (for [todo
                      (filter
-                      (fn [item] (not (re-matches #"\d" (:content item))))
+                      (fn [item]
+                        (= (:search item) true)
+                        #_(if (empty? @search-text)
+                          true
+                          (every?
+                           true?
+                           (map
+                            (fn [x]
+                              (if (re-matches (re-pattern (str "(.*)" x "(.*)")) (str item)) true false))
+                            (str/split @search-text " ")))))
                       (filter
-                       (case @filt
-                         :active (complement :done)
-                         :done :done
-                         :all identity)
-                       items))]
+                       (fn [item] (not (re-matches #"\d" (:content item))))
+                       (filter
+                        (case @filt
+                          :active (complement :done)
+                          :done :done
+                          :all identity)
+                        items)))]
                  ^{:key (:id todo)} [todo-item todo blog-list blog-id
                                      todo-target todo-begin origins])]]
              [:footer#footer
