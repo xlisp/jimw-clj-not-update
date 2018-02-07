@@ -15,7 +15,8 @@ CREATE TABLE todos (
   islast BOOLEAN
   percent INT,
   begin INT,
-  mend INT
+  mend INT,
+  origin_content TEXT
 );
 
 /*
@@ -25,6 +26,7 @@ ALTER TABLE todos ADD COLUMN  islast BOOLEAN;
 ALTER TABLE todos ADD COLUMN  percent INT;
 ALTER TABLE todos ADD COLUMN  begin INT;
 ALTER TABLE todos ADD COLUMN  mend INT;
+ALTER TABLE todos ADD COLUMN  origin_content TEXT;
 */
 
 CREATE SEQUENCE todos_new_id_seq

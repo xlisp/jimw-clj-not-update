@@ -436,7 +436,8 @@
                         :islast  islast  
                         :percent percent 
                         :begin   begin   
-                        :mend     mend}]))))
+                        :mend     mend
+                        :origin_content content}]))))
 
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
