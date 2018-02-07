@@ -112,13 +112,19 @@
     (fn [{:keys [id class placeholder]}]
       [:input {:type "text" :value @val
                :id id :class class :placeholder placeholder               
-               :on-blur #(do (if (fn? search-fn) (if (empty? @val) nil (record-event "search-todo" @val identity)) (save))
+               :on-blur #(do (if (fn? search-fn) (if (empty? @val) nil
+                                                     (do
+                                                       (search-fn @val)
+                                                       (record-event "search-todo" @val identity)
+                                                       )
+                                                     )
+                                 (save))
                              (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "none"))
                :on-focus #(let [bdsug-stat (->> "bdsug-search" getElementById (. js/document) .-style .-display)]
                             (if (= bdsug-stat "none") (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "block")))
                :on-change #(do
                              (let [valu (-> % .-target .-value)]
-                               (if (fn? search-fn)
+                               #_(if (fn? search-fn)
                                  (prn (search-fn valu)) nil)
                                #_(if search-text
                                    (reset! search-text valu))
