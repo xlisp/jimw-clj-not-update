@@ -17,6 +17,17 @@
 
 (def memoized-api-token (memoize get-api-token))
 
+(defn record-event
+  [event_name event_data op-fn]
+  (go (let [response
+            (<!
+             (http/post (api-root "/record-event")
+                        {:headers {"jimw-clj-token" (memoized-api-token)}
+                         :json-params
+                         {:event_name event_name :event_data event_data}}))]
+        (let [data (:body response)]
+          (op-fn data)))))
+
 ;; (get-todos-list 4857 #(-> (zipmap  (map :id %) %) prn))
 (defn get-todos-list
   [blog op-fn]
@@ -100,8 +111,8 @@
                 (stop))]
     (fn [{:keys [id class placeholder]}]
       [:input {:type "text" :value @val
-               :id id :class class :placeholder placeholder
-               :on-blur #(do (save)
+               :id id :class class :placeholder placeholder               
+               :on-blur #(do (if (fn? search-fn) nil (save))
                              (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "none"))
                :on-focus #(let [bdsug-stat (->> "bdsug-search" getElementById (. js/document) .-style .-display)]
                             (if (= bdsug-stat "none") (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "block")))
@@ -111,7 +122,9 @@
                                  (prn (search-fn valu)) nil)
                                #_(if search-text
                                    (reset! search-text valu))
-                               (reset! val valu))
+                               (reset! val valu)
+                               (record-event "search-todo" valu identity)
+                               )
                              )
                :on-key-down #(case (.-which %)
                                13 (save)
@@ -182,6 +195,7 @@
            (swap! blog-list update-in
                   [(:blog data) :todos]
                   #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
+                                             :search true
                                              :parid (:parid data) :content (:content data)})))))}]))
 
 (defn get-todo-sort-id [id items]
@@ -283,6 +297,7 @@
                     (swap! blog-list update-in
                            [(:blog data) :todos]
                            #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
+                                                      :search true
                                                       :parid (:parid data) :content (:content data)})))))}])
 
 ;; (search-match-fn "完成websocket某某功能" "完成 功能") ;; => true
