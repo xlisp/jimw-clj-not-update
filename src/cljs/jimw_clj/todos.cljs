@@ -353,10 +353,9 @@
                          (->
                           (for [{:keys [content id] :as todo} items]
                             (do
-                              (prn (str "====" content "," id))
-                              (prn (set-search-fn id (search-match-fn content @search-text)))
-                              )
-                           ) str prn)
+                              (set-search-fn id (search-match-fn content @search-text))
+                              1)
+                            ) str prn)
                          #_(prn "AAAAAAAA")
                          ;;
                          @search-text)]
