@@ -112,7 +112,7 @@
     (fn [{:keys [id class placeholder]}]
       [:input {:type "text" :value @val
                :id id :class class :placeholder placeholder               
-               :on-blur #(do (if (fn? search-fn)
+               #_:on-blur #_(do (if (fn? search-fn)
                                (do
                                  (search-fn @val)
                                  (if (empty? @val) nil
@@ -136,7 +136,16 @@
                                )
                              )
                :on-key-down #(case (.-which %)
-                               13 (save)
+                               13 (if (fn? search-fn)
+                                    (do
+                                      (search-fn @val)
+                                      (if (empty? @val) nil
+                                          (do
+                                            (record-event "search-todo" @val identity)
+                                            )
+                                          )
+                                      )
+                                    (save))
                                27 (stop)
                                nil)}])))
 
