@@ -68,13 +68,13 @@
    "library(memoise)"
    "library(RJSONIO)"])
 
-;; load r lib
-(if (R/eval r-lib) (info "load R lib ok...") (throw (Exception. "load R lib failure !")))
-
-(def get-term-matrix-path (R/eval "paste(getwd(),'/src/R/getTermMatrix.R', sep='')"))
-
-;; load getTermMatrix function
-(R/eval (str "source('" get-term-matrix-path "')"))
+(if (get (System/getenv) "RUN_REVAL") nil
+    (do
+      ;; load r lib
+      (if (R/eval r-lib) (info "load R lib ok...") (throw (Exception. "load R lib failure !")))      
+      (def get-term-matrix-path (R/eval "paste(getwd(),'/src/R/getTermMatrix.R', sep='')"))
+      ;; load getTermMatrix function
+      (R/eval (str "source('" get-term-matrix-path "')"))))
 
 (defstate conn
   :start (try
