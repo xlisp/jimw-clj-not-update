@@ -102,7 +102,7 @@
           (op-fn (:body response))
           (js/alert "Update todo sort failure!")))))
 
-(defn todo-input [{:keys [content on-save on-stop search-fn]}]
+(defn todo-input [{:keys [content on-save on-stop items search-fn]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -111,7 +111,10 @@
                 (stop))]
     (fn [{:keys [id class placeholder]}]
       [:input {:type "text" :value @val
-               :id id :class class :placeholder placeholder               
+               :id id :class class :placeholder placeholder
+               :on-blur (fn []
+                          (if (> (count items) 9)
+                            identity (save)))
                #_:on-blur #_(do (if (fn? search-fn)
                                (do
                                  (search-fn @val)
@@ -136,16 +139,19 @@
                                )
                              )
                :on-key-down #(case (.-which %)
-                               13 (if (fn? search-fn)
-                                    (do
-                                      (search-fn @val)
-                                      (if (empty? @val) nil
-                                          (do
-                                            (record-event "search-todo" @val identity)
-                                            )
-                                          )
-                                      )
-                                    (save))
+                               13
+                               (if (> (count items) 9)
+                                 (if (fn? search-fn)
+                                   (do
+                                     (search-fn @val)
+                                     (if (empty? @val) nil
+                                         (do
+                                           (record-event "search-todo" @val identity)
+                                           )
+                                         )
+                                     )
+                                   (save))
+                                 (save))
                                27 (stop)
                                nil)}])))
 
@@ -303,8 +309,11 @@
 
 (defn new-todo [blog-list blog-id items parid-first-id search-fn]
   [todo-input {:id "new-todo"
-               :placeholder "Search todo"
+               :placeholder (if (> (count items) 9)
+                              "Search todo"
+                              "Add todo")
                :search-fn search-fn
+               :items     items
                :on-save
                (fn [content]
                  (create-todo
