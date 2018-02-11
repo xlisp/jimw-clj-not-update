@@ -779,3 +779,12 @@
       )
     )
   )
+
+
+#_(swap! @blog-list update-in [37581 :todos]                            
+       ;;@(get-in @blog-list [37581 :todos])
+       ;;(sorted-map)
+       (fn [x] (sorted-map))
+       )
+
+;; (swap! @blog-list update-in [37581 :todos 228 :content] (fn [x] "0000" ))

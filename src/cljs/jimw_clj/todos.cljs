@@ -204,8 +204,10 @@
        [:button#clear-completed ;; {:on-click clear-done}
         "Clear completed " done])]))
 
+(declare search-match-fn)
+
 (def new-todo-par
-  (fn [sort_id blog-list blog-id on-blur]
+  (fn [sort_id blog-list blog-id on-blur search-text]
     [todo-input-par
      {:id sort_id
       :type "text"
@@ -218,8 +220,13 @@
          (fn [data]
            (swap! blog-list update-in
                   [(:blog data) :todos]
+                  ;; New 出来的不接受搜索的原因是什么? => 很可能是for的问题
+                  ;;1. new出来的如果默认为true,怎么搜索都在
+                  ;;2. new出来的如果默认为false,怎么搜索都不在
+                  ;;3. 除非刷新整个todo列表才起作用
                   #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
-                                             :search true
+                                             :search false
+                                             ;;(search-match-fn content @search-text)
                                              :parid (:parid data) :content (:content data)})))))}]))
 
 (defn get-todo-sort-id [id items]
@@ -241,7 +248,7 @@
 (defn todo-item []
   (let [editing (r/atom false)]
     (fn [{:keys [id done content sort_id parid]} blog-list blog-id
-         todo-target todo-begin origins]
+         todo-target todo-begin origins search-text]
       (let [parid-val (r/atom "")
             _ (reset! parid-val parid)]
         [:li {:class (str (if done "completed ")
@@ -291,7 +298,7 @@
           [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
           [:div.input-label {:id (str "input-label-id-" id)}
            (new-todo-par sort_id blog-list blog-id
-                         #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none"))]
+                         #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none") search-text)]
           [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
           [:label.input-parid {:id (str "input-parid-id-" id)}
            [todo-parid-input
@@ -325,7 +332,53 @@
                            [(:blog data) :todos]
                            #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
                                                       :search true
-                                                      :parid (:parid data) :content (:content data)})))))}])
+                                                      :parid (:parid data) :content (:content data)}))
+                    (swap! @blog-list update-in [37581 :todos] (fn [x] (sorted-map) ))
+                    )))}])
+
+(defn aaaa
+  [items filt blog-list blog-id
+   todo-target todo-begin origins search-text
+   done active]
+    (when (-> items count pos?)
+      [:div
+       [:section#main
+        [:ul#todo-list
+         (for [todo
+               (filter
+                (fn [item]
+                  (= (:search item) true)
+                  #_(if (empty? @search-text)
+                      true
+                      (every?
+                       true?
+                       (map
+                        (fn [x]
+                          (if (re-matches (re-pattern (str "(.*)" x "(.*)")) (str item)) true false))
+                        (str/split @search-text " ")))))
+                (filter
+                 (fn [item] (not (re-matches #"\d" (:content item))))
+                 (filter
+                  (case @filt
+                    :active (complement :done)
+                    :done :done
+                    :all identity)
+                  ;;
+                  #_(do
+                      (take (count items)
+                            (for [todo items]
+                              (prn todo)
+                              ))
+                      items
+                      )
+                  ;;(get-in @blog-list [37581 :todos])
+                  items
+                  ;;
+                  )))]
+           ^{:key (:id todo)} [todo-item todo blog-list blog-id
+                               todo-target todo-begin origins search-text])]]
+       [:footer#footer
+        [todo-stats {:active active :done done :filt filt}]]]))
 
 ;; (search-match-fn "完成websocket某某功能" "完成 功能") ;; => true
 ;; (search-match-fn "完成websocket某某功能" "完成 功能 aaa") ;; => false
@@ -359,10 +412,16 @@
             search-fn #(do
                          (reset! search-text %)
                          ;;
+                         (prn (str "========" (count (vals (get-in @blog-list [blog-id :todos])))))
                          (->
-                          (for [{:keys [content id] :as todo} items]
+                          (for [{:keys [content id] :as todo} (vals (get-in @blog-list [blog-id :todos]))]
                             (do
-                              (set-search-fn id (search-match-fn content @search-text))
+                              (set-search-fn id
+                                             (if (empty? @search-text)
+                                               true
+                                               (search-match-fn content @search-text)
+                                               )
+                                             )
                               1)
                             ) str prn)
                          #_(prn "AAAAAAAA")
@@ -384,33 +443,11 @@
              "哒哒英语"] 
             [:li {:data-key "达达外卖", :class "bdsug-overflow"}
              "达达外卖"]]]
-          (when (-> items count pos?)
-            [:div
-             [:section#main
-              [:ul#todo-list
-               (for [todo
-                     (filter
-                      (fn [item]
-                        (= (:search item) true)
-                        #_(if (empty? @search-text)
-                          true
-                          (every?
-                           true?
-                           (map
-                            (fn [x]
-                              (if (re-matches (re-pattern (str "(.*)" x "(.*)")) (str item)) true false))
-                            (str/split @search-text " ")))))
-                      (filter
-                       (fn [item] (not (re-matches #"\d" (:content item))))
-                       (filter
-                        (case @filt
-                          :active (complement :done)
-                          :done :done
-                          :all identity)
-                        items)))]
-                 ^{:key (:id todo)} [todo-item todo blog-list blog-id
-                                     todo-target todo-begin origins])]]
-             [:footer#footer
-              [todo-stats {:active active :done done :filt filt}]]])]
+          ;;;;;;;;
+          (aaaa (vals (get-in @blog-list [blog-id :todos])) filt blog-list blog-id
+                todo-target todo-begin origins search-text
+                done active)
+          ;;;;;;;
+          ]
          #_[:footer#info
             [:p "Double-click to edit a todo"]]]))))
