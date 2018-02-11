@@ -225,8 +225,8 @@
                   ;;2. new出来的如果默认为false,怎么搜索都不在
                   ;;3. 除非刷新整个todo列表才起作用
                   #(assoc % (:sort_id data) {:id (:sort_id data) :sort_id (:id data)
-                                             :search false
-                                             ;;(search-match-fn content @search-text)
+                                             :search ;;false
+                                             (search-match-fn content @search-text)
                                              :parid (:parid data) :content (:content data)})))))}]))
 
 (defn get-todo-sort-id [id items]
