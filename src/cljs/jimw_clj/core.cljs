@@ -227,6 +227,8 @@
 (defonce page-offset (r/atom 0))
 (defonce blog-list (r/atom (sorted-map-by >)))
 (def api-token (local-storage (r/atom "") :api-token))
+(def pcm-ip (local-storage (r/atom "0.0.0.0") :pcm-ip))
+
 (defonce search-key (r/atom ""))
 
 (defonce search-viz-en (r/atom (sorted-map-by >)))
@@ -357,6 +359,7 @@
   (let [search-str (r/atom "")
         google-q (r/atom "")
         github-q (r/atom "")
+        pcm-ip-txt (r/atom "")
         search-fn (fn []
                     (do
                       (reset! blog-list (sorted-map-by >))
@@ -399,6 +402,14 @@
                                  nil)
                  :name "q"}] 
         [:input {:type "submit" :value "Github"}]]
+       [:h6 "pcm ip: " @pcm-ip]
+       [:input {:type "text"
+                :value @pcm-ip-txt
+                :on-change #(reset! pcm-ip-txt (-> % .-target .-value))
+                :on-key-down #(case (.-which %)
+                                13 (do (reset! pcm-ip @pcm-ip-txt)
+                                       (js/alert (str "更新pcm播放地址为" @pcm-ip)))
+                                nil)}]
        [:p]])))
 
 (defn navbar []

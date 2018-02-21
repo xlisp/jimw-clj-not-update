@@ -15,6 +15,13 @@
    (clojure.string/split "\"")
    (get 3)))
 
+(defn get-pcm-ip
+  []
+  (->
+   (.getItem js/localStorage "[\"~#'\",\"~:pcm-ip\"]")
+   (clojure.string/split "\"")
+   (get 3)))
+
 (def memoized-api-token (memoize get-api-token))
 
 (defn record-event
@@ -108,7 +115,7 @@
   (go (let [response
             (<!
              (http/post
-              (str "http://192.168.0.101:5557/cache" time-id "_xunfeiclj.pcm")
+              (str "http://" (get-pcm-ip) ":5557/cache" time-id "_xunfeiclj.pcm")
               {:with-credentials? false}))]
         #_(if (= (:status response) 200)
             (op-fn (:body response))
