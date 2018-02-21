@@ -102,6 +102,18 @@
           (op-fn (:body response))
           (js/alert "Update todo sort failure!")))))
 
+;; (play-pcm-file "1519193567626" prn)
+(defn play-pcm-file
+  [time-id op-fn]
+  (go (let [response
+            (<!
+             (http/post
+              (str "http://192.168.0.101:5557/cache" time-id "_xunfeiclj.pcm")
+              {:with-credentials? false}))]
+        #_(if (= (:status response) 200)
+            (op-fn (:body response))
+            (js/alert "Play pcm failure!")))))
+
 (defn todo-input [{:keys [content on-save on-stop items search-fn]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
@@ -247,7 +259,7 @@
 
 (defn todo-item []
   (let [editing (r/atom false)]
-    (fn [{:keys [id done content sort_id parid]} blog-list blog-id
+    (fn [{:keys [id done content sort_id parid file]} blog-list blog-id
          todo-target todo-begin origins search-text]
       (let [parid-val (r/atom "")
             _ (reset! parid-val parid)]
@@ -287,7 +299,11 @@
                 (update-todo
                  sort_id nil blog-id done-stat
                  #(prn %))))}]
-          [:label.todo-front-size {:on-double-click #(reset! editing true)} [:a {:on-click #(js/alert sort_id)} sort_id "◔"]  content]
+          [:label.todo-front-size {:on-double-click #(reset! editing true)}
+           [:a {:on-click (fn [] (if (nil? file)
+                                   (js/alert "pcm file is nil!")
+                                   (play-pcm-file (re-find #"\d\d+" file) identity)
+                                   ))} sort_id "◔"]  content]
           [:button.destroy {:on-click
                             (fn []
                               (delete-todo
