@@ -327,7 +327,15 @@
                   :content :content
                   :done :done
                   :created_at :created_at
-                  :updated_at :updated_at}))
+                  :updated_at :updated_at
+                  :wctags :wctags
+                  :app_id         :app_id        
+                  :file           :file          
+                  :islast         :islast        
+                  :percent        :percent       
+                  :begin          :begin         
+                  :mend           :mend          
+                  :origin_content :origin_content}))
       (h/from :todos)))
 
 ;; (search-blogs {:db conn :q "肌肉记忆"})

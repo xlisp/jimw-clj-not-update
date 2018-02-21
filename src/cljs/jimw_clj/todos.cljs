@@ -287,7 +287,7 @@
                 (update-todo
                  sort_id nil blog-id done-stat
                  #(prn %))))}]
-          [:label.todo-front-size {:on-double-click #(reset! editing true)} (str sort_id "◔" content)]
+          [:label.todo-front-size {:on-double-click #(reset! editing true)} [:a {:on-click #(js/alert sort_id)} sort_id "◔"]  content]
           [:button.destroy {:on-click
                             (fn []
                               (delete-todo
