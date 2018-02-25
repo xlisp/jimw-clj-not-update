@@ -4,7 +4,7 @@
 ;; Atom as in memory-database.
 ;; In real life, you would replace this with database connection using Mount.
 
-;; (swap! db conj "测试22")
+;; (swap! db conj "测试22333")
 ;; cider里面修改db之后,连接的客户端无法更新, 只有客户端再新增的时候,cider添加的数据才能显示出来
 (defonce db (atom []))
 
@@ -32,7 +32,10 @@
 ;;  (fn [{:keys [db]} _]
 ;;    {:sente/event {:event [:msg/create (select-keys db [:new-msg])]}
 ;;     :db (dissoc db :new-msg)}))
+;;;;;;;;;;;; !!! 这个方法只是给前端用的而已, 都是属于`sente/event-msg-handler`的函数
 (defmethod sente/event-msg-handler :msg/create
+  ;; 前端Cljs用`:msg/create` => ` (re-frame/dispatch [:msg/create]) `
+  ;; & ` (re-frame/dispatch [:msg/update-new {:new-msg value}]) ` 产生数据流
   [{:keys [event]}]
   (let [new-msg (-> event second :new-msg)]
     (swap! db conj new-msg)

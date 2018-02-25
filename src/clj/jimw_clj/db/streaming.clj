@@ -5,7 +5,8 @@
    [taoensso.timbre :refer [info error debug trace report fatal]]
    [cheshire.core :as json]
    [clojure.java.io :as io]
-   [clojure.string :as str]))
+   [clojure.string :as str]
+   [jimw-clj.sente :as sente]))
 
 (defn- make-streaming-proc []
   (let [env {"PGHOST"     "localhost"
@@ -60,3 +61,18 @@
 
 ;; 终止go-loop循环
 ;; (a/close! aaa) ;; => nil
+
+
+(def pg-streaming-change
+  (let [stop-ch (a/promise-chan)]
+    (a/go-loop []
+      (let [[v port] (a/alts! [stop-ch stream-source] :priority true)]
+        (when-not (= port stop-ch)
+          (doseq [uid (:any @(:connected-uids sente/sente))]
+            ((:send-fn sente/sente)
+             uid
+             [:msg/push-all {:msgs (json/generate-string v)}]))          
+          )
+        )
+      (recur))
+    stop-ch))
