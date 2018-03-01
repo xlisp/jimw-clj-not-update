@@ -978,3 +978,16 @@
 ;;(-> (shell/sh "python2.7" "/home/clojure/jieba_cli.py" "clojure我爱"))
 
 ;; (-> (shell/sh "python2.7" "./bin/jieba_cli_clj.py" "clojure我爱" "我爱Lisp"))
+
+;; 为什么repl用过了conn就会报这个错误呢?
+;; java.lang.ClassCastException: clojure.lang.PersistentArrayMap cannot be cast to com.zaxxer.hikari.HikariDataSource, compiling:(jimw_clj/db/core.clj:79:1)
+;;  DELETE FROM todos;
+;;  DELETE FROM blogs;
+
+(defn reimport-clj-project-s-exp
+  [project-name]
+  (do
+    (jconn conn (-> (h/delete-from :blogs) (h/where [:like :name (str "%jimw-code/" project-name "%")])))
+    (read-string-for-pro (fn [code-list file-name] (map first code-list)) project-name)
+    (import-project-s-exp-to-blog conn project-name)
+    (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name (str "%jimw-code/" project-name "%")]))))))
