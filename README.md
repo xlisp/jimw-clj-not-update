@@ -268,6 +268,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 两个todo句子的因果性的粗暴量化
 * 搜索todo的list,前十条: 按照不同的搜索角度和排列顺序
 * 两个todo关联性分析
+* 纯函数init.el做到极致,再加上CLJS的FRP就更完美了
 
 ## 以时间和工资作为货币系统: 价值系统的表达
 * 做每一个todo消耗的时间和金钱是多少

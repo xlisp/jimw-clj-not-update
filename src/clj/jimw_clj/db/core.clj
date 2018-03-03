@@ -1002,3 +1002,17 @@
   [binding & body]
   `(clojure.java.jdbc/with-db-connection
      ~binding ~@body))
+
+;; (with-conn [c @conn] (search-todos-el {:db c :q "能力"}))
+(defn search-todos-el [{:keys [db q]}]
+  (jconn db
+         (-> (h/select :*)
+             (h/from :todos)
+             (h/order-by [:id :desc])
+             (h/where (when (seq q)
+                        (let [q-list (clojure.string/split q #" ")]
+                          (apply conj [:and]
+                                 (map #(vector
+                                        :like :content (str "%" % "%"))
+                                      q-list)))))
+             (h/limit 10))))
