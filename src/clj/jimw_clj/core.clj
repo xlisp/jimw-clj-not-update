@@ -8,6 +8,7 @@
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.tools.logging :as log]
             [mount.core :as mount]
+            [mount.lite :as lite]
             [jimw-clj.db.ruby :as ruby])
   (:gen-class))
 
@@ -63,4 +64,5 @@
     :else
     (do
       (config/jimw-load-conf)
+      (lite/start)
       (start-app args))))

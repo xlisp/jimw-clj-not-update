@@ -51,7 +51,7 @@
   (try
     (let [{:keys [id password username]}
           (db/get-user-by-username
-           {:db db/conn :username (:username params)})]
+           {:db @db/conn :username (:username params)})]
       (if (check-password (:password params) password)
         (ok {:id id
              :username username
@@ -70,34 +70,34 @@
 (defn get-blogs
   [{{:keys [q limit offset]
      :or   {limit 10 offset 0 q ""}} :params}]
-  (ok (db/search-blogs {:db db/conn :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
+  (ok (db/search-blogs {:db @db/conn :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset)})))
 
 (defn update-blog
   [{{:keys [id name content]} :params}]
-  (let [res (db/update-blog {:db db/conn :id (Integer/parseInt id) :name name :content content})]
+  (let [res (db/update-blog {:db @db/conn :id (Integer/parseInt id) :name name :content content})]
     (if res
       (ok res) (not-found))))
 
 (defn create-blog
   [{{:keys [name content]} :params}]
-  (let [res (db/create-blog {:db db/conn :name name :content content})]
+  (let [res (db/create-blog {:db @db/conn :name name :content content})]
     (ok res)))
 
 (defn create-blog-and-root
   [{{:keys [name content]} :params}]
-  (let [res (db/create-blog-and-root {:db db/conn :name name :content content})]
+  (let [res (db/create-blog-and-root {:db @db/conn :name name :content content})]
     (ok res)))
 
 (defn get-todos
   [{{:keys [q blog]
      :or   {q ""}} :params}]
-  (ok (db/search-todos {:db db/conn :q q :blog (Integer/parseInt blog)})))
+  (ok (db/search-todos {:db @db/conn :q q :blog (Integer/parseInt blog)})))
 
 (defn update-todo
   [{{:keys [id parid blog content done]} :params}]
   (let [res (db/update-todo
              (merge
-              {:db db/conn
+              {:db @db/conn
                :id (Integer/parseInt id)
                :blog (Integer/parseInt blog)
                :done done
@@ -109,7 +109,7 @@
 
 (defn create-todo
   [{{:keys [parid blog content]} :params}]
-  (let [res (db/create-todo {:db db/conn
+  (let [res (db/create-todo {:db @db/conn
                              :parid (Integer/parseInt parid)
                              :blog (Integer/parseInt blog)
                              :content content})]
@@ -119,7 +119,7 @@
   [{{:keys [parid blog content
             app_id file islast percent begin mend]} :params}]
   (let [res (db/create-todo-app
-             {:db db/conn
+             {:db @db/conn
               :parid (Integer/parseInt parid)
               :blog (Integer/parseInt blog)
               :content content
@@ -133,7 +133,7 @@
 
 (defn delete-todo
   [{{:keys [id]} :params}]
-  (let [res (db/delete-todo {:db db/conn
+  (let [res (db/delete-todo {:db @db/conn
                              :id (Integer/parseInt id)})]
     (if res
       (ok res) (not-found))))
@@ -143,14 +143,14 @@
   [{:keys [params]}]
   (ok {:params params :rtest (R/eval "rnorm(5)") }))
 
-;; (db/tree-todo-generate {:db db/conn :blog 4859})
+;; (db/tree-todo-generate {:db @db/conn :blog 4859})
 ;; (db/writer-tree-file 4859)
 (defn tree-todo-generate
   [{{:keys [blog]} :params}]
   (do
     (info (str "======>> tree-todo-generate"
                (db/tree-todo-generate
-                {:db db/conn
+                {:db @db/conn
                  :blog (Integer/parseInt blog)})))
     (Thread/sleep 1000)
     (db/writer-tree-file (Integer/parseInt blog))
@@ -160,19 +160,19 @@
   [{{:keys [blog]} :params}]
   (ok {:data
        (db/tree-todo-generate-new
-        {:db db/conn
+        {:db @db/conn
          :blog (Integer/parseInt blog)})}))
 
 (defn record-event
   [{{:keys [event_name info event_data]} :params}]
-  (ok (db/insert-event {:db db/conn
+  (ok (db/insert-event {:db @db/conn
                         :event_name event_name
                         :info       info
                         :event_data event_data})))
 
 (defn update-todo-sort
   [{{:keys [origins response target]} :params}]
-  (ok (db/update-todo-sort {:db db/conn
+  (ok (db/update-todo-sort {:db @db/conn
                             :origins (into {} origins)
                             :response response
                             :target target})))
@@ -186,7 +186,7 @@
 
 (defn get-blog-wctags
   [{{:keys [id]} :params}]
-  (let [res (db/get-blog-wctags {:db db/conn :id (Integer/parseInt id)})]
+  (let [res (db/get-blog-wctags {:db @db/conn :id (Integer/parseInt id)})]
     (if res (ok {:data (sort-by (fn [item] (* (last item) -1)) (:wctags res))})
         (not-found))))
 
@@ -199,7 +199,7 @@
           "\n"
           (map :content
                (db/search-sqldots
-                {:db db/conn :q
+                {:db @db/conn :q
                  (if (seq q)
                    (clojure.string/replace q #"-" "_")
                    "")})))
@@ -213,7 +213,7 @@
      {}
      (map-indexed
       vector
-      (clojure.string/split (db/map->en db/conn q) #" ")))}))
+      (clojure.string/split (db/map->en @db/conn q) #" ")))}))
 
 (defroutes api-routes
   (POST "/login" [] login)

@@ -5,6 +5,7 @@
     [conman.core :as conman]
     [jimw-clj.config :refer [env]]
     [mount.core :refer [defstate]]
+    [mount.lite :as lite]
     [honeysql.core :as sql]
     [honeysql.helpers :as h]
     [honeysql-postgres.helpers :as hp]
@@ -76,7 +77,7 @@
       ;; load getTermMatrix function
       (R/eval (str "source('" get-term-matrix-path "')"))))
 
-(defstate conn
+(lite/defstate conn
   :start (try
            {:datasource
             (pool/make-datasource
@@ -85,7 +86,7 @@
            (catch Throwable e
              (info (str e ", 连接池连接失败!"))
              (System/exit 1)))
-  :stop (pool/close-datasource conn))
+  :stop (pool/close-datasource @conn))
 
 (defn to-date [^java.sql.Date sql-date]
   (-> sql-date (.getTime) (java.util.Date.)))
@@ -991,3 +992,13 @@
     (read-string-for-pro (fn [code-list file-name] (map first code-list)) project-name)
     (import-project-s-exp-to-blog conn project-name)
     (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name (str "%jimw-code/" project-name "%")]))))))
+
+;;(lite/start)
+;;(lite/stop)
+#_(with-conn [c @conn]
+    (search-todos {:db c :q "a" :blog 40546})
+    )
+(defmacro with-conn
+  [binding & body]
+  `(clojure.java.jdbc/with-db-connection
+     ~binding ~@body))
