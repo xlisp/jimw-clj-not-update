@@ -1018,6 +1018,7 @@
              (h/limit 10))))
 
 ;; (get-todo-frequencies {:db @conn :blog 5703})
+;; 脑袋排除非名词:["成功" 5] ["找到" 5] ["能力" 4] ["时间" 3] ["影响" 3] ["货币" 3] ["有趣" 3]  ["人才" 3] ["东西" 3] ["产品" 3] ["模式" 2] ...
 (defn get-todo-frequencies
   [{:keys [db q blog]}]
   (with-conn [c db]
@@ -1031,7 +1032,8 @@
                   (map first (jieba-wordcloud content))))
         (search-todos {:db c :q (if (nil? q) "" q) :blog blog})))))))
 
-;; (:content (get-blog-by-id {:db @conn :id 5703}))
+;; (jieba-wordcloud (:content (get-blog-by-id {:db @conn :id 5703})))
+;; 脑袋排除非名词: ["产品" 18] ["公司" 17] [" 人才" 16]  ["想法" 12] ["电脑" 11] ...
 (defn get-blog-by-id
   [{:keys [db id]}]
   (jconn1 db
