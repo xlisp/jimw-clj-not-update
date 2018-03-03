@@ -1040,3 +1040,14 @@
           (-> (h/select :*)
               (h/from :blogs)
               (h/where [:= :id id]))))
+
+;; (get-voice-mark-content {:db @conn :id 5703})
+(defn get-voice-mark-content
+  [{:keys [db id q]}]
+  (with-conn [c db]
+    (let [{:keys [content]} (get-blog-by-id {:db c :id id})]
+      (map
+       (fn [{:keys [begin mend]}]
+         (if (nil? begin) ""
+             (subs content begin mend)))
+       (search-todos {:db c :q (if (nil? q) "" q) :blog id})))))
