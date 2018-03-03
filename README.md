@@ -276,6 +276,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 预算消耗时间和金钱,以及实际所用的时间和金钱
 * 投资时间和金钱的回报率或影响力
 * 时间和金钱的兑换,汇率的计算,不同时间不同的价值
+* 借鉴区块链分布式账本,好的设计 => 广义的区块链,广义的价值表达
 
 ## License
 
