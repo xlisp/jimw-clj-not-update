@@ -270,6 +270,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 两个todo关联性分析
 * 极限纯函数init.el能做的,最后加上CLJS的FRP
 * 当λ演算不够成熟的时候,没有必要做CLJS可视化FRP
+* 先极限λ演算可计算的纯函数, 后过渡到不确定性的概率计算
 
 ## 以时间和工资作为货币系统: 价值系统的表达
 * 做每一个todo消耗的时间和金钱是多少
