@@ -1016,3 +1016,25 @@
                                         :like :content (str "%" % "%"))
                                       q-list)))))
              (h/limit 10))))
+
+;; (get-todo-frequencies {:db @conn :blog 5703})
+(defn get-todo-frequencies
+  [{:keys [db q blog]}]
+  (with-conn [c db]
+    (sort-by
+     #(* (last %) -1)
+     (frequencies
+      (flatten
+       (map
+        (fn [{:keys [content]}]
+          (filter #(not (or (= % "|") (= % "。") (= % "？") (= % "?") (= % ".") (= % "，")))
+                  (map first (jieba-wordcloud content))))
+        (search-todos {:db c :q (if (nil? q) "" q) :blog blog})))))))
+
+;; (:content (get-blog-by-id {:db @conn :id 5703}))
+(defn get-blog-by-id
+  [{:keys [db id]}]
+  (jconn1 db
+          (-> (h/select :*)
+              (h/from :blogs)
+              (h/where [:= :id id]))))

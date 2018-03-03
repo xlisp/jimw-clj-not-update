@@ -269,6 +269,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 搜索todo的list,前十条: 按照不同的搜索角度和排列顺序
 * 两个todo关联性分析
 * 极限纯函数init.el能做的,最后加上CLJS的FRP
+* 当λ演算不够成熟的时候,没有必要做CLJS可视化FRP
 
 ## 以时间和工资作为货币系统: 价值系统的表达
 * 做每一个todo消耗的时间和金钱是多少
