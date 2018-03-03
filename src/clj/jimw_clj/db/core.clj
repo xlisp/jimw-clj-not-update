@@ -1042,6 +1042,7 @@
               (h/where [:= :id id]))))
 
 ;; (get-voice-mark-content {:db @conn :id 5703})
+;;  => ("传媒评论" "你必须做出难以两全的取舍" "你也会发现" "这里有个好点子" ...)
 (defn get-voice-mark-content
   [{:keys [db id q]}]
   (with-conn [c db]
@@ -1051,3 +1052,7 @@
          (if (nil? begin) ""
              (subs content begin mend)))
        (search-todos {:db c :q (if (nil? q) "" q) :blog id})))))
+
+;; 输入几个关联路径(假设从标签云里面,选择拉线A->B,再拉线A->C): 如 `洗澡 -> 洗袜子`, `洗澡 -> 刷牙`
+
+;; 如何分类出,与文章相关,还是与文章不相关的todos呢? 参考贝叶斯垃圾邮件分类: 用文章来训练分类器,用分类器来分类todos
