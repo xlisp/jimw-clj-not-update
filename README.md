@@ -263,6 +263,11 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 ## 任何文档,数据,书籍,项目的Lisp化,任何媒体可微分化为神经网络 ① ① 2018
 * 只有这样才可以无穷无尽的强大自性的能量
 
+## EmacsLisp的思想: 不要管CLJS的可视化操作,而是纯函数作为REPL工具来做,不断的演算出去先 => 不要让UI限制了你的想象力
+* 两个句子相似度的粗暴量化
+* 两个句子的因果性的粗暴量化
+* 搜索todo的list,前十条: 按照不同的搜索角度和排列顺序
+
 ## License
 
 Copyright © 2017 FIXME
