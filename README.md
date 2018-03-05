@@ -290,6 +290,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 
 ## Websocket可行之道,演示和同时操作多个todos,分开多屏幕(不用管db的Stream了)
 * 把msg的后端db作为消息的中心,设置一个路由的hash规则,可以自动更新todo就可以了, 手机和电脑做到数据>的同步
+* 树的更新
 
 ## License
 
