@@ -273,6 +273,7 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 先极限λ演算可计算的纯函数, 后过渡到不确定性的概率计算
 * 所有可计算的都尽量表达出来成纯函数,像Rlisp一样最后组合每一个函数的分析得到最终的组合分析结果
 * λ的演算极限,不确定性问题,用什么机器学习算法可以解决你的问题?
+* 把Clojure的演算函数先用API包起来,给命令行curl去用先,避免cider作为server而emacselient去调用返回一个buffer的问题,没办法返回标准输出的问题
 
 ## 以时间和工资作为货币系统: 价值系统的表达
 * 做每一个todo消耗的时间和金钱是多少
