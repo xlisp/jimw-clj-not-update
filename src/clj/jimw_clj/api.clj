@@ -215,6 +215,11 @@
       vector
       (clojure.string/split (db/map->en @db/conn q) #" ")))}))
 
+(defn search-todos-el
+  [{{:keys [q]} :params}]
+  (ok (db/search-todos-el {:db @db/conn :q (if (nil? q) "" q)}))
+  )
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
@@ -234,4 +239,5 @@
   (POST "/update-todo-sort" [] (check-api-token update-todo-sort))
   (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags))
   (GET "/search-sqldots" [] (check-api-token search-sqldots))
-  (GET "/search-mapen" [] (check-api-token search-mapen)))
+  (GET "/search-mapen" [] (check-api-token search-mapen))
+  (GET "/search-todos-el" [] (check-api-token search-todos-el)))
