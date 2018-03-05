@@ -288,6 +288,8 @@ Successfully compiled "target/cljsbuild/public/js/app.js" in 22.094 seconds.
 * 整体之于局部 => 以消息为中心的驱动相关的局部树形化,不管是哪篇文章的树: 比如有三篇不同领域的文章,todolist都说到"影响力",那这三篇文章的上下文todos"影响力"的部分都会被树形化
 * 用上代码语义搜索的东西 => 这些局部树形化,就像一个lisp的闭包AST树一样(函数也是闭包),可以做"代码语义搜索", 搜索出来的结果是一颗颗局部树(向下遍历到最后点)
 
+## Websocket可行之道,演示和同时操作多个todos,分开多屏幕(不用管db的Stream了)
+* 把msg的后端db作为消息的中心,设置一个路由的hash规则,可以自动更新todo就可以了, 手机和电脑做到数据>的同步
 
 ## License
 
