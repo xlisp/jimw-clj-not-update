@@ -1010,17 +1010,18 @@
 ;; 2. 整体之于局部 => 以消息为中心的驱动相关的局部树形化,不管是哪篇文章的树: 比如有三篇不同领域的文章,todolist都说到"影响力",那这三篇文章的上下文影响力的部分都会被树形化
 ;; 3. 用上代码语义搜索的东西 => 这些局部树形化,就像一个lisp的闭包AST树一样(函数也是闭包),可以做"代码语义搜索", 搜索出来的结果是一颗颗局部树(向下遍历到最后点)
 (defn search-todos-el [{:keys [db q]}]
-  (jconn db
-         (-> (h/select :*)
-             (h/from :todos)
-             (h/order-by [:id :desc])
-             (h/where (when (seq q)
-                        (let [q-list (clojure.string/split q #" ")]
-                          (apply conj [:and]
-                                 (map #(vector
-                                        :like :content (str "%" % "%"))
-                                      q-list)))))
-             (h/limit 10))))
+  (let [res (insert-event {:db db :event_name "search-todos-el" :info "cli" :event_data q})]
+    (jconn db
+           (-> (h/select :*)
+               (h/from :todos)
+               (h/order-by [:id :desc])
+               (h/where (when (seq q)
+                          (let [q-list (clojure.string/split q #" ")]
+                            (apply conj [:and]
+                                   (map #(vector
+                                          :like :content (str "%" % "%"))
+                                        q-list)))))
+               (h/limit 10)))))
 
 ;; (get-todo-frequencies {:db @conn :blog 5703})
 ;; 脑袋排除非名词:["成功" 5] ["找到" 5] ["能力" 4] ["时间" 3] ["影响" 3] ["货币" 3] ["有趣" 3]  ["人才" 3] ["东西" 3] ["产品" 3] ["模式" 2] ...
