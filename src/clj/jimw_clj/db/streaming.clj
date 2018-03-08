@@ -5,6 +5,7 @@
    [taoensso.timbre :refer [info error debug trace report fatal]]
    [cheshire.core :as json]
    [clojure.java.io :as io]
+   [mount.lite :as lite]
    [clojure.string :as str]
    [jimw-clj.sente :as sente]))
 
@@ -14,20 +15,20 @@
              "PGDATABASE" "blackberry"
              "PGUSER"     "postgres"
              "PGPASSWORD" "123456"}]
-    (sh/proc "pg_recvlogical"
+    (sh/proc "/opt/PostgreSQL/9.6/bin/pg_recvlogical"
              "--no-loop"
              "--dbname" "blackberry"
              "--slot" "blackberry_streaming"
              "--start" "--file" "-"
              :env env)))
 
-(def proc (make-streaming-proc))
+(lite/defstate proc :start (make-streaming-proc) :stop 111)
 
 (def stream-source (a/chan 10))
 
 (defn data-stream []
   (a/thread
-    (with-open [rdr (io/reader (:out proc))]
+    (with-open [rdr (io/reader (:out @proc))]
       (doseq [item (json/parsed-seq rdr true)]
         (>!! stream-source item)))))
 
@@ -63,7 +64,7 @@
 ;; (a/close! aaa) ;; => nil
 
 
-(def pg-streaming-change
+#_(def pg-streaming-change
   (let [stop-ch (a/promise-chan)]
     (a/go-loop []
       (let [[v port] (a/alts! [stop-ch stream-source] :priority true)]

@@ -18,7 +18,7 @@
    [taoensso.timbre :refer [error debug info]]
    [jimw-clj.config :as config]
    [clojure.java.io :as io]
-   [clj-jri.R :as R]
+   ;;[clj-jri.R :as R]
    [jimw-clj.sente :as sente])
   (:import (org.apache.commons.codec.binary Base64)
            (org.apache.commons.io IOUtils))
@@ -141,7 +141,7 @@
 ;; headers => jimw-clj-token: "token" => {:params {:jimw_clj_userinfo {:user "abc"}}}
 (defn test-api
   [{:keys [params]}]
-  (ok {:params params :rtest (R/eval "rnorm(5)") }))
+  (ok {:params params :rtest "" #_(R/eval "rnorm(5)") }))
 
 ;; (db/tree-todo-generate {:db @db/conn :blog 4859})
 ;; (db/writer-tree-file 4859)

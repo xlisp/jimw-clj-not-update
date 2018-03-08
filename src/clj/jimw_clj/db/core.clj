@@ -16,7 +16,7 @@
     [clojure.java.shell :as shell]
     [clojure.string :as str]
     [clojure.pprint :as pp]
-    [clj-jri.R :as R]
+    ;;[clj-jri.R :as R]
     [cheshire.core :as cjson]
     [clojure.core.async :as async]
     [jimw-clj.db.racket :as racket]
@@ -69,7 +69,7 @@
    "library(memoise)"
    "library(RJSONIO)"])
 
-(if (get (System/getenv) "RUN_REVAL") nil
+#_(if (get (System/getenv) "RUN_REVAL") nil
     (do
       ;; load r lib
       (if (R/eval r-lib) (info "load R lib ok...") (throw (Exception. "load R lib failure !")))      
@@ -375,7 +375,7 @@
                                       (into {})))
                          (h/where [:= :id id])))
         update-wctags (fn []
-                        (let [res-json (R/eval
+                        (let [res-json 111 #_(R/eval
                                         (str "toJSON(getTermMatrix(\""
                                              (->>
                                               (clojure.string/split (:content res) #"\W")
