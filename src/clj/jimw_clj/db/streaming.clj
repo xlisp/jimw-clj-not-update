@@ -86,3 +86,27 @@
       (recur))
     stop-ch)
   :stop 2222)
+
+
+(def test-stream-update-data
+  {:xid 1740, ;; 每一个数据流变更事件都是唯一的交易id: xid
+   :change [{:kind "update", :schema "public", :table "todos", :columnnames
+             ["id" "blog" "parid" "content" "created_at" "updated_at" "done" "sort_id" "wctags" "app_id" "file" "islast" "percent" "begin" "mend" "origin_content"],
+             :columntypes ["int8" "int8" "int8" "text" "timestamptz" "timestamptz" "bool" "int4" "jsonb" "int4" "text" "bool" "int4" "int4" "int4" "text"],
+             :columnvalues [9702 5727 9699 "Emacs也是同步更新的,操作生成语义树" "2018-03-08 15:46:45.336272-05" "2018-03-08 15:58:40.667049-05" false 5782833 "{}" nil nil nil nil nil nil nil],
+             :oldkeys {:keynames ["id"], :keytypes ["int8"], :keyvalues [9702]}}]})
+
+(def test-stream-insert-data
+  {:xid 1743,
+   :change [{:kind "insert", :schema "public", :table "todos", :columnnames
+             ["id" "blog" "parid" "content" "created_at" "updated_at" "done" "sort_id" "wctags" "app_id" "file" "islast" "percent" "begin" "mend" "origin_content"],
+             :columntypes ["int8" "int8" "int8" "text" "timestamptz" "timestamptz" "bool" "int4" "jsonb" "int4" "text" "bool" "int4" "int4" "int4" "text"],
+             :columnvalues [9704 5727 9702 "这点很重要,可以整合cider和jimw-clj的语义搜索的能量(静态分析)" "2018-03-08 16:05:08.441853-05" "2018-03-08 16:05:08.441853-05" false 5784109 "{}" nil nil nil nil nil nil nil]}]})
+
+;; 没有Websocket,后端是操作不了前端的=>> 后端只是把JSON消息发给前端,让它自己去处理吧
+#_(let [change (first (:change test-stream-update-data))
+      {:keys [kind table columnnames columnvalues]} change
+      {:keys [id blog parid content created_at updated_at done
+              sort_id wctags app_id file islast percent begin mend origin_content]}
+      (zipmap (map keyword columnnames) columnvalues)]
+  )
