@@ -12,13 +12,13 @@
 (defn- make-streaming-proc []
   (let [env {"PGHOST"     "localhost"
              "PGPORT"     "5432"
-             "PGDATABASE" "blackberry"
+             "PGDATABASE" "blackberry03081644"
              "PGUSER"     "postgres"
              "PGPASSWORD" "123456"}]
     (sh/proc "/opt/PostgreSQL/9.6/bin/pg_recvlogical"
              "--no-loop"
-             "--dbname" "blackberry"
-             "--slot" "blackberry_streaming"
+             "--dbname" "blackberry03081644"
+             "--slot" "blackberry_streaming_03081644"
              "--start" "--file" "-"
              :env env)))
 
