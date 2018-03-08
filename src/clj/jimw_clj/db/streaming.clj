@@ -7,20 +7,23 @@
    [clojure.java.io :as io]
    [mount.lite :as lite]
    [clojure.string :as str]
-   [jimw-clj.sente :as sente]))
+   [jimw-clj.sente :as sente]
+   [jimw-clj.config :as config :refer [env]]))
 
 (defn- make-streaming-proc []
-  (let [env {"PGHOST"     "localhost"
-             "PGPORT"     "5432"
-             "PGDATABASE" "blackberry03081644"
-             "PGUSER"     "postgres"
-             "PGPASSWORD" "123456"}]
-    (sh/proc "/opt/PostgreSQL/9.6/bin/pg_recvlogical"
-             "--no-loop"
-             "--dbname" "blackberry03081644"
-             "--slot" "blackberry_streaming_03081644"
-             "--start" "--file" "-"
-             :env env)))
+  (let [{:keys [username password database-name slot]}
+        (:datasource-options @config/jimw-conf)]
+    (let [env {"PGHOST"     "localhost"
+               "PGPORT"     "5432"
+               "PGDATABASE" database-name
+               "PGUSER"     username
+               "PGPASSWORD" password}]
+      (sh/proc "pg_recvlogical"
+               "--no-loop"
+               "--dbname" database-name
+               "--slot" slot
+               "--start" "--file" "-"
+               :env env))))
 
 (lite/defstate proc :start (make-streaming-proc) :stop 111)
 

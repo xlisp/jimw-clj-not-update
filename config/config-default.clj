@@ -16,5 +16,6 @@
                       :database-name      "blackberry"
                       :server-name        "localhost"
                       :port-number        5432
-                      :register-mbeans    false}
+                      :register-mbeans    false
+                      :slot               "blackberry_streaming"}
  }
