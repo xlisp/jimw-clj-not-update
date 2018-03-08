@@ -63,17 +63,23 @@
 ;; 终止go-loop循环
 ;; (a/close! aaa) ;; => nil
 
-
-#_(def pg-streaming-change
-  (let [stop-ch (a/promise-chan)]
+(lite/defstate pg-streaming-change
+  :start
+  (let [start_stream (data-stream)
+        stop-ch (a/promise-chan)]
     (a/go-loop []
       (let [[v port] (a/alts! [stop-ch stream-source] :priority true)]
         (when-not (= port stop-ch)
           (doseq [uid (:any @(:connected-uids sente/sente))]
-            ((:send-fn sente/sente)
-             uid
-             [:msg/push-all {:msgs (json/generate-string v)}]))          
+            (do
+              (info "===>>>>" v) 
+              ((:send-fn sente/sente)
+               uid
+               [:msg/push-all {:msgs (json/generate-string v)}])
+              )
+            )          
           )
         )
       (recur))
-    stop-ch))
+    stop-ch)
+  :stop 2222)
