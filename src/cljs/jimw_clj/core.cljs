@@ -230,8 +230,15 @@
                                            :content content}))
                  )
              ;;
-             (= kind "update") (prn (str "------update" content))
-             (= kind "delete") (prn (str "------delete" content))
+             (= kind "update")
+             (do (prn (str "------update" content))
+                 (swap! blog-list update-in [blog :todos sort_id :content] (fn [x] content))
+                 )             
+             (= kind "delete")
+             (do (prn (str "------delete" content))
+                 (swap! blog-list update-in
+                        [blog :todos] #(dissoc % sort_id))
+                 )
              :else (prn "todos other operation"))
        nil)
      )
