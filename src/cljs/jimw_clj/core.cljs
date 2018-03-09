@@ -219,7 +219,17 @@
          (zipmap (map keyword columnnames) columnvalues)]
      (if (= table "todos")
        ;;(prn (str "------" content))
-       (cond (= kind "insert") (prn (str "------insert" content))
+       (cond (= kind "insert")
+             ;;
+             (do (prn (str "------insert" content))
+                 (swap! blog-list update-in
+                        [blog :todos]
+                        #(assoc % sort_id {:id sort_id :sort_id id
+                                           :search true                                                   
+                                           :parid parid
+                                           :content content}))
+                 )
+             ;;
              (= kind "update") (prn (str "------update" content))
              (= kind "delete") (prn (str "------delete" content))
              :else (prn "todos other operation"))
