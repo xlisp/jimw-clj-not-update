@@ -25,7 +25,11 @@
                "--start" "--file" "-"
                :env env))))
 
-(lite/defstate proc :start (make-streaming-proc) :stop 111)
+(lite/defstate proc
+  :start (if (= (get (System/getenv) "OS_TYPE") "MACOX")
+           (sh/proc "bin/pg_stream.sh")
+           (make-streaming-proc))
+  :stop 111)
 
 (def stream-source (a/chan 10))
 
@@ -48,17 +52,17 @@
 
 ;; jim2: 监听多次的DB变化, 可以终止的循环
 #_(def aaa
-  (let [stop-ch (a/promise-chan)]
-    (a/go-loop []
-      (let [[v port] (a/alts! [stop-ch stream-source] :priority true)]
-        (when-not (= port stop-ch)
-          (println "Message: " v "\nFrom Object: " port)
+    (let [stop-ch (a/promise-chan)]
+      (a/go-loop []
+        (let [[v port] (a/alts! [stop-ch stream-source] :priority true)]
+          (when-not (= port stop-ch)
+            (println "Message: " v "\nFrom Object: " port)
+            )
           )
-        )
-      #_(let [x (<!! stream-source)]
-          (println "Got a value in this loop:" x))
-      (recur))
-    stop-ch))
+        #_(let [x (<!! stream-source)]
+            (println "Got a value in this loop:" x))
+        (recur))
+      stop-ch))
 ;; =>
 ;; Message:  {:change [{:kind update, :schema public, :table blogs, ... }
 ;; From Object:  #object[clojure.core.async.impl.channels.ManyToManyChannel...]
@@ -105,8 +109,9 @@
 
 ;; 没有Websocket,后端是操作不了前端的=>> 后端只是把JSON消息发给前端,让它自己去处理吧
 #_(let [change (first (:change test-stream-update-data))
-      {:keys [kind table columnnames columnvalues]} change
-      {:keys [id blog parid content created_at updated_at done
-              sort_id wctags app_id file islast percent begin mend origin_content]}
-      (zipmap (map keyword columnnames) columnvalues)]
-  )
+        {:keys [kind table columnnames columnvalues]} change
+        {:keys [id blog parid content created_at updated_at done
+                sort_id wctags app_id file islast percent begin mend origin_content]}
+        (zipmap (map keyword columnnames) columnvalues)]
+    )
+
