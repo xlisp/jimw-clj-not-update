@@ -200,11 +200,34 @@
             [re-frame.core :as re-frame])
   (:import goog.History))
 
+(declare blog-list)
+
+(defn json-parse
+  [json]
+  (->
+   (.parse js/JSON json)
+   (js->clj :keywordize-keys true)))
+
 (re-frame/reg-event-db
  :msg/push-all
  (fn [db [_ {:keys [msgs]}]]
-   (prn (str "----" msgs))
-   (assoc db :msgs msgs)))
+   #_(prn (str "----" msgs))
+   ;;
+   (let [{:keys [kind table columnnames columnvalues]} (first (:change (json-parse msgs)))
+         {:keys [id blog parid content created_at updated_at done
+                 sort_id wctags app_id file islast percent begin mend origin_content]}
+         (zipmap (map keyword columnnames) columnvalues)]
+     (if (= table "todos")
+       ;;(prn (str "------" content))
+       (cond (= kind "insert") (prn (str "------insert" content))
+             (= kind "update") (prn (str "------update" content))
+             (= kind "delete") (prn (str "------delete" content))
+             :else (prn "todos other operation"))
+       nil)
+     )
+   ;;
+   #_(assoc db :msgs msgs)
+   ))
 
 (.setOptions js/marked
              (clj->js
