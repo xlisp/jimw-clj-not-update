@@ -17,5 +17,6 @@
                       :server-name        "localhost"
                       :port-number        5432
                       :register-mbeans    false
-                      :slot               "blackberry_streaming"}
+                      :slot               "blackberry_streaming"
+                      :pg-recvlogical     "/usr/local/bin/pg_recvlogical"}
  }

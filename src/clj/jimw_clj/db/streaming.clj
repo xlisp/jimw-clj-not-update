@@ -11,14 +11,14 @@
    [jimw-clj.config :as config :refer [env]]))
 
 (defn- make-streaming-proc []
-  (let [{:keys [username password database-name slot]}
+  (let [{:keys [username password database-name slot pg-recvlogical]}
         (:datasource-options @config/jimw-conf)]
     (let [env {"PGHOST"     "localhost"
                "PGPORT"     "5432"
                "PGDATABASE" database-name
                "PGUSER"     username
                "PGPASSWORD" password}]
-      (sh/proc "pg_recvlogical"
+      (sh/proc pg-recvlogical
                "--no-loop"
                "--dbname" database-name
                "--slot" slot
