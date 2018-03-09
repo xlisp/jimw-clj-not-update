@@ -213,7 +213,7 @@
  (fn [db [_ {:keys [msgs]}]]
    #_(prn (str "----" msgs))
    ;;
-   (let [{:keys [kind table columnnames columnvalues]} (first (:change (json-parse msgs)))
+   (let [{:keys [kind table columnnames columnvalues oldkeys]} (first (:change (json-parse msgs)))
          {:keys [id blog parid content created_at updated_at done
                  sort_id wctags app_id file islast percent begin mend origin_content]}
          (zipmap (map keyword columnnames) columnvalues)]
@@ -221,7 +221,7 @@
        ;;(prn (str "------" content))
        (cond (= kind "insert")
              ;;
-             (do (prn (str "------insert" content))
+             (do (prn (str id "------insert" content))
                  (swap! blog-list update-in
                         [blog :todos]
                         #(assoc % sort_id {:id sort_id :sort_id id
@@ -231,13 +231,15 @@
                  )
              ;;
              (= kind "update")
-             (do (prn (str "------update" content))
+             (do (prn (str id "------update" content))
                  (swap! blog-list update-in [blog :todos sort_id :content] (fn [x] content))
                  )             
              (= kind "delete")
-             (do (prn (str "------delete" content))
-                 (swap! blog-list update-in
-                        [blog :todos] #(dissoc % sort_id))
+             (do (prn
+                  (str
+                   (first (:keyvalues oldkeys)) "------delete" content))                 
+                 #_(swap! blog-list update-in
+                        [blog :todos] #(dissoc % (first (:keyvalues oldkeys))))
                  )
              :else (prn "todos other operation"))
        nil)
