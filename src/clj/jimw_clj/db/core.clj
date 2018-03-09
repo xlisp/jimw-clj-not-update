@@ -78,14 +78,34 @@
       (R/eval (str "source('" get-term-matrix-path "')"))))
 
 (lite/defstate conn
-  :start (try
-           {:datasource
-            (pool/make-datasource
-             (:datasource-options
-              @config/jimw-conf))}
-           (catch Throwable e
-             (info (str e ", 连接池连接失败!"))
-             (System/exit 1)))
+  :start
+  (let [{:keys [database-name adapter auto-commit register-mbeans password
+                port-number username max-lifetime minimum-idle connection-timeout
+                server-name read-only maximum-pool-size idle-timeout
+                validation-timeout pool-name]}
+        (:datasource-options @config/jimw-conf)]
+    (try
+      {:datasource
+       (pool/make-datasource
+        {:database-name      database-name     
+         :adapter            adapter           
+         :auto-commit        auto-commit       
+         :register-mbeans    register-mbeans   
+         :password           password          
+         :port-number        port-number       
+         :username           username          
+         :max-lifetime       max-lifetime      
+         :minimum-idle       minimum-idle      
+         :connection-timeout connection-timeout
+         :server-name        server-name       
+         :read-only          read-only         
+         :maximum-pool-size  maximum-pool-size 
+         :idle-timeout       idle-timeout      
+         :validation-timeout validation-timeout
+         :pool-name          pool-name})}
+      (catch Throwable e
+        (info (str e ", jimw-clj 连接池连接失败!"))
+        (System/exit 1))))
   :stop (pool/close-datasource @conn))
 
 (defn to-date [^java.sql.Date sql-date]
