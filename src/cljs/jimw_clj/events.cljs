@@ -83,7 +83,7 @@
    {:sente/event {:event [:msg/create (select-keys db [:new-msg])]}
     :db (dissoc db :new-msg)}))
 
-(re-frame/reg-event-db
+#_(re-frame/reg-event-db
  :msg/push-all
  (fn [db [_ {:keys [msgs]}]]
    (assoc db :msgs msgs)))

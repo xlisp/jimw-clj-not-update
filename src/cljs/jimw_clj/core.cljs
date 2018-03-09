@@ -193,11 +193,18 @@
             [alandipert.storage-atom :refer [local-storage]]
             [myexterns.viz]
             [myexterns.wordcloud]
+            [re-frame.core :as re-frame]
             [jimw-clj.events :as msg-events]
             [jimw-clj.subs :as subs]
             [jimw-clj.views :as views]
             [re-frame.core :as re-frame])
   (:import goog.History))
+
+(re-frame/reg-event-db
+ :msg/push-all
+ (fn [db [_ {:keys [msgs]}]]
+   (prn (str "----" msgs))
+   (assoc db :msgs msgs)))
 
 (.setOptions js/marked
              (clj->js
