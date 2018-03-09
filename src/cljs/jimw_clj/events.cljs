@@ -87,3 +87,14 @@
  :msg/push-all
  (fn [db [_ {:keys [msgs]}]]
    (assoc db :msgs msgs)))
+
+;; (json-parse "{\"data\": [1, 2, 3]}") ;;=> {:data [1 2 3]}
+(defn json-parse
+  [json]
+  (->
+   (.parse js/JSON json)
+   (js->clj :keywordize-keys true)))
+
+;; (prn (json-parse @aamsgs))
+(def json-parse-msgs-eg
+  {:change [{:kind "update", :schema "public", :table "todos", :columnnames ["id" "blog" "parid" "content" "done" "sort_id" "created_at" "updated_at" "app_id" "file" "islast" "percent" "begin" "mend" "wctags" "origin_content"], :columntypes ["bigint" "bigint" "bigint" "text" "boolean" "integer" "timestamp with time zone" "timestamp with time zone" "integer" "text" "boolean" "integer" "integer" "integer" "jsonb" "text"], :columnvalues [279 40546 259 "aaaaaaakoiaa" false 238 "2018-03-09 10:30:57.715457+08" "2018-03-09 11:56:15.036576+08" nil nil nil nil nil nil "{}" nil], :oldkeys {:keynames ["id"], :keytypes ["bigint"], :keyvalues [279]}}]})
