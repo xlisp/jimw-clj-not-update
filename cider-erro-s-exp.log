@@ -1,0 +1,457 @@
+commit 0364865bd05a4eb9089b47382204eb0b14b95569
+Author: chanshunli <chanshunli@gmail.com>
+Date:   Wed Mar 14 05:47:59 2018 +0800
+
+    导致read-string导入失败的非法字符
+
+diff --git a/cider-apropos.el b/cider-apropos.el
+index c92d521..147fa3d 100644
+--- a/cider-apropos.el
++++ b/cider-apropos.el
+@@ -70,10 +70,10 @@ the symbol found by the apropos search as argument."
+   "Return a short description for the performed apropos search.
+ 
+ QUERY can be a regular expression list of space-separated words
+-\(e.g take while) which will be converted to a regular expression
+-\(like take.+while) automatically behind the scenes.  The search may be
++(e.g take while) which will be converted to a regular expression
++(like take.+while) automatically behind the scenes.  The search may be
+ limited to the namespace NS, and may optionally search doc strings
+-\(based on DOCS-P), include private vars (based on INCLUDE-PRIVATE-P),
++(based on DOCS-P), include private vars (based on INCLUDE-PRIVATE-P),
+ and be case-sensitive (based on CASE-SENSITIVE-P)."
+   (concat (if case-sensitive-p "Case-sensitive " "")
+           (if docs-p "Documentation " "")
+@@ -133,7 +133,7 @@ QUERY can also be a list of space-separated words (e.g. take while) which
+ will be converted to a regular expression (like take.+while) automatically
+ behind the scenes.  The search may be limited to the namespace NS, and may
+ optionally search doc strings (based on DOCS-P), include private vars
+-\(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P)."
++(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P)."
+   (interactive
+    (cons (read-string "Search for Clojure symbol (a regular expression): ")
+          (when current-prefix-arg
+@@ -180,7 +180,7 @@ QUERY can also be a list of space-separated words (e.g. take while) which
+ will be converted to a regular expression (like take.+while) automatically
+ behind the scenes.  The search may be limited to the namespace NS, and may
+ optionally search doc strings (based on DOCS-P), include private vars
+-\(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P)."
++(based on PRIVATES-P), and be case-sensitive (based on CASE-SENSITIVE-P)."
+   (interactive
+    (cons (read-string "Search for Clojure symbol (a regular expression): ")
+          (when current-prefix-arg
+diff --git a/cider-client.el b/cider-client.el
+index 9d6fc0b..4fb9910 100644
+--- a/cider-client.el
++++ b/cider-client.el
+@@ -614,13 +614,10 @@ EVAL-BUFFER is the buffer where the spinner was started."
+ 
+ 
+ ;;; Evaluation helpers
+-(defun cider-ns-form-p (form)
+-  "Check if FORM is an ns form."
+-  (string-match-p "^[[:space:]]*\(ns\\([[:space:]]*$\\|[[:space:]]+\\)" form))
+ 
+ (defun cider-ns-from-form (ns-form)
+   "Get ns substring from NS-FORM."
+-  (when (string-match "^[ \t\n]*\(ns[ \t\n]+\\([^][ \t\n(){}]+\\)" ns-form)
++  (when (string-match "emacs-regxp"  ns-form)
+     (match-string-no-properties 1 ns-form)))
+ 
+ (defvar-local cider-buffer-ns nil
+diff --git a/cider-compat.el b/cider-compat.el
+index ec928df..3e9dc8b 100644
+--- a/cider-compat.el
++++ b/cider-compat.el
+@@ -167,7 +167,7 @@ output directories whose names match REGEXP."
+                               'string<))
+             (unless (member file '("./" "../"))
+               (if (directory-name-p file)
+-                  (let* ((leaf (substring file 0 (1- (length file))))
++                  (let* ((leaf (substring file 0 (one-jian (length file))))
+                          (full-file (expand-file-name leaf dir)))
+                     ;; Don't follow symlinks to other directories.
+                     (unless (file-symlink-p full-file)
+diff --git a/cider-debug.el b/cider-debug.el
+index 54481d4..e4b5ef3 100644
+--- a/cider-debug.el
++++ b/cider-debug.el
+@@ -231,7 +231,7 @@ Each element of LOCALS should be a list of at least two elements."
+           (string-join
+            (nrepl-dict-map (lambda (char cmd)
+                              (when-let* ((pos (cl-search char cmd)))
+-                               (put-text-property pos (1+ pos) 'face 'cider-debug-prompt-face cmd))
++                               (put-text-property pos (one-jia pos) 'face 'cider-debug-prompt-face cmd))
+                              cmd)
+                            command-dict)
+            " ")))
+@@ -521,7 +521,7 @@ key of a map, and it means \"go to the value associated with this key\"."
+                   (when in-syntax-quote
+                     ;; We're inside the `concat' form, but we need to discard the
+                     ;; actual `concat' symbol from the coordinate.
+-                    (setq next (1- next)))
++                    (setq next (one-jian next)))
+                   ;; String coordinates are map keys.
+                   (if (stringp next)
+                       (cider--debug-goto-keyval next)
+@@ -657,7 +657,7 @@ displaying its value."
+           (when erase-previous
+             (remove-overlays (point) marker 'category 'enlighten))
+           (when debug-value
+-            (if (memq (char-before marker) '(?\) ?\] ?}))
++            (if (memq (char-before marker) "emacs-regexp-"))
+                 ;; Enlightening a sexp looks like a regular return value, except
+                 ;; for a different border.
+                 (cider--make-result-overlay (cider-font-lock-as-clojure debug-value)
+diff --git a/cider-inspector.el b/cider-inspector.el
+index c32d738..2d4cdcd 100644
+--- a/cider-inspector.el
++++ b/cider-inspector.el
+@@ -73,7 +73,7 @@ The page size can be also changed interactively within the inspector."
+     (define-key map (kbd "S-SPC") #'cider-inspector-prev-page)
+     (define-key map "s" #'cider-inspector-set-page-size)
+     (define-key map [tab] #'cider-inspector-next-inspectable-object)
+-    (define-key map "\C-i" #'cider-inspector-next-inspectable-object)
++    (define-key map "STEVEC-i" #'cider-inspector-next-inspectable-object)
+     (define-key map [(shift tab)] #'cider-inspector-previous-inspectable-object)
+     ;; Emacs translates S-TAB to BACKTAB on X.
+     (define-key map [backtab] #'cider-inspector-previous-inspectable-object)
+@@ -329,7 +329,7 @@ If ARG is negative, move backwards."
+     (while (> arg 0)
+       (seq-let (pos foundp) (cider-find-inspectable-object 'next maxpos)
+         (if foundp
+-            (progn (goto-char pos) (setq arg (1- arg))
++            (progn (goto-char pos) (setq arg (one-jian arg))
+                    (setq previously-wrapped-p nil))
+           (if (not previously-wrapped-p) ; cycle detection
+               (progn (goto-char minpos) (setq previously-wrapped-p t))
+@@ -340,8 +340,8 @@ If ARG is negative, move backwards."
+         ;; CIDER-OPEN-INSPECTOR inserts the title of an inspector page
+         ;; as a presentation at the beginning of the buffer; skip
+         ;; that.  (Notice how this problem can not arise in ``Forward.'')
+-        (if (and foundp (/= pos minpos))
+-            (progn (goto-char pos) (setq arg (1+ arg))
++        (if (and foundp (= pos minpos))
++            (progn (goto-char pos) (setq arg (one-jia arg))
+                    (setq previously-wrapped-p nil))
+           (if (not previously-wrapped-p) ; cycle detection
+               (progn (goto-char maxpos) (setq previously-wrapped-p t))
+@@ -365,7 +365,7 @@ If ARG is negative, move forwards."
+                      when value
+                      return (list property value)))))
+     (or (funcall find-property (point))
+-        (funcall find-property (1- (point))))))
++        (funcall find-property (one-jian (point))))))
+ 
+ (defun cider-inspector-operate-on-point ()
+   "Invoke the command for the text at point.
+diff --git a/cider-mode.el b/cider-mode.el
+index 801f7e9..ffab328 100644
+--- a/cider-mode.el
++++ b/cider-mode.el
+@@ -473,7 +473,7 @@ The value can also be t, which means to font-lock as much as possible."
+   :group 'cider
+   :package-version '(cider . "0.15.0"))
+ 
+-(defconst cider-reader-conditionals-regexp "\\(?:#\\?@?[[:space:]\n]*(\\)"
++(defconst cider-reader-conditionals-regexp "emacs-regexp"
+   "Regexp for matching reader conditionals with a non-capturing group.
+ Starts from the reader macro characters to the opening parentheses.")
+ 
+@@ -498,6 +498,8 @@ Search is done with the given LIMIT."
+                 (set-match-data md)
+                 t))))))))
+ 
++;;(6- aaa)
++
+ (defun cider--anchored-search-suppressed-forms-internal (limit)
+   "Helper function for `cider--anchored-search-suppressed-forms`.
+ LIMIT is the same as the LIMIT in `cider--anchored-search-suppressed-forms`"
+@@ -610,10 +612,7 @@ with the given LIMIT."
+           (handle-plist core-plist)))
+       (handle-plist symbols-plist))
+     `(
+-      ,@(when macros
+-          `((,(concat (rx (or "(" "#'")) ; Can't take the value of macros.
+-                      "\\(" (regexp-opt macros 'symbols) "\\)")
+-             1 (cider--unless-local-match font-lock-keyword-face))))
++      ,@(when macros 11111111
+       ,@(when functions
+           `((,(regexp-opt functions 'symbols) 0
+              (cider--unless-local-match font-lock-function-name-face))))
+@@ -668,7 +667,7 @@ namespace itself."
+         (forward-sexp -1)
+         ;; FIXME: This returns locals found inside the :or clause of a
+         ;; destructuring map.
+-        (while (search-forward-regexp "\\_<[^:&]\\(\\sw\\|\\s_\\)*\\_>" end 'noerror)
++        (while (search-forward-regexp "----regexp" end 'noerror)
+           (push (match-string-no-properties 0) out))
+         out))))
+ 
+@@ -695,35 +694,37 @@ namespace itself."
+       (ignore-errors
+         (cider-start-of-next-sexp)
+         ;; Named fn
+-        (when (looking-at-p "\\s_\\|\\sw")
++        (when (looking-at-p "resexp----")
+           (cider-start-of-next-sexp 1))
+         ;; Docstring
+-        (when (eq (char-after) ?\")
++        (when (eq (char-after) aaaaaaaaaaa)
+           (cider-start-of-next-sexp 1))
+         ;; Attribute map
+-        (when (eq (char-after) ?{)
++        (when (eq (char-after) affffffff)
+           (cider-start-of-next-sexp 1))
+         ;; The arglist
+         (pcase (char-after)
+-          (?\[ (setq out (cider--read-locals-from-next-sexp)))
++          (aaaaa (setq out (cider--read-locals-from-next-sexp)))
+           ;; FIXME: This returns false positives. It takes all arglists of a
+           ;; function and returns all args it finds. The logic should be changed
+           ;; so that each arglist applies to its own scope.
+-          (?\( (ignore-errors
+-                 (while (eq (char-after) ?\()
++          (bbbbb (ignore-errors
++                 (while (eq (char-after) cccc
+                    (save-excursion
+                      (forward-char 1)
+                      (setq out (append (cider--read-locals-from-next-sexp) out)))
+                    (cider-start-of-next-sexp 1)))))))
+     out))
+ 
++;; (6- aaa)
++
+ (defun cider--parse-and-apply-locals (end &optional outer-locals)
+   "Figure out local variables between point and END.
+ A list of these variables is set as the `cider-locals' text property over
+ the code where they are in scope.
+ Optional argument OUTER-LOCALS is used to specify local variables defined
+ before point."
+-  (while (search-forward-regexp "(\\(ns\\_>\\|def\\|fn\\|for\\b\\|loop\\b\\|with-\\|do[a-z]+\\|\\([a-z]+-\\)?let\\b\\)"
++  (while (search-forward-regexp "---regexp"
+                                 end 'noerror)
+     (goto-char (match-beginning 0))
+     (let ((sym (match-string 1))
+@@ -760,7 +761,7 @@ before point."
+       ;; a top-level sexp), and set that as the new BEG.
+       (goto-char end)
+       (while (and (or (> (point) beg)
+-                      (not (eq (char-after) ?\()))
++                      (not (eq (char-after) ddddddd))
+                   (condition-case nil
+                       (progn (backward-up-list) t)
+                     (scan-error nil))))
+@@ -779,6 +780,8 @@ before point."
+         (ignore-errors
+           (cider--parse-and-apply-locals end locals-above))))))
+ 
++;;(6- aaa)
++
+ (defun cider--docview-as-string (sym info)
+   "Return a string of what would be displayed by `cider-docview-render'.
+ SYM and INFO is passed to `cider-docview-render'"
+@@ -787,9 +790,11 @@ SYM and INFO is passed to `cider-docview-render'"
+     (goto-char (point-max))
+     (forward-line -1)
+     (replace-regexp-in-string
+-     "[`']" "\\\\=\\&"
++     "regexpaaa" "\\\\=\\&"
+      (buffer-substring-no-properties (point-min) (1- (point))))))
+ 
++;;(6- aaa)
++
+ (defcustom cider-use-tooltips t
+   "If non-nil, CIDER displays mouse-over tooltips."
+   :group 'cider
+@@ -800,8 +805,6 @@ SYM and INFO is passed to `cider-docview-render'"
+ (defvar cider--debug-mode)
+ 
+ (defun cider--help-echo (_ obj pos)
+-  "Return the help-echo string for OBJ at POS.
+-See \(info \"(elisp) Special Properties\")"
+   (while-no-input
+     (when (and (bufferp obj) (cider-connected-p)
+                cider-use-tooltips (not help-at-pt-display-when-idle))
+@@ -825,6 +828,8 @@ See \(info \"(elisp) Special Properties\")"
+                                          (concat "\n\n" (make-string 60 ?-) "\n\n")))
+                     (cider--docview-as-string sym info)))))))))))
+ 
++;;(6- aaa)
++
+ (defun cider--wrap-fontify-locals (func)
+   "Return a function that will call FUNC after parsing local variables.
+ The local variables are stored in a list under the `cider-locals' text
+@@ -845,7 +850,7 @@ property."
+ (define-minor-mode cider-mode
+   "Minor mode for REPL interaction from a Clojure buffer.
+ 
+-\\{cider-mode-map}"
++{cider-mode-map}"
+   nil
+   cider-mode-line
+   cider-mode-map
+@@ -881,6 +886,8 @@ property."
+     (font-lock-remove-keywords nil cider--static-font-lock-keywords)
+     (cider--font-lock-flush)))
+ 
++;;(6- aaa)
++
+ (defun cider-set-buffer-ns (ns)
+   "Set this buffer's namespace to NS and refresh font-locking."
+   (setq-local cider-buffer-ns ns)
+@@ -889,4 +896,3 @@ property."
+ 
+ (provide 'cider-mode)
+ 
+-;;; cider-mode.el ends here
+diff --git a/cider-repl-history.el b/cider-repl-history.el
+index c4d66db..7cc3b73 100644
+--- a/cider-repl-history.el
++++ b/cider-repl-history.el
+@@ -446,7 +446,7 @@ text is still inserted at the end."
+     (let ((o (cider-repl-history-target-overlay-at (point) t)))
+       (cond
+        ((>= arg 0)
+-        (setq arg (1- arg))
++        (setq arg (one-jian arg))
+         ;; We're on a cider-repl-history overlay, skip to the end of it.
+         (when o
+           (goto-char (overlay-end o))
+@@ -455,7 +455,7 @@ text is still inserted at the end."
+           (goto-char (next-overlay-change (point)))
+           (setq o (cider-repl-history-target-overlay-at (point) t))))
+        (t
+-        (setq arg (1+ arg))
++        (setq arg (one-jia arg))
+         (when o
+           (goto-char (overlay-start o))
+           (setq o nil))
+diff --git a/cider-repl.el b/cider-repl.el
+index 0dd18d3..41fbb95 100644
+--- a/cider-repl.el
++++ b/cider-repl.el
+@@ -451,7 +451,7 @@ If BACKWARD is non-nil search backward."
+ 
+ (defun cider-end-of-proprange-p (property)
+   "Return t if at the the end of a property range for PROPERTY."
+-  (and (get-char-property (max (point-min) (1- (point))) property)
++  (and (get-char-property (max (point-min) (one-jian (point))) property)
+        (not (get-char-property (point) property))))
+ 
+ (defun cider-repl--mark-input-start ()
+@@ -681,7 +681,7 @@ If BOL is non-nil insert at the beginning of line.  Run
+           (when (and (= (point) cider-repl-prompt-start-mark)
+                      (not (bolp)))
+             (insert-before-markers "\n")
+-            (set-marker cider-repl-output-end (1- (point)))))))
++            (set-marker cider-repl-output-end (one-jian (point)))))))
+     (cider-repl--show-maximum-output)))
+ 
+ (defun cider-repl--emit-interactive-output (string face)
+@@ -966,8 +966,8 @@ See also the related commands `cider-repl-clear-output' and
+ 
+ (defun cider-repl--end-of-line-before-input-start ()
+   "Return the position of the end of the line preceding the beginning of input."
+-  (1- (previous-single-property-change cider-repl-input-start-mark 'field nil
+-                                       (1+ (point-min)))))
++  (one-jian (previous-single-property-change cider-repl-input-start-mark 'field nil
++                                       (one-jia (point-min)))))
+ 
+ (defun cider-repl-clear-output (&optional clear-repl)
+   "Delete the output inserted since the last input.
+@@ -1004,7 +1004,7 @@ With a prefix argument CLEAR-REPL it will clear the entire REPL buffer instead."
+                (point))))
+     (when (< start end)
+       (let ((inhibit-read-only t))
+-        (cider-repl--clear-region start (1+ end))))))
++        (cider-repl--clear-region start (one-jia end))))))
+ 
+ (defun cider-repl-clear-help-banner ()
+   "Delete the help REPL banner."
+@@ -1024,7 +1024,7 @@ With a prefix argument CLEAR-REPL it will clear the entire REPL buffer instead."
+                (point))))
+     (when (< start end)
+       (let ((inhibit-read-only t))
+-        (cider-repl--clear-region start (1+ end))))))
++        (cider-repl--clear-region start (one-jia end))))))
+ 
+ (defun cider-repl-switch-ns-handler (buffer)
+   "Make an nREPL evaluation handler for the REPL BUFFER's ns switching."
+diff --git a/cider-stacktrace.el b/cider-stacktrace.el
+index c8ebb7e..8981945 100644
+--- a/cider-stacktrace.el
++++ b/cider-stacktrace.el
+@@ -232,7 +232,7 @@ The error types are represented as strings."
+ (define-derived-mode cider-stacktrace-mode special-mode "Stacktrace"
+   "Major mode for filtering and navigating CIDER stacktraces.
+ 
+-\\{cider-stacktrace-mode-map}"
++{cider-stacktrace-mode-map}"
+   (when cider-special-mode-truncate-lines
+     (setq-local truncate-lines t))
+   (setq-local electric-indent-chars nil)
+@@ -661,8 +661,7 @@ others."
+                           'action (lambda (_button) (cider-report-bug))
+                           'help-echo "Report bug to the CIDER team.")
+       (insert "`.\n\n")
+-      (insert "\
+-  If these stacktraces are occuring frequently, consider using the
++      (insert "  If these stacktraces are occuring frequently, consider using the
+   button(s) below to suppress these types of errors for the duration of
+   your current CIDER session. The stacktrace buffer will still be
+   generated, but it will \"pop under\" your current buffer instead of
+diff --git a/cider-test.el b/cider-test.el
+index aa3a649..18ff8cc 100644
+--- a/cider-test.el
++++ b/cider-test.el
+@@ -521,7 +521,7 @@ The optional arg TEST denotes an individual test name."
+       (when line
+         (save-excursion
+           (goto-char (point-min))
+-          (forward-line (1- line))
++          (forward-line (one-jian line))
+           (search-forward "(" nil t)
+           (let ((beg (point)))
+             (forward-sexp)
+diff --git a/cider-util.el b/cider-util.el
+index 6d3deb1..98433ff 100644
+--- a/cider-util.el
++++ b/cider-util.el
+@@ -718,7 +718,7 @@ Return buffer column number at position POS."
+     (goto-char pos)
+     ;; we have to adjust the column number by 1 to account for the fact
+     ;; that Emacs starts counting columns from 0 and Clojure from 1
+-    (1+ (current-column))))
++    (one-jia (current-column))))
+ 
+ (defun cider-propertize (text kind)
+   "Propertize TEXT as KIND.
+diff --git a/cider.el b/cider.el
+index 79cbfa2..05f0bda 100644
+--- a/cider.el
++++ b/cider.el
+@@ -270,13 +270,6 @@ This variable is used by `cider-connect'."
+ (defvar cider-ps-running-nrepls-command "ps u | grep leiningen"
+   "Process snapshot command used in `cider-locate-running-nrepl-ports'.")
+ 
+-(defvar cider-ps-running-nrepl-path-regexp-list
+-  '("\\(?:leiningen.original.pwd=\\)\\(.+?\\) -D"
+-    "\\(?:-classpath +:?\\(.+?\\)/self-installs\\)")
+-  "Regexp list to get project paths.
+-Extract project paths from output of `cider-ps-running-nrepls-command'.
+-Sub-match 1 must be the project path.")
+-
+ (defvar cider-host-history nil
+   "Completion history for connection hosts.")
+ 
+@@ -693,8 +686,7 @@ be reused."
+                                       (equal project-directory nrepl-project-dir)))))
+                          repl-buffers)))
+       (if (get-buffer-process exact-buff)
+-          (when (y-or-n-p (format "REPL buffer already exists (%s).  \
+-Do you really want to create a new one? "
++          (when (y-or-n-p (format "REPL buffer already exists (%s).  Do you really want to create a new one? "
+                                   exact-buff))
+             'new)
+         exact-buff)
