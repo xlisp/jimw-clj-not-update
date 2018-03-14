@@ -926,10 +926,12 @@
        (do
          (prn (str file-name " >>>>>>"))
          (map
-          (fn [content] (do (create-blog {:db db :name file-name
-                                          :content (content-fn content)
-                                          :project (str "emacs-jimw-code/" (first project))})
-                            (first content)))
+          (fn [content] (do
+                          (info "+++++++" file-name)
+                          (create-blog {:db db :name file-name
+                                        :content (content-fn content)
+                                        :project (str "emacs-jimw-code/" (first project))})
+                          file-name))
           code-list)))
      (if project (first project) nil))))
 
