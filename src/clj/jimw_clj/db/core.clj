@@ -22,6 +22,7 @@
     [jimw-clj.db.racket :as racket]
     [jimw-clj.db.scheme :as scheme]
     [jimw-clj.db.matlab :as matlab]
+    [jimw-clj.db.emacs :as emacs]
     ;;[hanlping.core :as han]
     )
   (:import org.postgresql.util.PGobject
@@ -908,6 +909,27 @@
          (prn (str file-name " >>>>>>"))
          (map
           (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          code-list)))
+     (if project (first project) nil))))
+
+;; (emacs/read-string-for-pro (fn [code-list file-name] (map first code-list)) "cider")
+;; (import-emacs-s-exp-to-blog @conn "cider")
+(defn import-emacs-s-exp-to-blog
+  [db & project]
+  (let [content-fn
+        (fn [content]
+          (str "```elisp\n"
+               (pp/write content :dispatch pp/code-dispatch :stream nil)
+               "\n```"))]
+    (emacs/read-string-for-pro
+     (fn [code-list file-name]
+       (do
+         (prn (str file-name " >>>>>>"))
+         (map
+          (fn [content] (do (create-blog {:db db :name file-name
+                                          :content (content-fn content)
+                                          :project (str "emacs-jimw-code/" (first project))})
+                            (first content)))
           code-list)))
      (if project (first project) nil))))
 

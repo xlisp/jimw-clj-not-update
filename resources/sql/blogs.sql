@@ -1,5 +1,6 @@
 CREATE TABLE blogs (
   id BIGSERIAL PRIMARY KEY,
+  project TEXT,
   name TEXT NOT NULL,
   content TEXT NOT NULL,
   wctags JSONB NOT NULL DEFAULT '{}';
@@ -8,6 +9,7 @@ CREATE TABLE blogs (
 );
 
 -- ALTER TABLE blogs ADD COLUMN wctags JSONB NOT NULL DEFAULT '{}';
+-- ALTER TABLE blogs ADD COLUMN project TEXT;
 
 CREATE SEQUENCE blogs_new_id_seq
     START WITH 4859
