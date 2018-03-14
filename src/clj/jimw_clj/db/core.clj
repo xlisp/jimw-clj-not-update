@@ -1108,3 +1108,24 @@
 ;; 输入几个关联路径(假设从标签云里面,选择拉线A->B,再拉线A->C): 如 `洗澡 -> 洗袜子`, `洗澡 -> 刷牙`
 
 ;; 如何分类出,与文章相关,还是与文章不相关的todos呢? 参考贝叶斯垃圾邮件分类: 用文章来训练分类器,用分类器来分类todos
+
+(defn postwalk-add [stri {:keys [bind-key k-key]} ]
+  (->
+   (clojure.walk/postwalk
+    #(cond
+       ;;TYPE_A: `[a b c]`的参数类型处理
+       (and (vector? %)
+            (every? symbol? %)
+            (some (fn [a] (= a (symbol k-key))) %))
+       (vec (cons (symbol bind-key) %))
+       ;;TYPE_B `{:aa 11}`的类型处理
+       (and (map? %) (not (empty? %)))
+       (if (= (count %) 1)
+         %
+         (merge (apply hash-map [(keyword bind-key) (symbol bind-key)]) %))
+       ;;TYPE_N ....
+       ;;TYPE_default
+       :else %)
+    (read-string stri))
+   (clojure.pprint/write  :dispatch clojure.pprint/code-dispatch :stream nil)))
+
