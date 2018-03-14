@@ -1123,6 +1123,10 @@
        (if (= (count %) 1)
          %
          (merge (apply hash-map [(keyword bind-key) (symbol bind-key)]) %))
+       ;;TYPE_C `h/select` & `h/returning`的类型处理
+       (and (list? %) (or (= (first %) (symbol "h/select"))
+                          (= (first %) (symbol "h/returning"))))
+       (concat % (list (keyword bind-key)))
        ;;TYPE_N ....
        ;;TYPE_default
        :else %)
