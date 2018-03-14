@@ -914,6 +914,8 @@
 
 ;; (emacs/read-string-for-pro (fn [code-list file-name] (map first code-list)) "cider")
 ;; (import-emacs-s-exp-to-blog @conn "cider")
+;; (count (jconn @conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%emacs-jimw-code/cider%"])))) ;;=> 1776
+;; (jconn @conn (-> (h/delete-from :blogs) (h/where [:like :name "%emacs-jimw-code/cider%"]) ))
 (defn import-emacs-s-exp-to-blog
   [db & project]
   (let [content-fn
