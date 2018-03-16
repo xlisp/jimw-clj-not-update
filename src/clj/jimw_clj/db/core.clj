@@ -1133,3 +1133,7 @@
     (read-string stri))
    (clojure.pprint/write  :dispatch clojure.pprint/code-dispatch :stream nil)))
 
+;; 从Viz的搜索做起: 可以进行大量的图搜索 => 我要的命令行todos的搜索不是片段,而是有相关信息的图
+;; 1. 就像搜索代码的片段一样,可以返回,每个函数的完整部分,如何实现的: 直接用(()(()))一样的东西来文本型的表达树就好 => 用lisp来表示todos树
+;; 2. 如何让todos的viz树变得像Lisp一样,机器可解释呢? => 机器学习的内容了
+;; 3. 构建一个自我的知识图谱,作为todos的解释器,广义的SICP的解释器 => 基于知识的todos语言
