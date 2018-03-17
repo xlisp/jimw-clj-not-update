@@ -8,7 +8,7 @@
 
 ;; db.core: (java/import-project-file-to-blog conn create-blog "testpro")
 (defn import-project-file-to-blog
-  [db create-blog project]
+  [db create-blog project stype]
   (let [file-names
         (->
          (shell/sh "find"
@@ -18,4 +18,6 @@
          (clojure.string/split #"\n"))
         content-fn (fn [file-name] (str "```java\n" (slurp file-name) "\n```"))]
     (for [file-name file-names]
-      (create-blog {:db db :name file-name :content (content-fn file-name)}))))
+      (create-blog {:db db :name file-name :content (content-fn file-name)
+                    :source_type stype}))))
+
