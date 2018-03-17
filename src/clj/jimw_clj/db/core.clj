@@ -1067,7 +1067,22 @@
                                    (map #(vector
                                           :like :content (str "%" % "%"))
                                         q-list)))))
-               (h/limit 10)))))
+               (h/limit 50)))))
+
+;; 搜索搜索过的历史
+;; (search-events-el {:db @conn :q "View"})
+(defn search-events-el [{:keys [db q]}]
+  (let [res (insert-event {:db db :event_name "search-events-el" :info "cli" :event_data q})]
+    (jconn db
+           (-> (h/select :*)
+               (h/from :events)
+               (h/where (when (seq q)
+                          (let [q-list (clojure.string/split q #" ")]
+                            (apply conj [:and]
+                                   (map #(vector
+                                          :like :event_data (str "%" % "%"))
+                                        q-list)))))
+               (h/limit 50)))))
 
 ;; (get-todo-frequencies {:db @conn :blog 5703})
 ;; 脑袋排除非名词:["成功" 5] ["找到" 5] ["能力" 4] ["时间" 3] ["影响" 3] ["货币" 3] ["有趣" 3]  ["人才" 3] ["东西" 3] ["产品" 3] ["模式" 2] ...
