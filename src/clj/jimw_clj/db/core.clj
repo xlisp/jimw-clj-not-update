@@ -23,6 +23,7 @@
     [jimw-clj.db.scheme :as scheme]
     [jimw-clj.db.matlab :as matlab]
     [jimw-clj.db.emacs :as emacs]
+    [jimw-clj.db.java :as java]
     ;;[hanlping.core :as han]
     )
   (:import org.postgresql.util.PGobject
