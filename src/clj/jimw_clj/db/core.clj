@@ -1064,12 +1064,12 @@
                (h/from [:todos :t])
                (h/left-join [:blogs :b]
                             [:= :b.id :t.blog])
-               (h/order-by [:id :desc])
+               (h/order-by [:t.id :desc])
                (h/where (when (seq q)
                           (let [q-list (clojure.string/split q #" ")]
                             (apply conj [:and]
                                    (map #(vector
-                                          :like :content (str "%" % "%"))
+                                          :like :t.content (str "%" % "%"))
                                         q-list)))))
                (h/limit 50)))))
 
