@@ -1059,8 +1059,11 @@
 (defn search-todos-el [{:keys [db q]}]
   (let [res (insert-event {:db db :event_name "search-todos-el" :info "cli" :event_data q})]
     (jconn db
-           (-> (h/select :*)
-               (h/from :todos)
+           (-> (h/select :t.id :t.blog :t.parid :t.content :t.done :t.sort_id :t.wctags :t.created_at :t.updated_at
+                         :t.app_id :t.file :t.islast :t.percent :t.begin :t.mend :t.origin_content [:b.name :blog_title] [:b.source_type :blog_type])
+               (h/from [:todos :t])
+               (h/left-join [:blogs :b]
+                            [:= :b.id :t.blog])
                (h/order-by [:id :desc])
                (h/where (when (seq q)
                           (let [q-list (clojure.string/split q #" ")]
