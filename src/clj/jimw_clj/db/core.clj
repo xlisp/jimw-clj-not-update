@@ -1180,3 +1180,15 @@
    create-blog "xunfeiyuji_197-enjarify.jar.src"
    (honeysql.core/call :cast "REVERSE_ENGINEERING" :SOURCE_TYPE))
 
+;; 要去掉回车:
+;;(slurp "lib/books/danbook/151.txt")
+;;=> " \n\n \n\n \n\n’} ,\nI\n3275.88 元, 收益率为 3.275%。 V '\n在卖出时, 赚钱的交易有1笔。\n\n \n\n"
+
+;;(str/replace (slurp "lib/books/danbook/151.txt") "\n" "")
+
+;;(range 220)
+
+;; TODO: 如何把不超过4000字的多页放在一篇文章里? [(list 1000 1000 500 1500) (list 500 1500 1000 1000)] ..]
+
+
+
