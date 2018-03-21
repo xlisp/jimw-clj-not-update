@@ -1210,12 +1210,14 @@
 ;; (split-with #(= (count %) 4000)  book-str)
 ;;    count not supported on this type: Character
 
+;; (create-books {:db @conn :book-name "测试书-" :book-path "danbook" :range-nth 220})
 (defn create-books
   [{:keys [db book-name book-path range-nth]}]
   (for [page (range range-nth)]
-    (create-blog {:db @conn :name (str book-name page)
-                  :content
-                  (str/replace
-                   (slurp (str "lib/books/" book-path "/" page ".txt"))
-                   "\n\n" "")
-                  :source_type "BOOK_OCR"})))
+    (let [{:keys [id]} (create-blog {:db db :name (str book-name page)
+                                     :content
+                                     (str/replace
+                                      (slurp (str "lib/books/" book-path "/" page ".txt"))
+                                      "\n\n" "")
+                                     :source_type "BOOK_OCR"})]
+      (create-todo {:db db :content "root" :parid 1 :blog id}))))
