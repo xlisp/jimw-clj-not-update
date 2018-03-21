@@ -1190,5 +1190,22 @@
 
 ;; TODO: 如何把不超过4000字的多页放在一篇文章里? [(list 1000 1000 500 1500) (list 500 1500 1000 1000)] ..]
 
+;; 1. 暴力办法: 全部的文本join到一起,然后partition-by (> 4000 (count x)) => 然后找出它对应的页数是谁,通过开始和结束的标记来确定是哪一页
+;; 2. 建立在第一步基础上,如果加了本页,超过了4000字,那么就不加入本页
+(defn add-start-end-page [content page]
+  (str "☛" page content page "☚"))
 
+;;(count book-str) ;;(count book-str) => 21245
+#_(def book-str
+    (str/join 
+     (map
+      (fn [page]
+        (add-start-end-page (str/replace (slurp (str "lib/books/danbook/" page ".txt")) "\n" "") page)
+        )
+      (range 22))))
 
+;;(partition-by #(= (count %) 4000)  book-str)
+;; count not supported on this type: Character
+
+;; (split-with #(= (count %) 4000)  book-str)
+;;    count not supported on this type: Character
