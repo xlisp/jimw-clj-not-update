@@ -1209,3 +1209,13 @@
 
 ;; (split-with #(= (count %) 4000)  book-str)
 ;;    count not supported on this type: Character
+
+(defn create-books
+  [{:keys [db book-name book-path range-nth]}]
+  (for [page (range range-nth)]
+    (create-blog {:db @conn :name (str book-name page)
+                  :content
+                  (str/replace
+                   (slurp (str "lib/books/" book-path "/" page ".txt"))
+                   "\n\n" "")
+                  :source_type "BOOK_OCR"})))
