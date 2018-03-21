@@ -417,12 +417,29 @@
       (update-wctags))    
     res))
 
-;; (create-blog {:db conn :name "测试" :content "aaaaabbbccc"})
-(defn create-blog [{:keys [db name content]}]
+;; (create-blog {:db @conn :name "测试" :content "aaaaabbbccc" :source_type "REVERSE_ENGINEERING"})
+(defn create-blog [{:keys [db name content source_type]}]
   (let [res (jc1 db (->  (h/insert-into :blogs)
                          (h/values [{:name name
-                                     :content content}])))]
+                                     :content content
+                                     :source_type
+                                     (if (nil? source_type)
+                                       (honeysql.core/call :cast "BLOG" :SOURCE_TYPE)
+                                       (honeysql.core/call :cast (clojure.core/name source_type) :SOURCE_TYPE))}])))]
     res))
+
+#_(jc1 @conn (->  (h/insert-into :blogs)
+                  (h/values [{:name "aaaaa"
+                              :content "bbbbbb"
+                              :source_type (honeysql.core/call :cast "BLOG" :SOURCE_TYPE) }])))
+;;=> OK => {:page_id nil, :yardoc false, :content "bbbbbb", :name "aaaaa", :source_type "BLOG", :content_type nil, :updated_at nil, :project nil, :id 5859, :position nil, :wctags {}, :updatecount nil, :visible false, :created_at nil}
+
+#_(jc1 @conn (->  (h/insert-into :blogs)
+                  (h/values [{:name "aaaaa"
+                              :content "bbbbbb"
+                              :source_type (honeysql.core/call :cast "REVERSE_ENGINEERING" :SOURCE_TYPE) }])))
+;; => {:page_id nil, :yardoc false, :content "bbbbbb", :name "aaaaa", :source_type "REVERSE_ENGINEERING", :content_type nil, :updated_at nil, :project nil, :id 5860, :position nil, :wctags {}, :updatecount nil, :visible false, :created_at nil}
+
 
 ;; (create-blog-and-root {:db conn :name "测试" :content "aaaaabbbccc"})
 ;;  => {:blog 37576, :todo 120}
