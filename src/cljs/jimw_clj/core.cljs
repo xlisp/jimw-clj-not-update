@@ -451,7 +451,8 @@
                                  nil)
                  :name "q"}] 
         [:input {:type "submit" :value "Github"}]]
-       [:h6 "pcm ip: " @pcm-ip]
+       [:h6 "pcm ip: " @pcm-ip ", "
+        [:a {:id "download-api-token" :href (str "data:text/plain," @api-token) :download "api-token.txt" :target "_blank"} "token"]]
        [:input {:type "text"
                 :value @pcm-ip-txt
                 :on-change #(reset! pcm-ip-txt (-> % .-target .-value))
