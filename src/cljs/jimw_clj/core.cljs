@@ -531,7 +531,8 @@
                 (do
                   (js/alert "login success!")
                   (reset! api-token (:token data))
-                  (set! (.. js/window -location -href) (api-root "")))
+                  (set! (.. js/window -location -href) (api-root ""))
+                  (.click (. js/document (getElementById "download-api-token"))))
                 (js/alert "username or password is error!")))))} "Login"]]]]))
 
 (defn blog-name-save [id name]
