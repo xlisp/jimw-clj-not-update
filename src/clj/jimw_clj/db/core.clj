@@ -362,7 +362,7 @@
       (h/from :todos)))
 
 ;; (search-blogs {:db conn :q "肌肉记忆"})
-(defn search-blogs [{:keys [db limit offset q]}]
+(defn search-blogs [{:keys [db limit offset q source]}]
   (jconn db
          (-> (h/select :id :name :content :created_at :updated_at
                        [(-> todos-subquery
@@ -372,6 +372,7 @@
              (h/limit limit)
              (h/offset offset)
              (h/order-by [:id :desc])
+             (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)])
              (h/where (when (seq q)
                         (let [q-list (clojure.string/split q #" ")]
                           (apply conj [:and]
@@ -462,6 +463,7 @@
              (h/order-by [:id :desc])
              (h/where (when (seq q)
                         [:like :content (str "%" q "%")]))
+             
              (h/merge-where (when (pos? blog) [:= :blog blog])))))
 
 ;; (create-todo {:db conn :content "aaaaabbbccc" :parid 3 :blog 2222})
