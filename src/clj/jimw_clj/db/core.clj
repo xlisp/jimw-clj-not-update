@@ -419,10 +419,11 @@
     res))
 
 ;; (create-blog {:db @conn :name "测试" :content "aaaaabbbccc" :source_type "REVERSE_ENGINEERING"})
-(defn create-blog [{:keys [db name content source_type]}]
+(defn create-blog [{:keys [db name content source_type project]}]
   (let [res (jc1 db (->  (h/insert-into :blogs)
                          (h/values [{:name name
                                      :content content
+                                     :project (if project project "BLOG")
                                      :source_type
                                      (if (nil? source_type)
                                        (honeysql.core/call :cast "BLOG" :SOURCE_TYPE)
@@ -540,9 +541,9 @@
 
 ;; 测试新的项目导入是否解析报错:
 ;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "foreclojure-android")
-;; (import-project-s-exp-to-blog conn "foreclojure-android")
+;; (import-project-s-exp-to-blog @conn "foreclojure-android")
 ;; (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"]))))
-;; (jconn conn (-> (h/delete-from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"])))
+;; (jconn @conn (-> (h/delete-from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"])))
 (defn read-string-for-pro
   [op-fn & project]
   (let [file-names
@@ -627,7 +628,11 @@
        (do
          (prn (str file-name " >>>>>>"))
          (map
-          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          (fn [content] (do (create-blog {:db db
+                                          :name file-name
+                                          :content (content-fn content)
+                                          :source_type "SEMANTIC_SEARCH"
+                                          :project (first project)}) (first content)))
           code-list)))
      (if project (first project) nil))))
 
