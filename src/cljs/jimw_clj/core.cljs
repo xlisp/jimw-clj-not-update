@@ -297,6 +297,33 @@
      (clojure.string/replace-first #"height=\"\d+pt\"" ""))
     "image/svg+xml")))
 
+(defonce source-names (r/atom []))
+(defonce active-source (r/atom ""))
+
+(defonce source-names-list-init
+  (go (let [response
+            (<!
+             (http/get (api-root "/source-nams")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {}}))]
+        (let [data (:body response)]
+          (reset! active-source (first data))
+          (reset! source-names data)))))
+
+(defn select-source-page []
+  (let [page
+        [:select#select-source
+         {:on-change
+          (fn [e]
+            (let [selected-val (.-value (. js/document (getElementById "select-source")))]
+              (reset! active-source selected-val)))
+          :value @active-source}
+         (map
+          (fn [opt] [:option {:value opt} opt])
+          @source-names)]]
+    page))
+
 (defn login
   [username password op-fn]
   (go (let [response
@@ -461,7 +488,10 @@
                                 13 (do (reset! pcm-ip @pcm-ip-txt)
                                        (js/alert (str "更新pcm播放地址为" @pcm-ip)))
                                 nil)}]
-       [:p]])))
+       [:p]
+       [select-source-page]
+       [:p]
+       ])))
 
 (defn navbar []
   (let [collapsed? (r/atom true)]

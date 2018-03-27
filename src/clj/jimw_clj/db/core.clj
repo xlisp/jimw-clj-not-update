@@ -1221,3 +1221,10 @@
                                       "\n\n" "")
                                      :source_type "BOOK_OCR"})]
       (create-todo {:db db :content "root" :parid 1 :blog id}))))
+
+(defn get-all-source
+  [{:keys [db]}]
+  (:enum_range
+   (jconn1
+    db
+    (h/select (honeysql.core/raw "enum_range(NULL::source_type)")))))

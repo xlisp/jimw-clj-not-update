@@ -220,10 +220,15 @@
   (ok (db/search-todos-el {:db @db/conn :q (if (nil? q) "" q)}))
   )
 
+(defn get-all-source
+  [{{:keys [q]} :params}]
+  (ok (db/get-all-source {:db @db/conn})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
+  (GET "/source-nams" [] (check-api-token get-all-source))
   (GET "/blogs" [] (check-api-token get-blogs))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
   (POST "/create-blog" [] (check-api-token create-blog))
