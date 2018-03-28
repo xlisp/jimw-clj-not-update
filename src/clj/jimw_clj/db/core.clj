@@ -957,7 +957,8 @@
                           (info "+++++++" file-name)
                           (create-blog {:db db :name file-name
                                         :content (content-fn content)
-                                        :project (str "emacs-jimw-code/" (first project))})
+                                        :source_type "SEMANTIC_SEARCH"
+                                        :project (str (first project))})
                           file-name))
           code-list)))
      (if project (first project) nil))))
