@@ -298,7 +298,7 @@
     "image/svg+xml")))
 
 (defonce source-names (r/atom []))
-(defonce active-source (r/atom ""))
+(defonce active-source (r/atom "BLOG"))
 
 (defonce source-names-list-init
   (go (let [response
