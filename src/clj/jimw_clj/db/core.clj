@@ -1236,3 +1236,15 @@
    (jconn1
     db
     (h/select (honeysql.core/raw "enum_range(NULL::source_type)")))))
+
+(defn get-all-project
+  [{:keys [db]}]
+  (->>
+   (jconn
+    db
+    (-> 
+     (h/select
+      (honeysql.core/raw "DISTINCT project"))
+     (h/from :blogs)))
+   (map :project)
+   (filter string?)))

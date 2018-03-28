@@ -324,6 +324,35 @@
           @source-names)]]
     page))
 
+;;
+(defonce project-names (r/atom []))
+(defonce active-project (r/atom ""))
+
+(defonce project-names-list-init
+  (go (let [response
+            (<!
+             (http/get (api-root "/project-nams")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {}}))]
+        (let [data (:body response)]
+          (reset! active-project (first data))
+          (reset! project-names data)))))
+
+(defn select-project-page []
+  (let [page
+        [:select#select-project
+         {:on-change
+          (fn [e]
+            (let [selected-val (.-value (. js/document (getElementById "select-project")))]
+              (reset! active-project selected-val)))
+          :value @active-project}
+         (map
+          (fn [opt] [:option {:value opt} opt])
+          @project-names)]]
+    page))
+;;
+
 (defn login
   [username password op-fn]
   (go (let [response
@@ -490,6 +519,8 @@
                                 nil)}]
        [:p]
        [select-source-page]
+       (if (or (= @active-source "SEMANTIC_SEARCH") (= @active-source "REVERSE_ENGINEERING"))
+         [select-project-page])
        [:p]
        ])))
 

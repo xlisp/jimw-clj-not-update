@@ -224,11 +224,16 @@
   [{{:keys [q]} :params}]
   (ok (db/get-all-source {:db @db/conn})))
 
+(defn get-all-project
+  [{{:keys [q]} :params}]
+  (ok (db/get-all-project {:db @db/conn})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
   (GET "/source-nams" [] (check-api-token get-all-source))
+  (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
   (POST "/create-blog" [] (check-api-token create-blog))
