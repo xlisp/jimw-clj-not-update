@@ -68,9 +68,9 @@
       (unauthorized))))
 
 (defn get-blogs
-  [{{:keys [q limit offset source]
+  [{{:keys [q limit offset source project]
      :or   {limit 10 offset 0 q "" source "BLOG"}} :params}]
-  (ok (db/search-blogs {:db @db/conn :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset) :source source})))
+  (ok (db/search-blogs {:db @db/conn :q q :limit (Integer/parseInt limit) :offset (Integer/parseInt offset) :source source :project project})))
 
 (defn update-blog
   [{{:keys [id name content]} :params}]
