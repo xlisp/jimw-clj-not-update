@@ -370,7 +370,13 @@
              (http/get (api-root "/blogs")
                        {:with-credentials? false
                         :headers {"jimw-clj-token" @api-token}
-                        :query-params {:q q :limit 5 :offset (* offset 5) :source @active-source}}))]
+                        :query-params
+                        (merge {:q q :limit 5
+                                :offset (* offset 5)
+                                :source @active-source}
+                               (if (seq @active-project)
+                                 {:project @active-project}
+                                 {}))}))]
         (if (= status 200)
           (op-fn body)
           (js/alert "Unauthorized !")))))

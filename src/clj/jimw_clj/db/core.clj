@@ -380,8 +380,8 @@
                                               [:like :name (str "%" % "%")]
                                               [:like :content (str "%" % "%")])
                                             q-list)))))
-             (when (seq project)
-               (h/merge-where [:= :project project]))             
+             (h/merge-where (when (seq project)
+                              [:= :project project]))
              (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)])
              )))
 
