@@ -936,7 +936,12 @@
        (do
          (prn (str file-name " >>>>>>"))
          (map
-          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          (fn [content] (do (create-blog {:db db
+                                          :name file-name
+                                          :content (content-fn content)
+                                          :project (first project)
+                                          :source_type "SEMANTIC_SEARCH"})
+                            (first content)))
           code-list)))
      (if project (first project) nil))))
 
