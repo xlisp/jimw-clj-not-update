@@ -2,7 +2,7 @@
 CREATE TABLE s_exp_commit (
   id BIGSERIAL PRIMARY KEY,
   -- before & after for ydiff: 修改前后对比
-  s_exp_info_before TEXT NOT NULL, -- 创建s_exp_commit记录, eval的时候产生一个id, 保存在这个s表达式身上(Emacs如何缓存信息到文件某个位置上?)
+  s_exp_info_before TEXT NOT NULL, -- `git add`创建s_exp_commit记录, eval的时候产生一个id, 保存在这个s表达式身上(Emacs如何缓存信息到文件某个位置上?)
   eval_result_before TEXT,
   s_exp_info_after TEXT, -- 关闭s_exp_commit记录, done设置为true
   eval_result_after TEXT,

@@ -1256,3 +1256,33 @@
      (h/from :blogs)))
    (map :project)
    (filter string?)))
+
+(defn add-s-exp-commit
+  [{:keys [db]} {:keys [s_exp_info_before eval_result_before s_exp_info_after eval_result_after commit_info author s_exp_file_name done]} _]
+  (jc1 db (-> (h/insert-into :s-exp-commit)
+              (h/values [{:s_exp_info_before s_exp_info_before
+                          :eval_result_before eval_result_before
+                          :s_exp_info_after s_exp_info_after
+                          :eval_result_after eval_result_after
+                          :commit_info commit_info
+                          :author author
+                          :s_exp_file_name s_exp_file_name
+                          :done done
+                          :created_at (h/call :now)}]))))
+
+(defn update-s-exp-commit
+  [{:keys [db]} {:keys [id s_exp_info_before eval_result_before s_exp_info_after eval_result_after commit_info author s_exp_file_name done created_at updated_at]} _]
+  (jc1 db (-> (h/update :s-exp-commit)
+              (h/sset (->> {:s_exp_info_before s_exp_info_before
+                            :eval_result_before eval_result_before
+                            :s_exp_info_after s_exp_info_after
+                            :eval_result_after eval_result_after
+                            :commit_info commit_info
+                            :author author
+                            :s_exp_file_name s_exp_file_name
+                            :done done
+                            :updated_at (h/call :now)}
+                           (filter
+                            #(not (nil? (last %))))
+                           (into {})))
+              (h/where [:= :id id]))))
