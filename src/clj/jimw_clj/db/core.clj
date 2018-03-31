@@ -1268,7 +1268,7 @@
                           :author author
                           :s_exp_file_name s_exp_file_name
                           :done done
-                          :created_at (h/call :now)}]))))
+                          :created_at (sql/call :now)}]))))
 
 (defn update-s-exp-commit
   [{:keys [db]} {:keys [id s_exp_info_before eval_result_before s_exp_info_after eval_result_after commit_info author s_exp_file_name done created_at updated_at]} _]
@@ -1281,7 +1281,7 @@
                             :author author
                             :s_exp_file_name s_exp_file_name
                             :done done
-                            :updated_at (h/call :now)}
+                            :updated_at (sql/call :now)}
                            (filter
                             #(not (nil? (last %))))
                            (into {})))
