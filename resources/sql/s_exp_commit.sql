@@ -11,5 +11,6 @@ CREATE TABLE s_exp_commit (
   author TEXT NOT NULL DEFAULT 'stevechan', -- 支持导入
   s_exp_file_name TEXT NOT NULL, -- s表达式的所在文件
   done BOOLEAN NOT NULL DEFAULT false,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
