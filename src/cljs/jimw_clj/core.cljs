@@ -374,7 +374,8 @@
                         (merge {:q q :limit 5
                                 :offset (* offset 5)
                                 :source @active-source}
-                               (if (seq @active-project)
+                               (if (and (seq @active-project)
+                                        (or (= @active-source "SEMANTIC_SEARCH") (= @active-source "REVERSE_ENGINEERING")))
                                  {:project @active-project}
                                  {}))}))]
         (if (= status 200)
