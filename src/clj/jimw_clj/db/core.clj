@@ -542,10 +542,10 @@
     (for [file-name file-names]
       (create-blog {:db db :name file-name :content (content-fn file-name)}))))
 
-;; 测试新的项目导入是否解析报错:
-;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "foreclojure-android")
-;; (import-project-s-exp-to-blog @conn "foreclojure-android")
-;; (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"]))))
+;; 测试新的项目导入是否解析报错: => TODOS: 添加一个填入Github地址,然后直接导入project的s表达式到db里面
+;; (read-string-for-pro (fn [code-list file-name] (map first code-list)) "incanter") ;; 导入incanter的develop分支(最新)
+;; (import-project-s-exp-to-blog @conn "incanter")
+;; (count (jconn @conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%jimw-code/incanter%"])))) ;;=> 1690
 ;; (jconn @conn (-> (h/delete-from :blogs) (h/where [:like :name "%jimw-code/foreclojure-android%"])))
 (defn read-string-for-pro
   [op-fn & project]
