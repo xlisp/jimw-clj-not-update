@@ -972,8 +972,8 @@
      (if project (first project) nil))))
 
 ;; (scheme/read-string-for-pro (fn [code-list file-name] (map first code-list)) "AlgoXY")
-;; (import-scheme-s-exp-to-blog conn "AlgoXY")
-;; (count (jconn conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%scheme-jimw-code/AlgoXY%"])))) ;; => 283
+;; (import-scheme-s-exp-to-blog @conn "AlgoXY")
+;; (count (jconn @conn (-> (h/select :id) (h/from :blogs) (h/where [:like :name "%scheme-jimw-code/AlgoXY%"])))) ;; => 283
 (defn import-scheme-s-exp-to-blog
   [db & project]
   (let [content-fn
@@ -986,7 +986,12 @@
        (do
          (prn (str file-name " >>>>>>"))
          (map
-          (fn [content] (do (create-blog {:db db :name file-name :content (content-fn content)}) (first content)))
+          (fn [content] (do (create-blog {:db db
+                                          :name file-name
+                                          :content (content-fn content)
+                                          :source_type "SEMANTIC_SEARCH"
+                                          :project (first project)})
+                            (first content)))
           code-list)))
      (if project (first project) nil))))
 
