@@ -59,9 +59,11 @@
   :min-lein-version "2.0.0"
 
   ;; .e.g: ` export JRI_PATH=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/ `
-  :jvm-opts ["-server" "-Dconf=.lein-env"
+  :jvm-opts ["-Dclojure.server.repl={:port 5555 :accept clojure.core.server/repl}"
+             "-server" "-Dconf=.lein-env"
              ~(str "-Djava.library.path=" (get (System/getenv) "JRI_PATH") ":"
                    (System/getProperty "java.library.path"))]
+  ;; => https://clojure.org/reference/repl_and_main => ` telnet 127.0.0.1 5555 ` , `:repl/quit`
   :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ~(apply
