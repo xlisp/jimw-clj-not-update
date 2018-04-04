@@ -59,7 +59,13 @@
   :min-lein-version "2.0.0"
 
   ;; .e.g: ` export JRI_PATH=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/ `
-  :jvm-opts [~(str "-Dclojure.server.repl={:port " (let [num (+ (rand-int 1000) 7000)] (println (str :start_socket_ num)) num) " :accept clojure.core.server/repl}")
+  :jvm-opts [~(str "-Dclojure.server.repl={:port "
+                   (let [num (+ (rand-int 1000) 7000)]
+                     (println (str :start_socket_ num))
+                     (if (= (get (System/getenv) (name :OS_TYPE)) (name :MACOX))
+                       num
+                       5555))
+                   " :accept clojure.core.server/repl}")
              "-server" "-Dconf=.lein-env"
              ~(str "-Djava.library.path=" (get (System/getenv) "JRI_PATH") ":"
                    (System/getProperty "java.library.path"))]
