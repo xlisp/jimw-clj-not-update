@@ -64,6 +64,7 @@
              ~(str "-Djava.library.path=" (get (System/getenv) "JRI_PATH") ":"
                    (System/getProperty "java.library.path"))]
   ;; => https://clojure.org/reference/repl_and_main => ` telnet 127.0.0.1 5555 ` , `:repl/quit`
+  ;; 推荐 => ` echo "(prn 1111111111) (System/exit 0) :repl/quit " | netcat localhost 7870 `
   :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ~(apply
