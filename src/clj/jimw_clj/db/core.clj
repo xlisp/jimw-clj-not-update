@@ -451,7 +451,8 @@
 (defn create-blog-and-root [{:keys [db name content]}]
   (let [blog (jc1 db (->  (h/insert-into :blogs)
                           (h/values [{:name name
-                                      :content content}])))
+                                      :content content
+                                      :source_type (honeysql.core/call :cast "WEB_ARTICLE" :SOURCE_TYPE)}])))
         todo (jc1 db
                   (->  (h/insert-into :todos)
                        (h/values [{:content "root"
