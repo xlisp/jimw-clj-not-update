@@ -1314,3 +1314,13 @@
             (prn (str (inc num) " ******* Error! " e)))
           ))
       )))
+
+;; (import-pdf-to-blog {:db @conn :pdf-file "Lecun98.pdf"})
+(defn import-pdf-to-blog [{:keys [db pdf-file]}]
+  (for-import-pdf
+   {:pdf-file pdf-file
+    :op-fn (fn [num content]
+             (create-blog {:db db :name (str pdf-file ", 第" num "页")
+                           :content content
+                           :source_type "ENG_PDF_OCR"
+                           :project pdf-file}))}))
