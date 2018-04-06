@@ -1347,3 +1347,9 @@
         )
     )
   )
+
+;; 解决如下错误: java.io.IOException: COSStream has been closed and cannot be read. Perhaps its enclosing PDDocument has been closed?
+;; (pdf-to-text "Lecun98.pdf")
+(defn pdf-to-text [pdf-file]
+  (with-open [wtr (clojure.java.io/writer (str pdf-file ".txt"))]
+    (.write wtr (text/extract pdf-file))))
