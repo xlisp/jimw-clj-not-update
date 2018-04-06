@@ -656,7 +656,7 @@
                          :headers {"jimw-clj-token" @api-token}
                          :query-params {:blog blog}}))]
         (if (= status 200)
-          (op-fn (:data body))
+          (op-fn body)
           (js/alert "Unauthorized !")))))
 
 (defn search-sqldots
@@ -739,7 +739,7 @@
                      (fn [data]
                        (let [img-ele (.createElement js/document "img")
                              qrcode-div (.querySelector js/document (str "#qrcode-" id))]
-                         (set! (.-src img-ele ) (str "/qrcode/" (:file data) ".png"))
+                         (set! (.-src img-ele ) (str "/qrcode/" (:file data)))
                          (.appendChild qrcode-div img-ele)
                          )))
          } "QRCode"]
