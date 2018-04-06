@@ -55,10 +55,13 @@
                  [com.huaban/jieba-analysis "1.0.2"]
                  ;;[hanlping "0.1.1-SNAPSHOT"]
                  [instaparse "1.4.8"]
-                 [pdfboxing "0.1.13"]]
+                 [pdfboxing "0.1.13"]
+                 [com.github.kenglxn.qrgen/javase "2.4.0"]]
+
+  :repositories {"jitpack.io" "https://jitpack.io"}
 
   :min-lein-version "2.0.0"
-
+  
   ;; .e.g: ` export JRI_PATH=/home/clojure/R/x86_64-pc-linux-gnu-library/3.4/rJava/jri/ `
   :jvm-opts [~(str "-Dclojure.server.repl={:port "
                    (let [num (+ (rand-int 1000) 7000)]
