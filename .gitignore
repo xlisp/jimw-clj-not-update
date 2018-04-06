@@ -19,3 +19,4 @@ resources/public/js/viz-lite.js
 resources/public/js/wordcloud2.js
 data/model/segment/CRFSegmentModel.txt.bin
 *.pyc
+*.pdf

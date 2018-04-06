@@ -25,7 +25,11 @@
     [jimw-clj.db.emacs :as emacs]
     [jimw-clj.db.java :as java]
     ;;[hanlping.core :as han]
-    )
+    [pdfboxing.text :as text]
+    [pdfboxing.split :as pdf]
+    [pdfboxing.form :as form]
+    [pdfboxing.split :as split]
+    [pdfboxing.info :as info])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -1292,3 +1296,28 @@
                             #(not (nil? (last %))))
                            (into {})))
               (h/where [:= :id id]))))
+
+;; 1. PDF导出文本
+;; (text/extract "Lecun98.pdf")
+;; => "PROC^B OF THE IEEE^C NOVEMBER ^D^E^E^F ^D\nGradient^
+
+;; (pdf/split-pdf :input "Lecun98.pdf" :start 1 :end 46)
+;; => [#object[org.apache.pdfbox.pdmodel.PDDocument 0x8c5d4dd "org.apache.pdfbox.pdmodel.PDDocument@8c5d4dd"] #object[org.apache.pdfbox.pdmodel.PDDocument
+
+;; (pdf/split-pdf :input "Lecun98.pdf" :start 1 :end 50) ;; 一样可以
+
+;; 2. PDF 按页来切割
+;; (count (pdf/split-pdf :input "Lecun98.pdf")) ;;=> 46
+
+;;(pdf/split-pdf-at :input "Lecun98.pdf")
+;;1. Unhandled java.io.IOException
+;;   COSStream has been closed and cannot be read. Perhaps its enclosing
+;;   PDDocument has been closed?
+
+;;(form/get-fields "Lecun98.pdf") ;;1. Unhandled java.lang.NullPointerException
+
+;; 3. 导出特定页面的text
+#_(-> (split/split-pdf :input "Lecun98.pdf")
+      (nth 2)
+      text/extract
+      prn)

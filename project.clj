@@ -54,7 +54,8 @@
                  [me.raynes/conch "0.8.0"]
                  [com.huaban/jieba-analysis "1.0.2"]
                  ;;[hanlping "0.1.1-SNAPSHOT"]
-                 [instaparse "1.4.8"]]
+                 [instaparse "1.4.8"]
+                 [pdfboxing "0.1.13"]]
 
   :min-lein-version "2.0.0"
 
