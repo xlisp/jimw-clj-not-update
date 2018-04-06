@@ -1298,8 +1298,8 @@
               (h/where [:= :id id]))))
 
 ;; 9, 11, 20, 21, 23 是错误的
-;; (for-import-pdf {:pdf-file "Lecun98.pdf" :op-fn (fn [num content] (prn (str num "------" content)))})
-(defn for-import-pdf [{:keys [pdf-file op-fn]}]
+;; (for-import-pdf {:pdf-file "Lecun98.pdf" :op-fn (fn [num content] (prn (str num "------" content))) :error-fn prn})
+(defn for-import-pdf [{:keys [pdf-file op-fn error-fn]}]
   (let [pdf-count (info/page-number pdf-file)]
     (for [num (range pdf-count)]
       (do
@@ -1311,6 +1311,7 @@
               ((fn [content]
                  (op-fn (inc num) content))))
           (catch Exception e
+            (error-fn (inc num) (str e) )
             (prn (str (inc num) " ******* Error! " e)))
           ))
       )))
@@ -1319,6 +1320,11 @@
 (defn import-pdf-to-blog [{:keys [db pdf-file]}]
   (for-import-pdf
    {:pdf-file pdf-file
+    :error-fn (fn [num content]
+                (create-blog {:db db :name (str pdf-file ", 第" num "页")
+                              :content content
+                              :source_type "ENG_PDF_OCR"
+                              :project pdf-file}))
     :op-fn (fn [num content]
              (create-blog {:db db :name (str pdf-file ", 第" num "页")
                            :content content
