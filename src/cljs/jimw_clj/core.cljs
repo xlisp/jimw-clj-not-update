@@ -498,6 +498,14 @@
           [:button {:type "button", :class "btn btn-primary"
                     :on-click search-fn}
            [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+       [:form {:target "_blank", :action "https://www.wolframalpha.com/input/", :method "get"} 
+        [:input {:type "text"
+                 :on-change #(reset! wolfram-alpha-q (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity)
+                                 nil)
+                 :name "i"}]
+        [:input {:type "submit", :value "WolframAlpha"}]]
        [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! google-q (-> % .-target .-value))
