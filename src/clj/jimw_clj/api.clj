@@ -231,10 +231,10 @@
 (defn generate-qrcode
   [{{:keys [blog content]} :params}]
   (let [{:keys [todo-root-id blog-id] :as res}
-        (db/get-blog-root-todo-id {:db @db/conn :blog (Integer/parseInt blog)})]
-    (db/generate-qrcode (cjson/generate-string res)
-                        (str blog-id "-" todo-root-id ".png"))
-    (ok {:blog blog-id :todo-root todo-root-id})
+        (db/get-blog-root-todo-id {:db @db/conn :blog (Integer/parseInt blog)})
+        file-name (str blog-id "-" todo-root-id ".png")]
+    (db/generate-qrcode (cjson/generate-string res) file-name)
+    (ok {:blog blog-id :todo-root todo-root-id :file file-name})
     )
   )
 
@@ -242,6 +242,7 @@
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
+  (GET "/qrcode-generate" [] (check-api-token generate-qrcode))
   (GET "/source-nams" [] (check-api-token get-all-source))
   (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))

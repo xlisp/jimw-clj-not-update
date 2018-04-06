@@ -734,11 +734,15 @@
                           (clj->js
                            {:list wctags}))) 5 30))} "WordCloud"]
        [:button.btn.margin-download
-        {:on-click #(let [img-ele (.createElement js/document "img")
-                          qrcode-div (.querySelector js/document (str "#qrcode-" id))]
-                      (set! (.-src img-ele ) "/qrcode/stevechan_test.png")
-                      (.appendChild qrcode-div img-ele)
-                      )} "QRCode"]
+        {:on-click #(qrcode-generate
+                     id
+                     #(let [img-ele (.createElement js/document "img")
+                            qrcode-div (.querySelector js/document (str "#qrcode-" id))]
+                        (set! (.-src img-ele ) (str "/qrcode/" (:file %) ".png"))
+                        (.appendChild qrcode-div img-ele)
+                        )
+                     )
+         } "QRCode"]
        ]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
