@@ -736,12 +736,12 @@
        [:button.btn.margin-download
         {:on-click #(qrcode-generate
                      id
-                     #(let [img-ele (.createElement js/document "img")
-                            qrcode-div (.querySelector js/document (str "#qrcode-" id))]
-                        (set! (.-src img-ele ) (str "/qrcode/" (:file %) ".png"))
-                        (.appendChild qrcode-div img-ele)
-                        )
-                     )
+                     (fn [data]
+                       (let [img-ele (.createElement js/document "img")
+                             qrcode-div (.querySelector js/document (str "#qrcode-" id))]
+                         (set! (.-src img-ele ) (str "/qrcode/" (:file data) ".png"))
+                         (.appendChild qrcode-div img-ele)
+                         )))
          } "QRCode"]
        ]
       [:br]

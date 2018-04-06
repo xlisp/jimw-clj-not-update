@@ -242,7 +242,7 @@
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
-  (GET "/qrcode-generate" [] (check-api-token generate-qrcode))
+  (POST "/qrcode-generate" [] (check-api-token generate-qrcode))
   (GET "/source-nams" [] (check-api-token get-all-source))
   (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))
