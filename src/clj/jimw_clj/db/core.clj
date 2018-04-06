@@ -43,7 +43,8 @@
            [java.lang IndexOutOfBoundsException]
            [com.huaban.analysis.jieba JiebaSegmenter]
            ;; 对于JiebaSegmenter类里面的`static enum SegMode`的引用
-           [com.huaban.analysis.jieba JiebaSegmenter$SegMode]))
+           [com.huaban.analysis.jieba JiebaSegmenter$SegMode]
+           [net.glxn.qrgen.javase QRCode]))
 
 (def segmenter (JiebaSegmenter.))
 
@@ -1353,3 +1354,9 @@
 (defn pdf-to-text [pdf-file]
   (with-open [wtr (clojure.java.io/writer (str pdf-file ".txt"))]
     (.write wtr (text/extract pdf-file))))
+
+;; (generate-qrcode "Hi, Steve Chan!" "stevechan_test.png")
+(defn generate-qrcode [content output-file]
+  (with-open [out (clojure.java.io/output-stream
+                   (str "resources/public/qrcode/" output-file))]
+    (clojure.java.io/copy (.file (QRCode/from content)) out)))
