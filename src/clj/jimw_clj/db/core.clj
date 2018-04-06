@@ -1296,3 +1296,21 @@
                             #(not (nil? (last %))))
                            (into {})))
               (h/where [:= :id id]))))
+
+;; 9, 11, 20, 21, 23 是错误的
+;; (for-import-pdf {:pdf-file "Lecun98.pdf" :op-fn (fn [num content] (prn (str num "------" content)))})
+(defn for-import-pdf [{:keys [pdf-file op-fn]}]
+  (let [pdf-count (info/page-number pdf-file)]
+    (for [num (range pdf-count)]
+      (do
+        (prn (str "==========" (inc num)))
+        (try
+          (-> (split/split-pdf :input pdf-file :start (inc num) :end (inc num))
+              first
+              text/extract
+              ((fn [content]
+                 (op-fn (inc num) content))))
+          (catch Exception e
+            (prn (str (inc num) " ******* Error! " e)))
+          ))
+      )))
