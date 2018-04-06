@@ -498,6 +498,7 @@
           [:button {:type "button", :class "btn btn-primary"
                     :on-click search-fn}
            [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+       [:p]
        [:form {:target "_blank", :action "https://www.wolframalpha.com/input/", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! wolfram-alpha-q (-> % .-target .-value))
