@@ -508,6 +508,7 @@
                                  nil)
                  :name "i"}]
         [:input {:type "submit", :value "WolframAlpha"}]]
+       [:p]
        [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! google-q (-> % .-target .-value))
