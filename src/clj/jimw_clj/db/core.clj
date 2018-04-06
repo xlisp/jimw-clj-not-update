@@ -1321,3 +1321,86 @@
       (nth 2)
       text/extract
       prn)
+
+;; 4. for 只能打印几张就报错: 
+#_(let [pdf-file "Lecun98.pdf"
+      pdf-count (info/page-number pdf-file)
+      ;;pdfs (split/split-pdf :input pdf-file)
+      ]
+  (for [single-pdf (split/split-pdf :input pdf-file) ;;pdfs
+        ]
+    (do
+      (prn "===========" (str single-pdf) )
+      (prn (text/extract single-pdf))
+      )
+    )
+  )
+;;(split/split-pdf :input "Lecun98.pdf")
+;; 四月 06, 2018 10:17:53 上午 org.apache.pdfbox.pdmodel.font.PDFont <init>
+;; 严重: Could not read ToUnicode CMap in font T1
+;; java.io.IOException: COSStream has been closed and cannot be read. Perhaps its enclosing PDDocument has been closed?
+;; 
+
+;; 5.  for 只能打印几张就报错:
+#_(let [pdf-file "Lecun98.pdf"
+      pdf-count (info/page-number pdf-file)]
+  (for [;;num (range 1 (inc pdf-count))]
+        num (range pdf-count)
+        ]
+    (do
+      (prn (str "==========" num))
+    (-> (split/split-pdf :input pdf-file)
+        (nth num)
+        text/extract
+        prn)
+    )
+    )
+  )
+  
+#_(-> (split/split-pdf :input "Lecun98.pdf" :start 1 :end 1)
+    ;;(nth 0)
+    first
+    text/extract
+    )
+
+;; 6.总是打印同一张,不会报错
+#_(let [pdf-file "Lecun98.pdf"
+      pdf-count (info/page-number pdf-file)]
+  (for [num (range pdf-count)]
+    (do
+      (prn (str "==========" num))
+      (-> (split/split-pdf :input "Lecun98.pdf" :start 1 :end 1)
+          first
+          text/extract
+          prn)
+      )
+    )
+  )
+
+#_(let [pdf-file "Lecun98.pdf"
+      pdf-count (info/page-number pdf-file)]
+  (for [num (range pdf-count)]
+    (do
+      (prn (str "==========" num))
+      (-> (split/split-pdf :input "Lecun98.pdf" :start (inc num) :end (inc num))
+          first
+          text/extract
+          prn)
+      )
+    )
+  )
+
+;; 最多只能到8页
+;; 1. Unhandled java.io.IOException
+;;    COSStream has been closed and cannot be read. Perhaps its enclosing
+;;    PDDocument has been closed?
+;; 
+
+#_(-> (split/split-pdf :input "Lecun98.pdf" :start 9 :end 9)
+      first
+      text/extract
+      prn)
+;; 1. Unhandled java.io.IOException
+;;    COSStream has been closed and cannot be read. Perhaps its enclosing
+;; PDDocument has been closed?
+;; 
