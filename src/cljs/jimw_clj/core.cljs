@@ -647,6 +647,18 @@
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
 
+(defn qrcode-generate
+  [blog op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/post (api-root "/qrcode-generate")
+                        {:with-credentials? false
+                         :headers {"jimw-clj-token" @api-token}
+                         :query-params {:blog blog}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
 (defn search-sqldots
   [q op-fn]
   (go (let [{:keys [status body]}
@@ -720,10 +732,18 @@
                          (window.WordCloud
                           elem
                           (clj->js
-                           {:list wctags}))) 5 30))} "WordCloud"]]
+                           {:list wctags}))) 5 30))} "WordCloud"]
+       [:button.btn.margin-download
+        {:on-click #(let [img-ele (.createElement js/document "img")
+                          qrcode-div (.querySelector js/document (str "#qrcode-" id))]
+                      (set! (.-src img-ele ) "/qrcode/stevechan_test.png")
+                      (.appendChild qrcode-div img-ele)
+                      )} "QRCode"]
+       ]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
       [:canvas.wcanvas {:id (str "wordcloud-" id)}]
+      [:div {:id (str "qrcode-" id) :style {:width "20%"}}]
       [:hr]]]))
 
 (defn home-page []
