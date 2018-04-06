@@ -472,6 +472,7 @@
   (let [search-str (r/atom "")
         google-q (r/atom "")
         github-q (r/atom "")
+        wolfram-alpha-q (r/atom "")
         pcm-ip-txt (r/atom "")
         search-fn (fn []
                     (do
@@ -499,11 +500,11 @@
                     :on-click search-fn}
            [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
        [:p]
-       [:form {:target "_blank", :action "https://www.wolframalpha.com/input/", :method "get"} 
+       [:form {:target "_blank", :action "https://www.wolframalpha.com/input", :method "get"}
         [:input {:type "text"
                  :on-change #(reset! wolfram-alpha-q (-> % .-target .-value))
                  :on-key-down #(case (.-which %)
-                                 13 (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity)
+                                 13 (do (prn 111) (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity))
                                  nil)
                  :name "i"}]
         [:input {:type "submit", :value "WolframAlpha"}]]
