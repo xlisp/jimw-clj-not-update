@@ -1330,3 +1330,20 @@
                            :content content
                            :source_type "ENG_PDF_OCR"
                            :project pdf-file}))}))
+
+;; 解决如下错误: org.postgresql.util.PSQLException: ERROR: invalid byte sequence for encoding "UTF8": 0x00
+;; (invalid-byte-for-pdf "Lecun98.pdf" (list 1 32 37))
+(defn invalid-byte-for-pdf [pdf-file ids]
+  (for [page-num ids]
+    (-> (split/split-pdf :input pdf-file :start page-num :end page-num)
+        first
+        text/extract
+        ((fn [content]
+           (with-open [wtr (clojure.java.io/writer (str pdf-file page-num ".txt"))]
+             (.write wtr content)
+             )
+           )
+         )
+        )
+    )
+  )
