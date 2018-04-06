@@ -228,6 +228,16 @@
   [{{:keys [q]} :params}]
   (ok (db/get-all-project {:db @db/conn})))
 
+(defn generate-qrcode
+  [{{:keys [blog content]} :params}]
+  (let [{:keys [todo-root-id blog-id] :as res}
+        (db/get-blog-root-todo-id {:db @db/conn :blog (Integer/parseInt blog)})]
+    (db/generate-qrcode (cjson/generate-string res)
+                        (str blog-id "-" todo-root-id ".png"))
+    (ok {:blog blog-id :todo-root todo-root-id})
+    )
+  )
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))

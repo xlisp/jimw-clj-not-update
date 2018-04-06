@@ -1360,3 +1360,13 @@
   (with-open [out (clojure.java.io/output-stream
                    (str "resources/public/qrcode/" output-file))]
     (clojure.java.io/copy (.file (QRCode/from content)) out)))
+
+;; (get-blog-root-todo-id {:db @conn :blog 57921}) ;;=> {:todo-root-id 306, :blog-id 57921}
+(defn get-blog-root-todo-id
+  [{:keys [db blog]}]
+  (let [{:keys [id]}
+        (jconn1 db
+                (-> (h/select :id)
+                    (h/from :todos)
+                    (h/where [:= :blog blog])))]
+    {:todo-root-id id :blog-id blog}))
