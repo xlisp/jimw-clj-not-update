@@ -1152,7 +1152,11 @@
 (defn get-blog-by-id
   [{:keys [db id]}]
   (jconn1 db
-          (-> (h/select :*)
+          (-> (h/select :id :name :content :created_at
+                        :updated_at :tags :wctags :project :source_type
+                        [(-> todos-subquery
+                             (h/where [:= :blogs.id :todos.blog]))
+                         :todos])
               (h/from :blogs)
               (h/where [:= :id id]))))
 
