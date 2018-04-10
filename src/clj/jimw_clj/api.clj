@@ -238,6 +238,10 @@
     )
   )
 
+(defn get-blog-by-id
+  [{{:keys [id]} :params}]
+  (ok (get-blog-by-id {:db @db/conn :id (Integer/parseInt id)})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
@@ -246,6 +250,7 @@
   (GET "/source-nams" [] (check-api-token get-all-source))
   (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))
+  (GET "/blog/:id" [] (check-api-token get-blog-by-id))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
   (POST "/create-blog" [] (check-api-token create-blog))
   (POST "/create-blog-and-root" [] (check-api-token create-blog-and-root))
