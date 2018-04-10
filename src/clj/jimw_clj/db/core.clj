@@ -1153,7 +1153,7 @@
   [{:keys [db id]}]
   (jconn1 db
           (-> (h/select :id :name :content :created_at
-                        :updated_at :tags :wctags :project :source_type
+                        :updated_at :wctags :project :source_type
                         [(-> todos-subquery
                              (h/where [:= :blogs.id :todos.blog]))
                          :todos])
@@ -1374,3 +1374,15 @@
                     (h/from :todos)
                     (h/where [:= :blog blog])))]
     {:todo-root-id id :blog-id blog}))
+
+;; (add-search-event-for-blog {:db @conn :blog 37584 :event-ids [222]})
+;; 搜索的时候,目中目标可以绑定search的event的id
+(defn add-search-event-for-blog
+  [{:keys [db blog event-ids]}]
+  (jc1 db
+       (-> (h/update :blogs)
+           (h/sset
+            {:search_events
+             (sql/call :array_cat :search_events
+                       (honeysql.types/array event-ids))})
+           (h/where [:= :id blog]))))

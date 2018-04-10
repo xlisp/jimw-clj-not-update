@@ -25,6 +25,7 @@ CREATE TABLE blogs (
   name TEXT NOT NULL,
   content TEXT NOT NULL,
   wctags JSONB NOT NULL DEFAULT '{}';
+  search_events bigint [] NOT NULL DEFAULT '{}';
   source_type SOURCE_TYPE NOT NULL DEFAULT 'BLOG',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -33,6 +34,7 @@ CREATE TABLE blogs (
 -- ALTER TABLE blogs ADD COLUMN wctags JSONB NOT NULL DEFAULT '{}';
 -- ALTER TABLE blogs ADD COLUMN project TEXT;
 -- ALTER TABLE blogs ADD COLUMN source_type SOURCE_TYPE NOT NULL DEFAULT 'BLOG';
+-- ALTER TABLE blogs ADD COLUMN search_events bigint [] NOT NULL DEFAULT '{}';
 
 CREATE SEQUENCE blogs_new_id_seq
     START WITH 4859
