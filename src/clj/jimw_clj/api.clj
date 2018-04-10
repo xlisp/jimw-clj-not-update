@@ -240,7 +240,7 @@
 
 (defn get-blog-by-id
   [{{:keys [id]} :params}]
-  (ok (get-blog-by-id {:db @db/conn :id (Integer/parseInt id)})))
+  (ok (db/get-blog-by-id {:db @db/conn :id (Integer/parseInt id)})))
 
 (defroutes api-routes
   (POST "/login" [] login)
