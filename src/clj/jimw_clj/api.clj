@@ -242,6 +242,11 @@
   [{{:keys [id]} :params}]
   (ok (db/get-blog-by-id {:db @db/conn :id (Integer/parseInt id)})))
 
+(defn add-search-event-for-blog
+  [{{:keys [blog eid]} :params}]
+  (ok (db/add-search-event-for-blog
+       {:db @db/conn :event-ids [eid]})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
@@ -251,6 +256,7 @@
   (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))
   (GET "/blog/:id" [] (check-api-token get-blog-by-id))
+  (PUT "/bind-event-blog/:blog" [] (check-api-token add-search-event-for-blog))
   (PUT "/update-blog/:id" [] (check-api-token update-blog))
   (POST "/create-blog" [] (check-api-token create-blog))
   (POST "/create-blog-and-root" [] (check-api-token create-blog-and-root))

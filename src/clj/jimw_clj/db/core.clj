@@ -1386,3 +1386,4 @@
              (sql/call :array_cat :search_events
                        (honeysql.types/array event-ids))})
            (h/where [:= :id blog]))))
+
