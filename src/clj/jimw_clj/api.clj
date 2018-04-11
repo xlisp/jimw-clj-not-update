@@ -245,7 +245,10 @@
 (defn add-search-event-for-blog
   [{{:keys [blog eid]} :params}]
   (ok (db/add-search-event-for-blog
-       {:db @db/conn :event-ids [eid]})))
+       #_{:db @db/conn :blog 57921 :eid 283} ;; => 正确
+       ;; 错误 :eid Integer/parseInt 不能 int, 只能long => function array_cat(bigint[], integer[]) does not exist
+       {:db @db/conn :blog (Integer/parseInt blog) :eid (Long/parseLong eid)}
+       )))
 
 (defroutes api-routes
   (POST "/login" [] login)

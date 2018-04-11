@@ -1375,15 +1375,15 @@
                     (h/where [:= :blog blog])))]
     {:todo-root-id id :blog-id blog}))
 
-;; (add-search-event-for-blog {:db @conn :blog 37584 :event-ids [222]})
+;; (add-search-event-for-blog {:db @conn :blog 57921 :eid 283})
 ;; 搜索的时候,目中目标可以绑定search的event的id
 (defn add-search-event-for-blog
-  [{:keys [db blog event-ids]}]
+  [{:keys [db blog eid]}]
   (jc1 db
        (-> (h/update :blogs)
            (h/sset
             {:search_events
              (sql/call :array_cat :search_events
-                       (honeysql.types/array event-ids))})
+                       (honeysql.types/array [eid]))})
            (h/where [:= :id blog]))))
 
