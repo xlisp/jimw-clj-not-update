@@ -781,7 +781,7 @@
   (if (seq q)
     (let [q-list (clojure.string/split q #" ")]
       (into
-       {}
+       (sorted-map-by <)
        (map-indexed
         vector
         (->>
@@ -795,7 +795,7 @@
                        event_data))
                    (search-events {:db db :q q-item}))]
               (if (empty? res)
-                "" res))
+                (zh->en q) res))
             )
           q-list)
          flatten)))) ""))

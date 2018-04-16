@@ -282,7 +282,7 @@
 (defonce search-key (r/atom ""))
 
 (defonce search-viz-en (r/atom (sorted-map-by >)))
-(defonce search-wolframalpha-en (r/atom (sorted-map-by >)))
+(defonce search-wolframalpha-en (r/atom {}))
 
 ;; (viz-string "digraph { a -> b; }")
 ;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
