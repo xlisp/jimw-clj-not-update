@@ -282,6 +282,7 @@
 (defonce search-key (r/atom ""))
 
 (defonce search-viz-en (r/atom (sorted-map-by >)))
+(defonce search-wolframalpha-en (r/atom (sorted-map-by >)))
 
 ;; (viz-string "digraph { a -> b; }")
 ;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
@@ -468,6 +469,18 @@
         (let [data (:body response)]
           (op-fn data)))))
 
+(defn search-map-zh2en
+  [q op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/get (api-root "/search-map-zh2en")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" @api-token}
+                        :query-params {:q q}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
 (defn searchbar []
   (let [search-str (r/atom "")
         google-q (r/atom "")
@@ -499,16 +512,21 @@
           [:button {:type "button", :class "btn btn-primary"
                     :on-click search-fn}
            [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
-       [:p]
-       [:form {:target "_blank", :action "https://www.wolframalpha.com/input", :method "get"}
-        [:input {:type "text"
-                 :on-change #(reset! wolfram-alpha-q (-> % .-target .-value))
-                 :on-key-down #(case (.-which %)
-                                 13 (do (prn 111) (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity))
-                                 nil)
-                 :name "i"}]
-        [:input {:type "submit", :value "WolframAlpha"}]]
-       [:p]
+       [:div.viz-container
+        [:div#adv-search.input-group.search-margin
+         [:form {:target "_blank", :action "https://www.wolframalpha.com/input", :method "get"}
+          [:input {:type "text"
+                   :on-change #(do
+                                 (reset! wolfram-alpha-q (-> % .-target .-value))
+                                 (search-map-zh2en @wolfram-alpha-q (fn [data] (reset! search-wolframalpha-en data))))
+                   :on-key-down #(case (.-which %)
+                                   13 (do (prn 111) (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity))
+                                   nil)
+                   :name "i"}]
+          [:input {:type "submit", :value "WolframAlpha"}]]
+         [:ul
+          (for [item @search-wolframalpha-en]
+            [:li (str (last item))])]]]
        [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! google-q (-> % .-target .-value))
