@@ -48,6 +48,7 @@
            [com.lsj.trans LANG]
            [com.lsj.trans.factory TFactory TranslatorFactory]))
 
+;; (zh->en "高斯分布")  => "Gaussian distribution"
 (defn zh->en
   [stri]
   (let [factory (TranslatorFactory.)]

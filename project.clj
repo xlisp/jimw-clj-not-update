@@ -77,34 +77,34 @@
   ;; 推荐 => ` echo "(prn 1111111111) (System/exit 0) :repl/quit " | netcat localhost 7870 `
   :source-paths ["src/clj" "src/cljc"]
   :test-paths ["test/clj"]
-  :resource-paths ~(apply
-                    conj
-                    ["resources" "target/cljsbuild"
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-beanutils-1.8.0.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-codec-1.9.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-collections-3.2.1.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-lang-2.5.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-logging-1.1.1.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "commons-logging-1.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "ezmorph-1.0.6.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "fluent-hc-4.5.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-4.5.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-cache-4.5.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-win-4.5.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "httpcore-4.4.4.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "httpmime-4.5.2.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "jna-4.1.0.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "jna-platform-4.1.0.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "json-lib-2.4-jdk15.jar")
-                     (str (get (System/getenv) "TRANS_PATH")  "util_trans.jar")
-                     ]
+  :resource-paths ~(concat
+                    (map (fn [lis] (str (get (System/getenv) "TRANS_PATH") lis) )
+                         (list "commons-beanutils-1.8.0.jar"
+                               "commons-codec-1.9.jar"
+                               "commons-collections-3.2.1.jar"
+                               "commons-lang-2.5.jar"
+                               "commons-logging-1.1.1.jar"
+                               "commons-logging-1.2.jar"
+                               "ezmorph-1.0.6.jar"
+                               "fluent-hc-4.5.2.jar"
+                               "httpclient-4.5.2.jar"
+                               "httpclient-cache-4.5.2.jar"
+                               "httpclient-win-4.5.2.jar"
+                               "httpcore-4.4.4.jar"
+                               "httpmime-4.5.2.jar"
+                               "jna-4.1.0.jar"
+                               "jna-platform-4.1.0.jar"
+                               "json-lib-2.4-jdk15.jar"
+                               "util_trans.jar"))
                     (map #(str (get (System/getenv) "JRI_PATH") %)
                          (list "JRI.jar"
                                "JRIEngine.jar"
                                "REngine.jar"
                                (if (= (get (System/getenv) "OS_TYPE") "MACOX")
                                  "libjri.jnilib"
-                                 "libjri.so"))))
+                                 "libjri.so")))
+                    ["resources" "target/cljsbuild"])
+  
   :target-path "target/%s/"
   :main ^:skip-aot jimw-clj.core
   :migratus {:store :database :db ~(get (System/getenv) "DATABASE_URL")}
