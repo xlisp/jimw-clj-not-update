@@ -44,7 +44,19 @@
            [com.huaban.analysis.jieba JiebaSegmenter]
            ;; 对于JiebaSegmenter类里面的`static enum SegMode`的引用
            [com.huaban.analysis.jieba JiebaSegmenter$SegMode]
-           [net.glxn.qrgen.javase QRCode]))
+           [net.glxn.qrgen.javase QRCode]
+           [com.lsj.trans LANG]
+           [com.lsj.trans.factory TFactory TranslatorFactory]))
+
+(defn zh->en
+  [stri]
+  (let [factory (TranslatorFactory.)]
+    (.trans (.get factory "google") LANG/ZH LANG/EN stri)))
+
+(defn en->zh
+  [stri]
+  (let [factory (TranslatorFactory.)]
+    (.trans (.get factory "google") LANG/EN LANG/ZH stri)))
 
 (def segmenter (JiebaSegmenter.))
 

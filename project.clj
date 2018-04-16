@@ -79,7 +79,25 @@
   :test-paths ["test/clj"]
   :resource-paths ~(apply
                     conj
-                    ["resources" "target/cljsbuild"]
+                    ["resources" "target/cljsbuild"
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-beanutils-1.8.0.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-codec-1.9.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-collections-3.2.1.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-lang-2.5.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-logging-1.1.1.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "commons-logging-1.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "ezmorph-1.0.6.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "fluent-hc-4.5.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-4.5.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-cache-4.5.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "httpclient-win-4.5.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "httpcore-4.4.4.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "httpmime-4.5.2.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "jna-4.1.0.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "jna-platform-4.1.0.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "json-lib-2.4-jdk15.jar")
+                     (str (get (System/getenv) "TRANS_PATH")  "util_trans.jar")
+                     ]
                     (map #(str (get (System/getenv) "JRI_PATH") %)
                          (list "JRI.jar"
                                "JRIEngine.jar"
