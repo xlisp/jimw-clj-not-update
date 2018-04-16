@@ -215,6 +215,11 @@
       vector
       (clojure.string/split (db/map->en @db/conn q) #" ")))}))
 
+(defn search-map-zh2en
+  [{{:keys [q]} :params}]
+  (ok
+   {:data (db/translator-map2en @db/conn q)}))
+
 (defn search-todos-el
   [{{:keys [q]} :params}]
   (ok (db/search-todos-el {:db @db/conn :q (if (nil? q) "" q)}))
@@ -275,4 +280,5 @@
   (GET "/get-blog-wctags" [] (check-api-token get-blog-wctags))
   (GET "/search-sqldots" [] (check-api-token search-sqldots))
   (GET "/search-mapen" [] (check-api-token search-mapen))
+  (GET "/search-map-zh2en" [] (check-api-token search-map-zh2en))
   (GET "/search-todos-el" [] (check-api-token search-todos-el)))

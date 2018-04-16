@@ -745,6 +745,17 @@
              (h/from :enzhs)
              (h/where [:like :zh_name (str "%" zh_name "%")]))))
 
+;; (map :event_data (search-events {:db @conn :q "f"}))
+(defn search-events [{:keys [db q]}]
+  (jconn db
+         (-> (h/select :*)
+             (h/from :events)
+             (h/where [:and
+                       [:not= :event_data nil]
+                       [:like :event_data (str "%" q "%")]])
+             (h/order-by [:created_at :desc])
+             (h/limit 10))))
+
 ;; (map->en conn "操作") ;; => "operator operation"
 ;; (map->en conn "operator apple") ;;=> "operator apple"
 (defn map->en
@@ -762,6 +773,32 @@
             q-item))
         q-list)
        flatten (clojure.string/join " "))) ""))
+
+;; (translator-map2en @conn "f")
+;;  => ("Lecun98.pdf" "Lecun98.pdf" "f Gaussian distribution"
+(defn translator-map2en
+  [db q]
+  (if (seq q)
+    (let [q-list (clojure.string/split q #" ")]
+      (into
+       {}
+       (map-indexed
+        vector
+        (->>
+         (map
+          (fn [q-item]
+            (let [res
+                  (map
+                   (fn [{:keys [event_data]}]
+                     (if (re-matches #"(.*)[\u4e00-\u9fa5](.*)" event_data)
+                       (zh->en event_data)
+                       event_data))
+                   (search-events {:db db :q q-item}))]
+              (if (empty? res)
+                "" res))
+            )
+          q-list)
+         flatten)))) ""))
 
 #_(distinct
    (map :name
