@@ -515,7 +515,8 @@
        [:div.viz-container
         [:div#adv-search.input-group.search-margin
          [:form {:target "_blank", :action "https://www.wolframalpha.com/input", :method "get"}
-          [:input {:type "text"
+          [:input {:id "wolfram-alpha-input"
+                   :type "text"
                    :on-change #(do
                                  (reset! wolfram-alpha-q (-> % .-target .-value))
                                  (search-map-zh2en @wolfram-alpha-q (fn [data] (reset! search-wolframalpha-en data))))
@@ -524,9 +525,14 @@
                                    nil)
                    :name "i"}]
           [:input {:type "submit", :value "WolframAlpha"}]]
-         [:ul
-          (for [item @search-wolframalpha-en]
-            [:li (str (last item))])]]]
+         (let [alpha-input (.getElementById js/document "wolfram-alpha-input")]
+           [:ul
+            (for [item @search-wolframalpha-en]
+              [:li {:on-click #(set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))}
+               (str (last item))]
+              )]
+           )
+         ]]
        [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! google-q (-> % .-target .-value))
