@@ -121,7 +121,21 @@
             (op-fn (:body response))
             (js/alert "Play pcm failure!")))))
 
-(defn todo-input [{:keys [content on-save on-stop items search-fn blog-id focus-bdsug-blog-id]}]
+;; TODOS: 移到公共的cljs上
+(defn search-map-zh2en
+  [q op-fn]
+  (go (let [{:keys [status body]}
+            (<!
+             (http/get (api-root "/search-map-zh2en")
+                       {:with-credentials? false
+                        :headers {"jimw-clj-token" (memoized-api-token)}
+                        :query-params {:q q}}))]
+        (if (= status 200)
+          (op-fn (:data body))
+          (js/alert "Unauthorized !")))))
+
+(defn todo-input [{:keys [content on-save on-stop items search-fn blog-id focus-bdsug-blog-id
+                          search-wolframalpha-en]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -160,6 +174,8 @@
                                #_(if search-text
                                    (reset! search-text valu))
                                (reset! val valu)
+                               (search-map-zh2en valu
+                                                 (fn [data] (reset! search-wolframalpha-en data)))
                                ;;(record-event "search-todo" valu identity)
                                )
                              )
@@ -343,10 +359,12 @@
                           #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                        :on-stop #(reset! editing false)}])]))))
 
-(defn new-todo [blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id]
+(defn new-todo [blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id
+                search-wolframalpha-en]
   [todo-input {:id "new-todo"
                :blog-id blog-id
                :focus-bdsug-blog-id focus-bdsug-blog-id
+               :search-wolframalpha-en search-wolframalpha-en
                :placeholder (if (> (count items) 9)
                               "Search todo"
                               "Add todo")
@@ -464,7 +482,8 @@
          #_[:br]
          [:section#todoapp
           [:header#header
-           (new-todo blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id)]
+           (new-todo blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id
+                     search-wolframalpha-en)]
           [:div {:class "bdsug" :id (str "bdsug-search-" blog-id)}
            (if (= @focus-bdsug-blog-id blog-id)
              (for [item @search-wolframalpha-en]
