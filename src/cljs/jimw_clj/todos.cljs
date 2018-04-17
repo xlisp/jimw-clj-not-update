@@ -146,6 +146,7 @@
       [:input {:type "text" :value @val
                :id id :class class :placeholder placeholder
                :on-blur (fn []
+                          (reset! focus-bdsug-blog-id nil)
                           (if (> (count items) 9)
                             identity (save)))
                #_:on-blur #_(do (if (fn? search-fn)

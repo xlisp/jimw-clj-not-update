@@ -543,13 +543,15 @@
          (let [alpha-input (.getElementById js/document "wolfram-alpha-input")
                google-input (.getElementById js/document "google-input")]
            [:ul
-            (for [item @search-wolframalpha-en]
-              [:li {:on-click #(do (reset! append-stri (str (last item)))
-                                   (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
-                                   (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
-                                   )}
-               (str (last item))]
-              )]
+            (if (nil? @focus-bdsug-blog-id)
+              (for [item @search-wolframalpha-en]
+                [:li {:on-click #(do (reset! append-stri (str (last item)))
+                                     (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
+                                     (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
+                                     )}
+                 (str (last item))]
+                ))
+            ]
            )
          ]]
        ;;[:p]
