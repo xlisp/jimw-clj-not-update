@@ -121,7 +121,7 @@
             (op-fn (:body response))
             (js/alert "Play pcm failure!")))))
 
-(defn todo-input [{:keys [content on-save on-stop items search-fn]}]
+(defn todo-input [{:keys [content on-save on-stop items search-fn blog-id focus-bdsug-blog-id]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -145,8 +145,14 @@
                                  )
                                (save))
                              (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "none"))
-               :on-focus #(let [bdsug-stat (->> "bdsug-search" getElementById (. js/document) .-style .-display)]
-                            (if (= bdsug-stat "none") (set! (.-display (.-style (. js/document (getElementById "bdsug-search")))) "block")))
+               :on-focus
+               #(do
+                 (reset! focus-bdsug-blog-id blog-id)
+                 )
+               #_(let [bdsug-stat (->> (str "bdsug-search-" blog-id) getElementById (. js/document) .-style .-display)]
+                            (if (= bdsug-stat "none")
+                              (set! (.-display (.-style (. js/document (getElementById (str "bdsug-search-" blog-id))))) "block")
+                              ))
                :on-change #(do
                              (let [valu (-> % .-target .-value)]
                                #_(if (fn? search-fn)
@@ -337,8 +343,10 @@
                           #(swap! blog-list update-in [blog-id :todos id :content] (fn [x] (:content %)))))
                        :on-stop #(reset! editing false)}])]))))
 
-(defn new-todo [blog-list blog-id items parid-first-id search-fn]
+(defn new-todo [blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id]
   [todo-input {:id "new-todo"
+               :blog-id blog-id
+               :focus-bdsug-blog-id focus-bdsug-blog-id
                :placeholder (if (> (count items) 9)
                               "Search todo"
                               "Add todo")
@@ -415,9 +423,10 @@
         (if (re-matches (re-pattern (str "(.*)" x "(.*)")) item) true false))
       (str/split search-text " ")))))
 
-(defn todo-app [blog-list blog-id]
+(defn todo-app [blog-list blog-id search-wolframalpha-en focus-bdsug-blog-id]
   (let [filt (r/atom :all)
-        search-text (r/atom "")]
+        search-text (r/atom "")
+        ]
     (fn []
       (let [items (vals (get-in @blog-list [blog-id :todos]))
             parid-first-id (-> (if (= (count items) 0) 1
@@ -455,17 +464,19 @@
          #_[:br]
          [:section#todoapp
           [:header#header
-           (new-todo blog-list blog-id items parid-first-id search-fn)]
-          [:div {:class "bdsug" :id "bdsug-search"}
-           #_[:ul 
-            [:li {:data-key "哒哒加速器", :class "bdsug-overflow"}
-             "哒哒加速器"] 
-            [:li {:data-key "大道争锋", :class "bdsug-overflow"}
-             "大道争锋"] 
-            [:li {:data-key "哒哒英语", :class "bdsug-overflow"}
-             "哒哒英语"] 
-            [:li {:data-key "达达外卖", :class "bdsug-overflow"}
-             "达达外卖"]]]
+           (new-todo blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id)]
+          [:div {:class "bdsug" :id (str "bdsug-search-" blog-id)}
+           (if (= @focus-bdsug-blog-id blog-id)
+             (for [item @search-wolframalpha-en]
+             [:ul
+              [:li #_{:on-click #(do (reset! append-stri (str (last item)))
+                                     (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
+                                     (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
+                                     )}
+               (str (last item))]]
+             ))
+           
+           ]
           ;;;;;;;;
           (aaaa (vals (get-in @blog-list [blog-id :todos])) filt blog-list blog-id
                 todo-target todo-begin origins search-text

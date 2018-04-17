@@ -283,6 +283,7 @@
 
 (defonce search-viz-en (r/atom (sorted-map-by >)))
 (defonce search-wolframalpha-en (r/atom {}))
+(defonce focus-bdsug-blog-id (r/atom nil))
 
 ;; (viz-string "digraph { a -> b; }")
 ;; Chrome: jimw_clj.core.viz_string("digraph { a -> b; }")
@@ -736,7 +737,7 @@
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
-      [todos/todo-app blog-list id]
+      [todos/todo-app blog-list id search-wolframalpha-en focus-bdsug-blog-id]
       [:div
        ;; 打开本地的Viz临时使用局部树
        [:button.btn.tree-btn
