@@ -56,7 +56,10 @@
                  ;;[hanlping "0.1.1-SNAPSHOT"]
                  [instaparse "1.4.8"]
                  [pdfboxing "0.1.13"]
-                 [com.github.kenglxn.qrgen/javase "2.4.0"]]
+                 [com.github.kenglxn.qrgen/javase "2.4.0"]
+                 ;; 用出去incanter
+                 [incanter/incanter-core "1.9.2"]
+                 [incanter/incanter-charts "1.9.2"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
