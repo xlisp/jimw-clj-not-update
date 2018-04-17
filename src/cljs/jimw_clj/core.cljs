@@ -457,7 +457,7 @@
        (cond
          ;; 数字键
          ((set (range 47 58)) keycode)
-         (prn (str "数字键" keycode))
+         (prn (str "数字键" (- keycode 48)))
          ;;
          :else (prn keycode))
        nil)
@@ -572,7 +572,7 @@
                                      (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
                                      (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
                                      )}
-                 (str (last item))]
+                 (str (first item) ". " (last item))]
                 ))
             ]
            )

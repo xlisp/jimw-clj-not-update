@@ -493,7 +493,8 @@
                                      (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
                                      (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
                                      )}
-               (str (last item))]]
+               (str (first item) ". " (last item))
+               ]]
              ))
            
            ]
