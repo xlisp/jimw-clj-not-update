@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/zsh
 echo "Update code..."
 cd ~/jimw-clj && git pull origin master
 echo "Restart jimw-clj..."
