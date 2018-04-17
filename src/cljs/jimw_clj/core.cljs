@@ -497,7 +497,8 @@
                        (fn [data]
                          (swap-blog-list data)))
                       (set! (.-title js/document) @search-str)
-                      (record-event "search-blog-event" @search-str identity)))]
+                      (record-event "search-blog-event" @search-str identity)))
+        append-stri (r/atom "")]
     (fn []
       [:div
        [:div#adv-search.input-group.search-margin
@@ -512,6 +513,18 @@
           [:button {:type "button", :class "btn btn-primary"
                     :on-click search-fn}
            [:span {:class "glyphicon glyphicon-search", :aria-hidden "true"}]]]]]
+       ;;
+       [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
+        [:input {:id "google-input"
+                 :type "text"
+                 :on-change #(reset! google-q (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (record-event "search-google-event" @google-q identity)
+                                 nil)
+                 :name "q"}] 
+        [:input {:type "submit", :value "Google"
+                 :on-click #(record-event "search-google-event" @google-q identity)}]]
+       ;;
        [:div.viz-container
         [:div#adv-search.input-group.search-margin
          [:form {:target "_blank", :action "https://www.wolframalpha.com/input", :method "get"}
@@ -524,24 +537,21 @@
                                    13 (do (prn 111) (record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity))
                                    nil)
                    :name "i"}]
-          [:input {:type "submit", :value "WolframAlpha"}]]
-         (let [alpha-input (.getElementById js/document "wolfram-alpha-input")]
+          [:input {:type "submit", :value "WolframAlpha"
+                   :on-click #(record-event "search-wolfram-alpha-event" @wolfram-alpha-q identity)}]]
+         (let [alpha-input (.getElementById js/document "wolfram-alpha-input")
+               google-input (.getElementById js/document "google-input")]
            [:ul
             (for [item @search-wolframalpha-en]
-              [:li {:on-click #(set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))}
+              [:li {:on-click #(do (reset! append-stri (str (last item)))
+                                   (set! (.-value alpha-input) (str  (.-value alpha-input) " "  (str (last item))))
+                                   (set! (.-value google-input) (str  (.-value google-input) " "  (str (last item))))
+                                   )}
                (str (last item))]
               )]
            )
          ]]
-       [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
-        [:input {:type "text"
-                 :on-change #(reset! google-q (-> % .-target .-value))
-                 :on-key-down #(case (.-which %)
-                                 13 (record-event "search-google-event" @google-q identity)
-                                 nil)
-                 :name "q"}] 
-        [:input {:type "submit", :value "Google"}]]
-       [:p]
+       ;;[:p]
        [:form {:target "_blank", :action "https://github.com/search?utf8=✓", :method "get"} 
         [:input {:type "text"
                  :on-change #(reset! github-q (-> % .-target .-value))
@@ -549,7 +559,8 @@
                                  13 (record-event "search-github-event" @github-q identity)
                                  nil)
                  :name "q"}] 
-        [:input {:type "submit" :value "Github"}]]
+        [:input {:type "submit" :value "Github"
+                 :on-click #(record-event "search-github-event" @github-q identity)}]]
        [:h6 "pcm ip: " @pcm-ip ", "
         [:a {:id "download-api-token" :href (str "data:text/plain," @api-token) :download "api-token.txt" :target "_blank"} "token"]]
        [:input {:type "text"
