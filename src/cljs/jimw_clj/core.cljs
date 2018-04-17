@@ -443,6 +443,29 @@
                        (reset! is-end true))))
     nil))
 
+;; TODOS: Emacs 的键位设计用在CLJS身上
+(set!
+ js/window.onkeydown
+ (fn [e]
+   (let [keycode (.-keyCode e)
+         ;; 0~9 => 48~57
+         ctrlkey (.-ctrlKey e)
+         ;; true or false
+         metakey (.-metaKey e)]
+     ;; Ctrl的组合键
+     (if (and ctrlkey (not= keycode 17))
+       (cond
+         ;; 数字键
+         ((set (range 47 58)) keycode)
+         (prn (str "数字键" keycode))
+         ;;
+         :else (prn keycode))
+       nil)
+     ;; Meta的组合键TODO
+     )
+   )
+ )
+
 (defn nav-link [uri title page collapsed?]
   [:li.nav-item
    {:class (when (= page (session/get :page)) "active")}
