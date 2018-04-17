@@ -29,7 +29,9 @@
     [pdfboxing.split :as pdf]
     [pdfboxing.form :as form]
     [pdfboxing.split :as split]
-    [pdfboxing.info :as info])
+    [pdfboxing.info :as info]
+    [incanter.charts :as c]
+    [incanter.core :as i])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap

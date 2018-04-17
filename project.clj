@@ -59,7 +59,9 @@
                  [com.github.kenglxn.qrgen/javase "2.4.0"]
                  ;; 用出去incanter
                  [incanter/incanter-core "1.9.2"]
-                 [incanter/incanter-charts "1.9.2"]]
+                 [incanter/incanter-charts "1.9.2"]
+                 [incanter/incanter-io "1.9.2"]
+                 [incanter/incanter-svg "1.9.2"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
