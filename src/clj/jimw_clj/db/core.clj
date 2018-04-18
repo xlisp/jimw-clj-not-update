@@ -54,7 +54,10 @@
 (defn zh->en
   [stri]
   (let [factory (TranslatorFactory.)]
-    (.trans (.get factory "google") LANG/ZH LANG/EN stri)))
+    (let [res (.trans (.get factory "google") LANG/ZH LANG/EN stri)]
+      (if (re-matcher #"<HTML><HEAD>(.*)" res)
+        (.trans (.get factory "jinshan") LANG/ZH LANG/EN stri) ;;OK
+        res))))
 
 (defn en->zh
   [stri]
