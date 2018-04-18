@@ -587,6 +587,17 @@
                  :name "q"}] 
         [:input {:type "submit" :value "Github"
                  :on-click #(record-event "search-github-event" @github-q identity)}]]
+       [:p]
+       [:form {:target "_blank", :action "https://www.youtube.com/results", :method "get"}
+        [:input {:type "text"
+                 :on-change #(reset! github-q (-> % .-target .-value))
+                 :on-key-down #(case (.-which %)
+                                 13 (record-event "search-youtube-event" @youtube-q identity)
+                                 nil)
+                 :name "search_query"}]
+        [:input {:type "submit" :value "Youtube"
+                 :on-click #(record-event "search-youtube-event" @youtube-q identity)}]]
+       ;;
        [:h6 "pcm ip: " @pcm-ip ", "
         [:a {:id "download-api-token" :href (str "data:text/plain," @api-token) :download "api-token.txt" :target "_blank"} "token"]]
        [:input {:type "text"
