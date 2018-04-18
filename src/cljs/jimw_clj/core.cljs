@@ -509,6 +509,7 @@
   (let [search-str (r/atom "")
         google-q (r/atom "")
         github-q (r/atom "")
+        youtube-q (r/atom "")
         wolfram-alpha-q (r/atom "")
         pcm-ip-txt (r/atom "")
         search-fn (fn []
