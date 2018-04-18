@@ -591,7 +591,7 @@
        [:p]
        [:form {:target "_blank", :action "https://www.youtube.com/results", :method "get"}
         [:input {:type "text"
-                 :on-change #(reset! github-q (-> % .-target .-value))
+                 :on-change #(reset! youtube-q (-> % .-target .-value))
                  :on-key-down #(case (.-which %)
                                  13 (record-event "search-youtube-event" @youtube-q identity)
                                  nil)
