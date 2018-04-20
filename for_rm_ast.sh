@@ -4,13 +4,14 @@ erro=true
 
 while $erro;
 do
-    erro_info=`./read_pro.sh | grep Exception`
-    if [ ! $erro_info ]; then
-        erro=false
-    else
+    erro_info=`./read_pro.sh | grep -qi Exception && echo "Exception"`
+    if [ $erro_info == "Exception" ]; then
         erro=true
+    else
+        erro=false
     fi
+
     if $erro ; then
-        echo "/home/clojure/jimw-clj/`./for_rm_ast.sh | tail -n 2 | head -n 1 | awk -F' >>>>>>|"' '{print $2}'`" | xargs rm
+        echo "~/CljPro/jimw-clj/`./read_pro.sh | tail -n 2 | head -n 1 | awk -F' >>>>>>|"' '{print $2}'`" | xargs rm
     fi
 done
