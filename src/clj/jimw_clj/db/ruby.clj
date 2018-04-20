@@ -33,9 +33,10 @@
         (fn [file-name]
           (let [_ (prn (str file-name " >>>>>>"))
                 code-list
-                (try
-                  (read-string (remove-invalid-token (slurp file-name)))
-                  (catch Exception e ()))]
+                (read-string (remove-invalid-token (slurp file-name)))
+                #_(try
+                    (read-string (remove-invalid-token (slurp file-name)))
+                    (catch Exception e ()))]
             (op-fn code-list file-name)))]
     (for [file-name file-names]
       (split-code file-name))))
