@@ -134,8 +134,8 @@
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
 
-(defn todo-input [{:keys [content on-save on-stop items search-fn blog-id focus-bdsug-blog-id
-                          search-wolframalpha-en]}]
+(defn todo-input [{:keys [content on-save on-stop items search-fn blog-id
+                          focus-bdsug-blog-id search-wolframalpha-en editing]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -175,8 +175,12 @@
                                #_(if search-text
                                    (reset! search-text valu))
                                (reset! val valu)
-                               (search-map-zh2en valu
-                                                 (fn [data] (reset! search-wolframalpha-en data)))
+                               (if editing
+                                 nil
+                                 (search-map-zh2en
+                                  valu
+                                  (fn [data] (reset! search-wolframalpha-en data)))
+                                 )
                                ;;(record-event "search-todo" valu identity)
                                )
                              )
@@ -353,6 +357,7 @@
              :on-blur #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "none")}]]]
          (when @editing
            [todo-edit {:class "edit" :content content
+                       :editing @editing
                        :on-save
                        (fn [content]
                          (update-todo
