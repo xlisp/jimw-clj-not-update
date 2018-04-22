@@ -201,7 +201,7 @@
                                27 (stop)
                                nil)}])))
 
-(defn todo-input-par [{:keys [id content on-save on-stop on-blur]}]
+(defn todo-input-par [{:keys [id content on-save on-stop on-blur search-wolframalpha-en]}]
   (let [val (r/atom content)
         stop #(do (reset! val "")
                   (if on-stop (on-stop)))
@@ -212,7 +212,12 @@
       [:input.input-par {:type "text" :value @val
                          :id id :class class :placeholder placeholder
                          :on-blur #(if on-blur (do (save) (on-blur)) (save))
-                         :on-change #(reset! val (-> % .-target .-value))
+                         :on-change #(do
+                                       (reset! val (-> % .-target .-value))
+                                       (search-map-zh2en
+                                        @val
+                                        (fn [data] (reset! search-wolframalpha-en data)))
+                                       )
                          :on-key-down #(case (.-which %)
                                          13 (save)
                                          27 (stop)
@@ -253,10 +258,11 @@
 (declare search-match-fn)
 
 (def new-todo-par
-  (fn [sort_id blog-list blog-id on-blur search-text]
+  (fn [sort_id blog-list blog-id on-blur search-text search-wolframalpha-en]
     [todo-input-par
      {:id sort_id
       :type "text"
+      :search-wolframalpha-en search-wolframalpha-en
       :placeholder (str "Subneed to be done for " sort_id "?")
       :on-blur on-blur
       :on-save
@@ -294,7 +300,8 @@
 (defn todo-item []
   (let [editing (r/atom false)]
     (fn [{:keys [id done content sort_id parid file]} blog-list blog-id
-         todo-target todo-begin origins search-text]
+         todo-target todo-begin origins search-text
+         search-wolframalpha-en]
       (let [parid-val (r/atom "")
             _ (reset! parid-val parid)]
         [:li {:class (str (if done "completed ")
@@ -348,7 +355,19 @@
           [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
           [:div.input-label {:id (str "input-label-id-" id)}
            (new-todo-par sort_id blog-list blog-id
-                         #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none") search-text)]
+                         #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "none")
+                         search-text
+                         search-wolframalpha-en)
+           ;;
+           (for [item #_[[1 11] [2 22] [3 33]]
+                 @search-wolframalpha-en]
+             [:ul
+              [:li {:style {:font-size "1rem"}}
+               (str (first item) ". " (last item))
+               ]]
+             )
+           ;;
+           ]
           [:button.button-parid {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-parid-id-" id)))) ) "block")}]
           [:label.input-parid {:id (str "input-parid-id-" id)}
            [todo-parid-input
@@ -394,7 +413,8 @@
 (defn aaaa
   [items filt blog-list blog-id
    todo-target todo-begin origins search-text
-   done active]
+   done active
+   search-wolframalpha-en]
     (when (-> items count pos?)
       [:div
        [:section#main
@@ -431,7 +451,8 @@
                   ;;
                   )))]
            ^{:key (:id todo)} [todo-item todo blog-list blog-id
-                               todo-target todo-begin origins search-text])]]
+                               todo-target todo-begin origins search-text
+                               search-wolframalpha-en])]]
        [:footer#footer
         [todo-stats {:active active :done done :filt filt}]]]))
 
@@ -506,7 +527,8 @@
           ;;;;;;;;
           (aaaa (vals (get-in @blog-list [blog-id :todos])) filt blog-list blog-id
                 todo-target todo-begin origins search-text
-                done active)
+                done active
+                search-wolframalpha-en)
           ;;;;;;;
           ]
          #_[:footer#info
