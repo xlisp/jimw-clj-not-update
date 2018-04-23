@@ -27,7 +27,7 @@
           (shell/sh "find"
                     (if project
                       (str "lib/scheme-jimw-code/" (first project))
-                      "lib") "-name" "*.scm") :out
+                      "lib") "-name" "*.ss") :out
           (clojure.string/split #"\n")))
         split-code
         (fn [file-name]
