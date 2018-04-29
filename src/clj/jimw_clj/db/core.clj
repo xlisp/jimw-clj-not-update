@@ -205,8 +205,8 @@
     ;;(debug (str "SQL: " sql-returning))
     ;;为什么调试信息可以打印出来？in cider.如何运用代码语音搜索？
     ;; 充分利用截图来分析
-    (if (re-matcher #"(.*)贾维斯(.*)")
-      (debug (str "执行命令: " sql-returning )))
+    (if (re-matcher #"(.*)贾维斯(.*)" (str sql-returning))
+      (debug (str "执行命令: " sql-returning)))
     (first (jdbc/query conn sql-returning))))
 
 ;; (first-nav {:db conn :blog 4857})
