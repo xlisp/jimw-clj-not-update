@@ -1446,3 +1446,14 @@
                        (honeysql.types/array [eid]))})
            (h/where [:= :id blog]))))
 
+;; 创世的时候,假设只有10个单词,每个单词都有独特的编号
+;; A: where B: json_column R: json_column
+
+(def a-vec "where") ;; 头实体
+(def b-vec "json_column") ;; 尾实体: 含有json属性的字段才是符合要求的向量
+
+(def r-vec "select_condition") ;; 代码语义关系: 查询条件关系
+
+;;=> (= (+ a-vec r-vec) b-vec) 
+
+;; 已经有的图谱的样子: ["where" "select_condition" "json_a"] ["where" "select_condition" "json_b"] ... , json_a, json_b都有json的维度属性
