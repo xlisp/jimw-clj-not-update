@@ -123,8 +123,38 @@
   ;; [db blog eid]
   ;; [:keys :aaaa]
   ;; IllegalArgumentException Don't know how to create ISeq from: clojure.lang.Keyword  clojure.lang.RT.seqFrom (RT.java:542)
-
-  ;; (seq :aaa)
-  ;;=> IllegalArgumentException Don't know how to create ISeq from: clojure.lang.Keyword  clojure.lang.RT.seqFrom (RT.java:542)
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; TODO: 二叉树算法的多维向量
+  (clojure.walk/postwalk
+   #(if (coll? %)
+      (do
+        (prn %)
+        ;;(prn "=======")
+        (if (map? (type %))
+          nil
+          ""
+          )
+        )
+      %)
+   (read-string crf-code)
+   )
+  ;; =>
+  ;; [db blog eid]
+  ;; [:keys ""]
+  ;; {}
+  ;; [""]
+  ;; (h/update :blogs)
+  ;; [eid]
+  ;; (honeysql.types/array "")
+  ;; (sql/call :array_cat :search_events "")
+  ;; [:search_events ""]
+  ;; {}
+  ;; (h/sset "")
+  ;; [:= :id blog]
+  ;; (h/where "")
+  ;; (-> "" "" "")
+  ;; (jc1 db "")
+  ;; (defn add-search-event-for-blog "" "")
   
   )
