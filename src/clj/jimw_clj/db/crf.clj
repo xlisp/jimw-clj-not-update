@@ -77,6 +77,30 @@
   ;; defn
   ;; 
 
-
+  ;; TODO2: SQL字段的词性标注, Elisp或者instaparse写个SQL解析, 提取字段是什么类型的  
+  ;;;; (get-sql-table-hash nil nil) ;;=> ("id" "UUID" "personal" "UUID" "asset" "UUID" "order_in_set" "INT" "metadata" "JSONB" ...))
+  ;;(defun get-sql-table-hash (buffername op-lambda)
+  ;;  (let* ((stri (get-mark-content
+  ;;                (if (null buffername)
+  ;;                  (current-buffer)
+  ;;                  buffername)))
+  ;;         (hash (setq myHash (make-hash-table :test 'equal)))
+  ;;         (table-name
+  ;;          (replace-regexp-in-string
+  ;;           "_" "-"
+  ;;           (car (last (butlast (split-string (first (split-string stri "\n")) "\s+"))))))
+  ;;         (col-list-text (butlast (rest (split-string stri "\n"))))
+  ;;         (get-col-name (lambda (col-st)
+  ;;                               (let* ((split-str (rest (split-string col-st "\s+")))
+  ;;                                      (id-name (first split-str))
+  ;;                                      (type-name (first (rest split-str))))
+  ;;                                 (if (or (null id-name) (string-equal "UNIQUE" id-name)) nil
+  ;;                                     (puthash id-name type-name myHash)))))
+  ;;         (returns (butlast (cons table-name (-map get-col-name col-list-text)))))
+  ;;    (if (null op-lambda)
+  ;;      (list table-name hash)
+  ;;      (apply op-lambda (list table-name hash)))
+  ;;    ))
+  
 
   )
