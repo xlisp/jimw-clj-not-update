@@ -130,31 +130,39 @@
    #(if (coll? %)
       (do
         (prn %)
-        ;;(prn "=======")
-        (if (map? (type %))
-          nil
-          ""
-          )
-        )
+        "")
+      
       %)
    (read-string crf-code)
    )
-  ;; =>
-  ;; [db blog eid]
-  ;; [:keys ""]
-  ;; {}
-  ;; [""]
-  ;; (h/update :blogs)
-  ;; [eid]
-  ;; (honeysql.types/array "")
-  ;; (sql/call :array_cat :search_events "")
-  ;; [:search_events ""]
-  ;; {}
-  ;; (h/sset "")
-  ;; [:= :id blog]
-  ;; (h/where "")
-  ;; (-> "" "" "")
-  ;; (jc1 db "")
-  ;; (defn add-search-event-for-blog "" "")
+  ;;=> A. 从最下往上数, 除了{}, 没有了""是个最小点
+  ;;   B. 如果只是含有一个"",默认就是,上一个的id
+  ;;   C. 如果含有两个和以上"", 就会从第一组最后一个id开始数
+
+  ;; =====>> 向量分类: 参数组
+  ;; 1 [db blog eid]
+  ;; 2 [:keys ""]
+  ;; 3 {}
+  ;; 4 [""] ;;=> ["函数参数3"]
+
+  ;; =====>> 向量分类: update组
+  ;; 5 (h/update :blogs)
+
+  ;; =====>>> 向量分类: sset组
+  ;; 6 [eid]
+  ;; 7 (honeysql.types/array "")
+  ;; 8 (sql/call :array_cat :search_events "")
+  ;; 9 [:search_events ""]
+  ;; 10 {}
+  ;; 11 (h/sset "") ;;=> (h/sset "更新字段10")
+
+  ;; ======>>> 向量分类: where组
+  ;; 12 [:= :id blog]
+  ;; 13 (h/where "") ;;=> (h/where "查询字段12")
   
-  )
+  ;; ======>>> 向量分类: defn组
+  ;; 14 (-> "" "" "") ;;=> (-> "Update5" "Sset11" "Where13")
+  ;; 15 (jc1 db "") ;;=> (jc1 db "SQL14")
+  ;; 16 (defn add-search-event-for-blog "" "") ;;=> (defn add-search-event-for-blog "参数4" "Body15")
+
+)
