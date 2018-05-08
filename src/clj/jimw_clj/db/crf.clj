@@ -102,5 +102,29 @@
   ;;      (apply op-lambda (list table-name hash)))
   ;;    ))
   
+  (def aaa (atom "")) ;;=> #atom[[:keys :aaaa] 0x293b7aef]
+  ;; TODO: 将树形的代码打成向量, nil部分为尾实体
+  (clojure.walk/postwalk
+   #(if (coll? %)
+      (do
+        (prn %)
+        ;;(prn "=======")
+        (if (map? (type %))
+          nil
+          (do
+            (reset! aaa %)
+            :aaaa)
+          )
+        )
+      %)
+   (read-string crf-code)
+   )
+  ;; => 
+  ;; [db blog eid]
+  ;; [:keys :aaaa]
+  ;; IllegalArgumentException Don't know how to create ISeq from: clojure.lang.Keyword  clojure.lang.RT.seqFrom (RT.java:542)
 
+  ;; (seq :aaa)
+  ;;=> IllegalArgumentException Don't know how to create ISeq from: clojure.lang.Keyword  clojure.lang.RT.seqFrom (RT.java:542)
+  
   )
