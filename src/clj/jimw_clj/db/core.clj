@@ -31,7 +31,9 @@
     [pdfboxing.split :as split]
     [pdfboxing.info :as info]
     [incanter.charts :as c]
-    [incanter.core :as i])
+    [incanter.core :as i]
+    ;; 代码语义搜索
+    [jimw-clj.db.crf :as crf])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
