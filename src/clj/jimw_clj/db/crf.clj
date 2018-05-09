@@ -198,8 +198,6 @@
    (read-string crf-code-1)
    )
   ;;
-  (prn (clojure.data/diff @crf-code-atom  @crf-code-1-atom))
-
   ;; 三个元素: 
   (clojure.data/diff [1 2 3] [5 9 3 2 3 7])
   ;;=> [[1 2] [5 9 nil 2 3 7] [nil nil 3]]
@@ -216,5 +214,18 @@
   (clojure.data/diff [5 9 3 2 3 7] [5 9 3 8 3 7])
   ;;=> [[nil nil nil 2] [nil nil nil 8] [5 9 3 nil 3 7]]
   ;;   第一个元素的不同, 第二个元素的不同, 两个元素相同的地方
+
+  (prn (clojure.data/diff @crf-code-atom  @crf-code-1-atom))
+  ;; =>
+  [
+   ;; @crf-code-atom的不同
+   [nil nil nil nil nil nil nil nil nil nil nil [nil :id blog] [h/where] [-> "" "" ""] [jc1 db ""] [defn add-search-event-for-blog]]
+   ;; @crf-code-1-atom的不同
+   [[nil nil nil name] nil nil nil nil nil nil nil nil nil nil [nil :name name] [h/merge-where] [:= :id blog] [h/where ""] [-> "" nil nil ""] (jc1 db "") (defn add-search-event-for-blog "" "")]
+   ;; 两个元素相同的地方
+   [[db blog eid] [:keys ""] {} [""] (h/update :blogs) [eid] (honeysql.types/array "") (sql/call :array_cat :search_events "") [:search_events ""] {} (h/sset "") [:=] [nil ""] nil nil [nil nil "" ""]]
+   ]
+
+  ;;
   
 )
