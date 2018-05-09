@@ -19,6 +19,19 @@
                        (honeysql.types/array [eid]))})
            (h/where [:= :id blog]))))")
 
+;; TODO: 可以表达增量编辑的差别
+(def crf-code-1
+  "(defn add-search-event-for-blog
+  [{:keys [db blog eid name]}]
+  (jc1 db
+       (-> (h/update :blogs)
+           (h/sset
+            {:search_events
+             (sql/call :array_cat :search_events
+                       (honeysql.types/array [eid]))})
+           (h/merge-where [:= :name name])
+           (h/where [:= :id blog]))))")
+
 (comment
 
   (clojure.walk/postwalk
@@ -140,7 +153,7 @@
   ;;   C. 如果含有两个和以上"", 就会从第一组最后一个id开始数
 
   ;; =====>> 向量分类: 参数组
-  ;; 1 [db blog eid]
+  ;; 1 [db blog eid]      => crf-code-1: [db blog eid name]
   ;; 2 [:keys ""]
   ;; 3 {}
   ;; 4 [""] ;;=> ["函数参数3"]
@@ -156,13 +169,29 @@
   ;; 10 {}
   ;; 11 (h/sset "") ;;=> (h/sset "更新字段10")
 
+  ;; ===================>> crf-code-1:
+  ;; [:= :name name]
+  ;; (h/merge-where "")
+  
   ;; ======>>> 向量分类: where组
   ;; 12 [:= :id blog]
   ;; 13 (h/where "") ;;=> (h/where "查询字段12")
   
   ;; ======>>> 向量分类: defn组
-  ;; 14 (-> "" "" "") ;;=> (-> "Update5" "Sset11" "Where13")
+  ;; 14 (-> "" "" "") ;;=> (-> "Update5" "Sset11" "Where13") ;;=> crf-code-1:(-> "" "" "" "")
   ;; 15 (jc1 db "") ;;=> (jc1 db "SQL14")
   ;; 16 (defn add-search-event-for-blog "" "") ;;=> (defn add-search-event-for-blog "参数4" "Body15")
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; TODO: 两段代码的相似度计算,也就是字符串向量相等匹配的比例有多少
+  (clojure.walk/postwalk
+   #(if (coll? %)
+      (do
+        (prn %)
+        "")
+      
+      %)
+   (read-string crf-code-1)
+   )
+  ;;
 )
