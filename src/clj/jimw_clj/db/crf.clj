@@ -138,11 +138,13 @@
   ;; IllegalArgumentException Don't know how to create ISeq from: clojure.lang.Keyword  clojure.lang.RT.seqFrom (RT.java:542)
   
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (def crf-code-atom (atom []))
   ;; TODO: 二叉树算法的多维向量
   (clojure.walk/postwalk
    #(if (coll? %)
       (do
         (prn %)
+        (swap! crf-code-atom conj %)
         "")
       
       %)
@@ -183,15 +185,36 @@
   ;; 16 (defn add-search-event-for-blog "" "") ;;=> (defn add-search-event-for-blog "参数4" "Body15")
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;
+  (def crf-code-1-atom (atom []))
   ;; TODO: 两段代码的相似度计算,也就是字符串向量相等匹配的比例有多少
   (clojure.walk/postwalk
    #(if (coll? %)
       (do
         (prn %)
+        (swap! crf-code-1-atom conj %)
         "")
       
       %)
    (read-string crf-code-1)
    )
   ;;
+  (prn (clojure.data/diff @crf-code-atom  @crf-code-1-atom))
+
+  ;; 三个元素: 
+  (clojure.data/diff [1 2 3] [5 9 3 2 3 7])
+  ;;=> [[1 2] [5 9 nil 2 3 7] [nil nil 3]]
+
+  ;; 前者是后者的子集时: 第三个元素为nil
+  (clojure.data/diff [2 3] [5 9 3 2 3 7])
+  ;;=> [[2 3] [5 9 3 2 3 7] nil]
+
+  ;; 后者是前者的子集时: 第三个元素为nil
+  (clojure.data/diff [5 9 3 2 3 7] [2 3])
+  ;;=> [[5 9 3 2 3 7] [2 3] nil]
+
+  ;; @@@@ 后者的中间2,改成是8
+  (clojure.data/diff [5 9 3 2 3 7] [5 9 3 8 3 7])
+  ;;=> [[nil nil nil 2] [nil nil nil 8] [5 9 3 nil 3 7]]
+  ;;   第一个元素的不同, 第二个元素的不同, 两个元素相同的地方
+  
 )
