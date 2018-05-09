@@ -226,6 +226,14 @@
    [[db blog eid] [:keys ""] {} [""] (h/update :blogs) [eid] (honeysql.types/array "") (sql/call :array_cat :search_events "") [:search_events ""] {} (h/sset "") [:=] [nil ""] nil nil [nil nil "" ""]]
    ]
 
+  ;; =>
+  (prn (clojure.data/diff (map str @crf-code-atom)  (map str @crf-code-1-atom)))
+  ;;=>
+  [
+   ["[db blog eid]" nil nil nil nil nil nil nil nil nil nil "[:= :id blog]" "(h/where \"\")" "(-> \"\" \"\" \"\")" "(jc1 db \"\")" "(defn add-search-event-for-blog \"\" \"\")"]
+   ["[db blog eid name]" nil nil nil nil nil nil nil nil nil nil "[:= :name name]" "(h/merge-where \"\")" "[:= :id blog]" "(h/where \"\")" "(-> \"\" \"\" \"\" \"\")" "(jc1 db \"\")" "(defn add-search-event-for-blog \"\" \"\")"]
+   [nil "[:keys \"\"]" "{}" "[\"\"]" "(h/update :blogs)" "[eid]" "(honeysql.types/array \"\")" "(sql/call :array_cat :search_events \"\")" "[:search_events \"\"]" "{}" "(h/sset \"\")"]
+   ]  
   ;;
   
 )
