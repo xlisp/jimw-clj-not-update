@@ -70,7 +70,7 @@
 ;; 终止go-loop循环
 ;; (a/close! aaa) ;; => nil
 
-#_(lite/defstate pg-streaming-change
+(lite/defstate pg-streaming-change
   :start
   (let [start_stream (data-stream)
         stop-ch (a/promise-chan)]
