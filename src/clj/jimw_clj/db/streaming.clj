@@ -31,13 +31,30 @@
            (make-streaming-proc))
   :stop 111)
 
+(def semantic-search-import (atom false))
+;; function lrepl () {
+;;   echo "(in-ns 'jimw-clj.db.streaming)"
+;;   echo "(reset! semantic-search-import true)"
+;;   echo "(in-ns 'jimw-clj.db.core)"
+;;   echo "(read-string-for-pro (fn [code-list file-name] (map first code-list)) \"$1\")"
+;;   echo "(import-project-s-exp-to-blog @conn \"$1\")"
+;;   lein repl :connect 7001
+;;   echo "(in-ns 'jimw-clj.db.streaming)"
+;;   echo "(reset! semantic-search-import false)"
+;; }
+
 (def stream-source (a/chan 10))
 
+;; while `sleep 0.5` ; do ps aux | grep  pg_recvlogical ; done
 (defn data-stream []
   (a/thread
-    (with-open [rdr (io/reader (:out @proc))]
-      (doseq [item (json/parsed-seq rdr true)]
-        (>!! stream-source item)))))
+    (if @semantic-search-import
+      nil
+      (with-open [rdr (io/reader (:out @proc))]
+        (doseq [item (json/parsed-seq rdr true)]
+          (>!! stream-source item)))
+      )
+    ))
 
 ;; (data-stream) ;; => #object[clojure.core.async.impl.channels.ManyToManyChannel 0x6bca2a18 "clojure.core.async.impl.channels.ManyToManyChannel@6bca2a18"]
 
