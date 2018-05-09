@@ -436,7 +436,7 @@
                                               (clojure.string/split (:content res) #"\W")
                                               (remove #(= % ""))
                                               (clojure.string/join " ")) "\"))"))]
-                          (info (str "JSON:" res-json "========"))
+                          ;;(info (str "JSON:" res-json "========"))
                           (jc1 conn
                                (->  (h/update :blogs)
                                     (h/sset {:wctags (sql/call
@@ -445,9 +445,9 @@
                                                        (cjson/parse-string
                                                         res-json)) :jsonb)})
                                     (h/where [:= :id (:id res)])))))]
-    (async/go
-      (async/<! (async/timeout (* 2 1000)))
-      (update-wctags))    
+    #_(async/go
+        (async/<! (async/timeout (* 2 1000)))
+        (update-wctags))
     res))
 
 ;; (create-blog {:db @conn :name "测试" :content "aaaaabbbccc" :source_type "REVERSE_ENGINEERING"})
