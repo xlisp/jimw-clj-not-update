@@ -235,5 +235,61 @@
    [nil "[:keys \"\"]" "{}" "[\"\"]" "(h/update :blogs)" "[eid]" "(honeysql.types/array \"\")" "(sql/call :array_cat :search_events \"\")" "[:search_events \"\"]" "{}" "(h/sset \"\")"]
    ]  
   ;;
+
+  ;; 不考虑顺序的情况下,考虑集合的相似度
+  (prn (clojure.set/intersection
+        (set (map str @crf-code-atom))
+        (set (map str @crf-code-1-atom))))
+  ;;=>
+  #{"(honeysql.types/array \"\")" "(jc1 db \"\")" "(h/where \"\")" "(h/sset \"\")" "(defn add-search-event-for-blog \"\" \"\")" "[:= :id blog]" "[:search_events \"\"]" "[\"\"]" "(sql/call :array_cat :search_events \"\")" "[:keys \"\"]" "[eid]" "(h/update :blogs)" "{}"}
+
+  (prn (clojure.set/difference
+        (set (map str @crf-code-atom))
+        (set (map str @crf-code-1-atom))))
+  ;;=> #{"[db blog eid]" "(-> \"\" \"\" \"\")"}
+
+  
+  (for [a '(1 2 3 4 5) b '(3 2 7 8 10)
+        :when
+        (= a b)]
+    a) ;; => (2 3)
+  
+  (for [a (map str @crf-code-atom) b (map str @crf-code-1-atom)
+        :when
+        (= a b)]
+    a)
+
+  ;; https://stackoverflow.com/questions/23199295/how-to-diff-substract-two-lists-in-clojure
+  (defn diff [s1 s2]
+    (mapcat
+     (fn [[x n]] (repeat n x))
+     (apply merge-with - (map frequencies [s1 s2]))))
+  (def L1  [1 1 1 3 3 4 4 5 5 6])
+  (def L2  [1     3 3   4 5 ])
+  (diff L1 L2) ;;=> (1 1 4 5 6)
+
+  ;; 111111111111: 最小不同的地方在哪里OK
+  (diff (map str @crf-code-atom)  (map str @crf-code-1-atom))
+  ;; => ("[db blog eid]" "[db blog eid name]" "(-> \"\" \"\" \"\")" "[:= :name name]" "(-> \"\" \"\" \"\" \"\")" "(h/merge-where \"\")")
+
+
+  ;; 只能比较数组
+  (defn sdiff 
+    [[x & rx :as xs] [y & ry :as ys]]
+    (lazy-seq 
+     (cond
+       (empty? xs) nil
+       (empty? ys) xs
+       :else (case (compare x y)
+               -1 (cons x (sdiff rx ys))
+               0 (sdiff rx ry)
+               +1 (sdiff xs ry)))))
+  (def LL1 [1 1 1 3 3 4 4 5 5 6])
+  (def LL2 [1 3 3 4 5])
+  (sdiff LL1 LL2) ;; => (1 1 4 5 6)
+
+  ;;(sdiff (map str @crf-code-atom)  (map str @crf-code-1-atom))
+  ;; IllegalArgumentException No matching clause: 61  jimw-clj.db.crf/sdiff/fn--74887 (form-init4708390340965895619.clj:275)
+  
   
 )
