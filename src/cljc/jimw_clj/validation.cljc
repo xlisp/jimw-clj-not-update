@@ -1,2 +1,2 @@
 (ns jimw-clj.validation
-  (:require [struct.core :as st]))
+  #_(:require [struct.core :as st]))

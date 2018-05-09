@@ -2,7 +2,7 @@
   (:require
     [cheshire.core :refer [generate-string parse-string]]
     [clojure.java.jdbc :as jdbc]
-    [conman.core :as conman]
+    ;;[conman.core :as conman]
     [jimw-clj.config :refer [env]]
     [mount.core :refer [defstate]]
     [mount.lite :as lite]
@@ -30,8 +30,8 @@
     [pdfboxing.form :as form]
     [pdfboxing.split :as split]
     [pdfboxing.info :as info]
-    [incanter.charts :as c]
-    [incanter.core :as i]
+    ;;[incanter.charts :as c]
+    ;;[incanter.core :as i]
     ;; 代码语义搜索
     [jimw-clj.db.crf :as crf])
   (:import org.postgresql.util.PGobject

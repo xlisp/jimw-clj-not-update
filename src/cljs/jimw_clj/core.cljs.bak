@@ -6,9 +6,9 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
-            ;;[markdown.core :refer [md->html]]
-            ;;[jimw-clj.ajax :refer [load-interceptors!]]
-            ;;[ajax.core :refer [GET POST]]
+            [markdown.core :refer [md->html]]
+            [jimw-clj.ajax :refer [load-interceptors!]]
+            [ajax.core :refer [GET POST]]
             [cljs-http.client :as http]
             [cljsjs.marked]
             [cljsjs.highlight]
@@ -443,6 +443,34 @@
                        (reset! is-end true))))
     nil))
 
+;; function copyToClipboard(s) {
+;;     document.addEventListener('copy', function(e){
+;;         e.clipboardData.setData('text/plain', s);
+;;         e.preventDefault();
+;;     });
+;;     document.execCommand('copy');
+;;     alert("已复制内容");
+;; }
+;; 
+(def aaattt (atom {}))
+(defn ooioio [e] (reset! aaattt e))
+;; => => #object [cljs.core.Atom {:val #object[ClipboardEvent [object ClipboardEvent]]}]
+
+
+;;(set! (.setData (.-clipboardData @aaattt)) "dasdasdas")
+
+;;"text/plain" "aaa")
+
+(. js/document (addEventListener
+                "copy"
+                (fn [e]
+                  (reset! aaattt e)
+                  (prn 11)
+                  )))
+
+;; (.execCommand js/document "copy")
+
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown
@@ -509,7 +537,6 @@
   (let [search-str (r/atom "")
         google-q (r/atom "")
         github-q (r/atom "")
-        youtube-q (r/atom "")
         wolfram-alpha-q (r/atom "")
         pcm-ip-txt (r/atom "")
         search-fn (fn []
@@ -588,17 +615,6 @@
                  :name "q"}] 
         [:input {:type "submit" :value "Github"
                  :on-click #(record-event "search-github-event" @github-q identity)}]]
-       [:p]
-       [:form {:target "_blank", :action "https://www.youtube.com/results", :method "get"}
-        [:input {:type "text"
-                 :on-change #(reset! youtube-q (-> % .-target .-value))
-                 :on-key-down #(case (.-which %)
-                                 13 (record-event "search-youtube-event" @youtube-q identity)
-                                 nil)
-                 :name "search_query"}]
-        [:input {:type "submit" :value "Youtube"
-                 :on-click #(record-event "search-youtube-event" @youtube-q identity)}]]
-       ;;
        [:h6 "pcm ip: " @pcm-ip ", "
         [:a {:id "download-api-token" :href (str "data:text/plain," @api-token) :download "api-token.txt" :target "_blank"} "token"]]
        [:input {:type "text"
@@ -1005,7 +1021,7 @@
   (r/render [views/main-view] (.getElementById js/document "msg")))
 
 (defn init! []
-  ;;(load-interceptors!)
+  (load-interceptors!)
   (hook-browser-navigation!)
   (re-frame/dispatch-sync [:db/initialize])
   (re-frame/dispatch-sync [:sente/connect])
