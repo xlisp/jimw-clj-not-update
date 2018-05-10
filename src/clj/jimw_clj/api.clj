@@ -255,11 +255,18 @@
        {:db @db/conn :blog (Integer/parseInt blog) :eid (Long/parseLong eid)}
        )))
 
+;; TODO: 如何根据db/add-pcmip分析来自动输出API函数?
+(defn add-pcmip
+  [{{:keys [ipaddress]} :params}]
+  (ok (db/add-pcmip
+       {:db @db/conn} {:ipaddress ipaddress} {})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
   (POST "/qrcode-generate" [] (check-api-token generate-qrcode))
+  (POST "/add-pcmip" [] (check-api-token add-pcmip))
   (GET "/source-nams" [] (check-api-token get-all-source))
   (GET "/project-nams" [] (check-api-token get-all-project))
   (GET "/blogs" [] (check-api-token get-blogs))

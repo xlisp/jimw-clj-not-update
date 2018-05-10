@@ -1466,3 +1466,9 @@
 ;; 要想很好的演绎,就必须先很好的归纳成多维的向量
 ;; 根据已经有的代码来归纳它们的维度属性(如字段meta是json属性), 上下文属性等
 
+;; Elisp: (get-sql-table-cols nil 'add-table-jimw)
+(defn add-pcmip
+  [{:keys [db]} {:keys [ipaddress]} _]
+  (jc1 db (-> (h/insert-into :pcmip)
+              (h/values [{:ipaddress ipaddress
+                          :created_at (sql/call :now)}]))))
