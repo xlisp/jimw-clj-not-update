@@ -209,6 +209,8 @@
    (.parse js/JSON json)
    (js->clj :keywordize-keys true)))
 
+(declare pcm-ip)
+
 (re-frame/reg-event-db
  :msg/push-all
  (fn [db [_ {:keys [msgs]}]]
@@ -218,7 +220,9 @@
          {:keys [id blog parid content created_at updated_at done
                  sort_id wctags app_id file islast percent begin mend origin_content]}
          (zipmap (map keyword columnnames) columnvalues)]
-     (if (= table "todos")
+     (cond
+       ;; 1. todos表的Websocket的同步
+       (= table "todos")
        ;;(prn (str "------" content))
        (cond (= kind "insert")
              ;;
@@ -240,10 +244,16 @@
                   (str
                    (first (:keyvalues oldkeys)) "------delete" content))                 
                  #_(swap! blog-list update-in
-                        [blog :todos] #(dissoc % (first (:keyvalues oldkeys))))
+                          [blog :todos] #(dissoc % (first (:keyvalues oldkeys))))
                  )
              :else (prn "todos other operation"))
-       nil)
+
+       ;; 2. pcmip表的Websocket的同步
+       (= table "pcmip")
+       (reset! pcm-ip (second columnvalues))
+       ;; 3. 其他表的更新
+       :else (prn (str table " update"))
+       )
      )
    ;;
    #_(assoc db :msgs msgs)
