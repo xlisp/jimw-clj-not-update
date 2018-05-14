@@ -1547,14 +1547,15 @@
     (for [item res]
       (do
         (let [s-exp (read-string (:content item))]
-          (if (list? (read-string "[(fn [] 11)]") )
-        (try
-          (with-conn [c db]
-            (add-special-form {:db @conn} {:content "if"} {})
-            (catch SQLException ex (prn ex))))
-        
-        ;;(type (read-string (:content item)))
-        )      
+          (if (and (list? s-exp) (symbol? (first s-exp)))
+            (try
+              (with-conn [c db]
+                (add-special-form {:db @conn}
+                                  {:content (str (first s-exp))} {})
+                (catch SQLException ex (prn ex))))
+            nil)
+          )      
+        )
       )
     )
   )
