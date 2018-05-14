@@ -1518,3 +1518,43 @@
       )
     )
   )
+
+#_(try (add-special-form {:db @conn} {:content "if"} {})
+       (catch SQLException ex (prn ex)))
+(defn add-special-form
+  [{:keys [db]} {:keys [content]} _]
+  (jc1 db (-> (h/insert-into :special-form)
+              (h/values [{:content content
+                          :created_at (sql/call :now)}]))))
+
+(defn update-special-form
+  [{:keys [db]} {:keys [id content]} _]
+  (jc1 db (-> (h/update :special-form)
+              (h/sset (->> {:content content
+                            :updated_at (sql/call :now)}
+                           (filter
+                            #(not (nil? (last %))))
+                           (into {})))
+              (h/where [:= :id id]))))
+
+(defn import-project-special-form
+  [{:keys [db project]}]
+  (let [res (jconn @conn (-> (h/select :*)
+                             (h/from :s-exp-vector)
+                             (h/merge-where [:= :project "silkycare"])
+                             (h/limit 10)
+                             ))]
+    (for [item res]
+      (do
+        (let [s-exp (read-string (:content item))]
+          (if (list? (read-string "[(fn [] 11)]") )
+        (try
+          (with-conn [c db]
+            (add-special-form {:db @conn} {:content "if"} {})
+            (catch SQLException ex (prn ex))))
+        
+        ;;(type (read-string (:content item)))
+        )      
+      )
+    )
+  )
