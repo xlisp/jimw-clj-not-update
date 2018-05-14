@@ -1490,23 +1490,25 @@
                            (into {})))
               (h/where [:= :id id]))))
 
-(let [res (jconn @conn (-> (h/select :*)
-                           (h/from :blogs)
-                           (h/merge-where [:= :project "silkycare"])))
-      ;;item (last res)
-      ]
-  (for [item res]
-    (clojure.walk/postwalk
-     #(if (coll? %)
-        (do
-          (with-conn [c @conn]
-            (add-s-exp-vector {:db c} {:blog (:id item)
-                                       :content (str %)} {}))
-          (prn %))
-        %)
-     (read-string
-      (-> (:content item)
-          (str/replace "```clojure\n" "")
-          (str/replace "\n```" ""))))  
+;; (import-project-s-vector {:db @conn :project "cider"})
+(defn import-project-s-vector
+  [{:keys [db project]}]
+  (let [res (jconn db (-> (h/select :*)
+                          (h/from :blogs)
+                          (h/merge-where [:= :project project])))]
+    (for [item res]
+      (clojure.walk/postwalk
+       #(if (coll? %)
+          (do
+            (with-conn [c db]
+              (add-s-exp-vector {:db c} {:blog (:id item)
+                                         :content (str %)} {}))
+            (prn %))
+          %)
+       (read-string
+        (-> (:content item)
+            (str/replace "```clojure\n" "")
+            (str/replace "\n```" ""))))  
+      )
     )
   )
