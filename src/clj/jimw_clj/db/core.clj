@@ -1475,16 +1475,18 @@
                           :created_at (sql/call :now)}]))))
 
 (defn add-s-exp-vector
-  [{:keys [db]} {:keys [blog content]} _]
+  [{:keys [db]} {:keys [blog content project]} _]
   (jc1 db (-> (h/insert-into :s-exp-vector)
               (h/values [{:blog blog
+                          :project project
                           :content content}]))))
 
 (defn update-s-exp-vector
-  [{:keys [db]} {:keys [id blog content]} _]
+  [{:keys [db]} {:keys [id blog content project]} _]
   (jc1 db (-> (h/update :s-exp-vector)
               (h/sset (->> {:blog blog
                             :content content
+                            :project project
                             :updated_at (sql/call :now)}
                            (filter
                             #(not (nil? (last %))))
