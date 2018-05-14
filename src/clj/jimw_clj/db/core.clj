@@ -597,6 +597,7 @@
                 (fn [st]
                   (-> st
                       (str/replace #"::" "double-colon-")
+                      (str/replace #"\"\"" "\"jimw_empty_string\"")
                       (str/replace #"#js" "" #_"the-tag-js")
                       (str/replace #"#\?" "")
                       (str/replace #"#\"" "\"")
@@ -1502,8 +1503,11 @@
           (do
             (with-conn [c db]
               (add-s-exp-vector {:db c} {:blog (:id item)
-                                         :content (str %)} {}))
-            (prn %))
+                                         :content (str %)
+                                         :project project} {}))
+            (prn %)
+            ;;返回空字符串给seq
+            "")
           %)
        (read-string
         (-> (:content item)

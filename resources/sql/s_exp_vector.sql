@@ -4,5 +4,6 @@ CREATE TABLE s_exp_vector (
   blog BIGSERIAL NOT NULL REFERENCES blogs (id),
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()  
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  project TEXT NOT NULL
 );
