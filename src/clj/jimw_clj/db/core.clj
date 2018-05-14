@@ -1472,3 +1472,41 @@
   (jc1 db (-> (h/insert-into :pcmip)
               (h/values [{:ipaddress ipaddress
                           :created_at (sql/call :now)}]))))
+
+(defn add-s-exp-vector
+  [{:keys [db]} {:keys [blog content]} _]
+  (jc1 db (-> (h/insert-into :s-exp-vector)
+              (h/values [{:blog blog
+                          :content content}]))))
+
+(defn update-s-exp-vector
+  [{:keys [db]} {:keys [id blog content]} _]
+  (jc1 db (-> (h/update :s-exp-vector)
+              (h/sset (->> {:blog blog
+                            :content content
+                            :updated_at (sql/call :now)}
+                           (filter
+                            #(not (nil? (last %))))
+                           (into {})))
+              (h/where [:= :id id]))))
+
+(let [res (jconn @conn (-> (h/select :*)
+                           (h/from :blogs)
+                           (h/merge-where [:= :project "silkycare"])))
+      ;;item (last res)
+      ]
+  (for [item res]
+    (clojure.walk/postwalk
+     #(if (coll? %)
+        (do
+          (with-conn [c @conn]
+            (add-s-exp-vector {:db c} {:blog (:id item)
+                                       :content (str %)} {}))
+          (prn %))
+        %)
+     (read-string
+      (-> (:content item)
+          (str/replace "```clojure\n" "")
+          (str/replace "\n```" ""))))  
+    )
+  )
