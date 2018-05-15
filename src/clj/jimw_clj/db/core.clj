@@ -1537,25 +1537,19 @@
                            (into {})))
               (h/where [:= :id id]))))
 
+;; (import-project-special-form {:db @conn :project "cider"})
 (defn import-project-special-form
   [{:keys [db project]}]
-  (let [res (jconn @conn (-> (h/select :*)
-                             (h/from :s-exp-vector)
-                             (h/merge-where [:= :project "silkycare"])
-                             (h/limit 10)
-                             ))]
+  (let [res (jconn db (-> (h/select :*)
+                          (h/from :s-exp-vector)
+                          (h/merge-where [:= :project project])))]
     (for [item res]
       (do
         (let [s-exp (read-string (:content item))]
           (if (and (list? s-exp) (symbol? (first s-exp)))
             (try
               (with-conn [c db]
-                (add-special-form {:db @conn}
-                                  {:content (str (first s-exp))} {})
-                (catch SQLException ex (prn ex))))
-            nil)
-          )      
-        )
-      )
-    )
-  )
+                (add-special-form {:db c}
+                                  {:content (str (first s-exp))} {}))
+              (catch SQLException ex (prn ex)))
+            nil))))))
