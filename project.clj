@@ -59,11 +59,12 @@
                  [com.github.kenglxn.qrgen/javase "2.4.0"]
                  ;; 用出去incanter
                  ;;[steve-incanter "1.9.3-SNAPSHOT"]
-                 ;;[steve-incanter/incanter-core "1.9.3-SNAPSHOT"]
-                 ;;[steve-incanter/incanter-io "1.9.3-SNAPSHOT" :exclusions [org.clojure/clojure]]
-                 ;;[steve-incanter/incanter-charts "1.9.3-SNAPSHOT" :exclusions [org.clojure/clojure]]
-                 ;;[steve-incanter/incanter-svg "1.9.3-SNAPSHOT"]
-                 ]
+                 [steve-incanter/incanter-core "1.9.3-SNAPSHOT"]
+                 [steve-incanter/incanter-io "1.9.3-SNAPSHOT" :exclusions [org.clojure/clojure]]
+                 [steve-incanter/incanter-charts "1.9.3-SNAPSHOT" :exclusions [org.clojure/clojure]]
+                 [steve-incanter/incanter-svg "1.9.3-SNAPSHOT"]
+                 [tuddman/neocons "3.2.1-SNAPSHOT"]
+                 [rid3 "0.2.1"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
