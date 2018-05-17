@@ -1561,3 +1561,14 @@
                                   {:content (str (first s-exp))} {}))
               (catch SQLException ex (prn ex)))
             nil))))))
+
+;; (two-keyword-relationship {:neo4j-conn @neo4j-conn :kw1 "where" :kw2 "json_column" :rel-name "argument_relationship" :rel-zh "参数关系"})
+;; => #clojurewerkz.neocons.rest.records.Relationship{:id 2, :location-uri "http://localhost:7474/db/data/relationship/2", :start "http://localhost:7474/db/data/node/64", :end "http://localhost:7474/db/data/node/65", :type "argument_relationship", :data {:source "参数关系"}}
+(defn two-keyword-relationship
+  [{:keys [neo4j-conn kw1 kw2 rel-name rel-zh]}]
+  (let [keyword1 (nn/create neo4j-conn {:keyword kw1})
+        keyword2 (nn/create neo4j-conn {:keyword kw2})
+        rel   (nrl/create neo4j-conn keyword1 keyword2
+                          (keyword rel-name)
+                          {:source rel-zh})]
+    (nrl/get neo4j-conn (:id rel))))
