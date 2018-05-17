@@ -33,7 +33,10 @@
     ;;[incanter.charts :as c]
     ;;[incanter.core :as i]
     ;; 代码语义搜索
-    [jimw-clj.db.crf :as crf])
+    [jimw-clj.db.crf :as crf]
+    [clojurewerkz.neocons.rest :as nr]
+    [clojurewerkz.neocons.rest.nodes :as nn]
+    [clojurewerkz.neocons.rest.relationships :as nrl])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -103,6 +106,11 @@
       (def get-term-matrix-path (R/eval "paste(getwd(),'/src/R/getTermMatrix.R', sep='')"))
       ;; load getTermMatrix function
       (R/eval (str "source('" get-term-matrix-path "')"))))
+
+(lite/defstate neo4j-conn
+  :start
+  (nr/connect "http://neo4j:123456@localhost:7474/db/data/")
+  :stop 123)
 
 (lite/defstate conn
   :start
