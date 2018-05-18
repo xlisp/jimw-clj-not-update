@@ -1572,3 +1572,23 @@
                           (keyword rel-name)
                           {:source rel-zh})]
     (nrl/get neo4j-conn (:id rel))))
+
+(defn add-s-exp-history
+  [{:keys [db]} {:keys [in_put out_put buffer_name]} _]
+  (jc1 db (-> (h/insert-into :s-exp-history)
+              (h/values [{:in_put in_put
+                          :out_put out_put
+                          :buffer_name buffer_name
+                          :created_at (sql/call :now)}]))))
+
+(defn update-s-exp-history
+  [{:keys [db]} {:keys [in_put out_put buffer_name]} _]
+  (jc1 db (-> (h/update :s-exp-history)
+              (h/sset (->> {:in_put in_put
+                            :out_put out_put
+                            :buffer_name buffer_name
+                            :updated_at (sql/call :now)}
+                           (filter
+                            #(not (nil? (last %))))
+                           (into {})))
+              (h/where [:= :id id]))))
