@@ -6,4 +6,6 @@ cd ~/jimw-clj && cp ~/app.js ./target/cljsbuild/public/js/app.js
 cd ~/jimw-clj &&  pm2 stop jimw-clj
 sleep 2
 cd ~/jimw-clj && pm2 start processes.json
+sleep 5
+ps aux | grep recvlogical
 
