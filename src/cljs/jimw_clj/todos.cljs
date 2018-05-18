@@ -301,7 +301,8 @@
   (let [editing (r/atom false)]
     (fn [{:keys [id done content sort_id parid file]} blog-list blog-id
          todo-target todo-begin origins search-text
-         search-wolframalpha-en]
+         search-wolframalpha-en
+         list-editing]
       (let [parid-val (r/atom "")
             _ (reset! parid-val parid)]
         [:li {:class (str (if done "completed ")
@@ -347,11 +348,14 @@
                                    ))} sort_id "◔"]  content]
           [:button.destroy {:on-click
                             (fn []
-                              (delete-todo
-                               sort_id
-                               (fn [data]
-                                 (swap! blog-list update-in
-                                        [blog-id :todos] #(dissoc % id)))))}]
+                              (if @list-editing
+                                (delete-todo
+                                 sort_id
+                                 (fn [data]
+                                   (swap! blog-list update-in
+                                          [blog-id :todos] #(dissoc % id))))
+                                (js/alert "todos 只读模式")
+                                ))}]
           [:button.reply {:on-click #(set! (.-display (.-style (. js/document (getElementById (str "input-label-id-" id)))) ) "block")}]
           [:div.input-label {:id (str "input-label-id-" id)}
            (new-todo-par sort_id blog-list blog-id
@@ -414,7 +418,8 @@
   [items filt blog-list blog-id
    todo-target todo-begin origins search-text
    done active
-   search-wolframalpha-en]
+   search-wolframalpha-en
+   list-editing]
     (when (-> items count pos?)
       [:div
        [:section#main
@@ -452,7 +457,9 @@
                   )))]
            ^{:key (:id todo)} [todo-item todo blog-list blog-id
                                todo-target todo-begin origins search-text
-                               search-wolframalpha-en])]]
+                               search-wolframalpha-en
+                               list-editing
+                               ])]]
        [:footer#footer
         [todo-stats {:active active :done done :filt filt}]]]))
 
@@ -470,6 +477,7 @@
 
 (defn todo-app [blog-list blog-id search-wolframalpha-en focus-bdsug-blog-id]
   (let [filt (r/atom :all)
+        editing (r/atom false)
         search-text (r/atom "")
         ]
     (fn []
@@ -509,6 +517,13 @@
          #_[:br]
          [:section#todoapp
           [:header#header
+           [:button.btn.margin-download
+            {:on-click #(if @editing
+                          (reset! editing false)
+                          (reset! editing true))}
+            (if @editing
+              "Edit mode"
+              "Read mode")]
            (new-todo blog-list blog-id items parid-first-id search-fn focus-bdsug-blog-id
                      search-wolframalpha-en)]
           [:div {:class "bdsug" :id (str "bdsug-search-" blog-id)}
@@ -528,8 +543,10 @@
           (aaaa (vals (get-in @blog-list [blog-id :todos])) filt blog-list blog-id
                 todo-target todo-begin origins search-text
                 done active
-                search-wolframalpha-en)
+                search-wolframalpha-en
+                editing)
           ;;;;;;;
           ]
          #_[:footer#info
             [:p "Double-click to edit a todo"]]]))))
+
