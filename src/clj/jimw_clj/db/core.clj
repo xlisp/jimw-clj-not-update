@@ -107,7 +107,7 @@
       ;; load getTermMatrix function
       (R/eval (str "source('" get-term-matrix-path "')"))))
 
-(lite/defstate neo4j-conn
+#_(lite/defstate neo4j-conn
   :start
   (nr/connect "http://neo4j:123456@localhost:7474/db/data/")
   :stop 123)
