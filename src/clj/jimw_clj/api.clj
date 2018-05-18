@@ -261,8 +261,16 @@
   (ok (db/add-pcmip
        {:db @db/conn} {:ipaddress ipaddress} {})))
 
+(defn add-s-exp-history
+  [{{:keys [in_put out_put buffer_name]} :params}]
+  (ok (db/add-s-exp-history
+       {:db @db/conn} {:in_put in_put
+                       :out_put out_put
+                       :buffer_name buffer_name} {})))
+
 (defroutes api-routes
   (POST "/login" [] login)
+  (POST "/add-s-exp-history" [] add-s-exp-history)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
   (POST "/qrcode-generate" [] (check-api-token generate-qrcode))
