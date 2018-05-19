@@ -1592,3 +1592,26 @@
                             #(not (nil? (last %))))
                            (into {})))
               (h/where [:= :id id]))))
+
+(defn import-md-books []
+  (for [title (list "2016-12-02-Chapter2_linear_algebra.md"
+                    "2016-12-03-Chapter3_probability_and_information_theory.md"
+                    "2016-12-04-Chapter4_numerical_computation.md"
+                    "2016-12-05-Chapter5_machine_learning_basics.md"
+                    "2016-12-06-Chapter6_deep_feedforward_networks.md"
+                    "2016-12-07-Chapter7_regularization.md"
+                    "2016-12-08-Chapter8_optimization_for_training_deep_models.md"
+                    "2016-12-09-Chapter9_convolutional_networks.md"
+                    "2016-12-10-Chapter10_sequence_modeling_rnn.md"
+                    "2016-12-11-Chapter11_practical_methodology.md"
+                    "2016-12-12-Chapter12_applications.md"
+                    "2016-12-13-Chapter13_linear_factor_models.md"
+                    "2016-12-14-Chapter14_autoencoders.md"
+                    "2016-12-15-Chapter15_representation_learning.md"
+                    "2016-12-16-Chapter16_structured_probabilistic_modelling.md"
+                    "2016-12-17-Chapter17_monte_carlo_methods.md"
+                    "2016-12-18-Chapter18_confronting_the_partition_function.md"
+                    "2016-12-19-Chapter19_approximate_inference.md"
+                    "2016-12-20-Chapter20_deep_generative_models.md")]
+    (create-blog {:db @conn :name (str "深度学习~>" title)
+                  :content (slurp title) :source_type "WEB_ARTICLE"})))
