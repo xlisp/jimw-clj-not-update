@@ -1041,3 +1041,4 @@
 ;; (swap! @blog-list update-in [37581 :todos 228 :content] (fn [x] "0000" ))
 
 ;; (something/hello) ;; => "Hey there from example.something JavaScript"
+;; (something/getSelectionEndPosition) ;;  => #js {:x 246.125, :y 458}
