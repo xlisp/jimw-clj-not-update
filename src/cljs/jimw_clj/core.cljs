@@ -476,11 +476,16 @@
            (prn (str "数字键" key-num ", " content))
            (something/copyToClipboard content))
          (= 71 keycode)
-         (let [select-stri (.toString (.getSelection js/window))]
-           (prn (str "谷歌: " select-stri))
+         (let [_ (prn "11111111888888")
+               selector (.getSelection js/window)
+               _ (prn "2222222888888")
+               select-stri (.toString selector)]
+           ;;(js/alert (str "1111133344" select-stri))
+           (prn select-stri)
+           ;;(prn (str "谷歌: " select-stri))
            (reset! searchbar-mode false)
-           (set! (.-value (.getElementById js/document "google-input")) select-stri)
-           (record-event "search-google-event" select-stri identity)
+           (set! (.-value (.getElementById js/document "google-input")) (str select-stri))
+           (record-event "search-google-event" (str select-stri) identity)
            (.click (.getElementById js/document "google-input-button"))
            )
          ;;
