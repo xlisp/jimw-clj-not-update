@@ -454,6 +454,8 @@
                        (reset! is-end true))))
     nil))
 
+(declare record-event)
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown
@@ -476,6 +478,7 @@
          (let [select-stri (.toString (.getSelection js/window))]
            (prn (str "谷歌: " select-stri))
            (set! (.-value (.getElementById js/document "google-input")) select-stri)
+           (record-event "search-google-event" select-stri identity)
            (.click (.getElementById js/document "google-input-button"))
            )
          ;;
@@ -564,12 +567,16 @@
                  :type "text"
                  :on-change #(reset! google-q (-> % .-target .-value))
                  :on-key-down #(case (.-which %)
-                                 13 (record-event "search-google-event" @google-q identity)
+                                 13 (if (not-empty @google-q)
+                                      (record-event "search-google-event" @google-q identity)
+                                      nil)
                                  nil)
                  :name "q"}] 
         [:input {:type "submit", :value "Google"
                  :id "google-input-button"
-                 :on-click #(record-event "search-google-event" @google-q identity)}]]
+                 :on-click #(if (not-empty @google-q)
+                              (record-event "search-google-event" @google-q identity)
+                              nil)}]]
        ;;
        [:div.viz-container
         [:div#adv-search.input-group.search-margin
