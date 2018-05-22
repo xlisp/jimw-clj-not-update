@@ -1042,3 +1042,4 @@
 
 ;; (something/hello) ;; => "Hey there from example.something JavaScript"
 ;; (something/getSelectionEndPosition) ;;  => #js {:x 246.125, :y 458}
+;; (something/copyToClipboard "aaaaaa") <=> jimw_clj.something.copyToClipboard("aaaaaaadsadsa")
