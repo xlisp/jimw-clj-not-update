@@ -455,6 +455,7 @@
     nil))
 
 (declare record-event)
+(declare searchbar-mode)
 
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
@@ -477,6 +478,7 @@
          (= 71 keycode)
          (let [select-stri (.toString (.getSelection js/window))]
            (prn (str "谷歌: " select-stri))
+           (reset! searchbar-mode false)
            (set! (.-value (.getElementById js/document "google-input")) select-stri)
            (record-event "search-google-event" select-stri identity)
            (.click (.getElementById js/document "google-input-button"))
@@ -528,6 +530,8 @@
           (op-fn (:data body))
           (js/alert "Unauthorized !")))))
 
+(defonce searchbar-mode (atom true))
+  
 (defn searchbar []
   (let [search-str (r/atom "")
         google-q (r/atom "")
@@ -565,16 +569,19 @@
        [:form {:target "_blank", :action "http://www.google.com/search", :method "get"} 
         [:input {:id "google-input"
                  :type "text"
-                 :on-change #(reset! google-q (-> % .-target .-value))
+                 :on-change #(do
+                               (reset! searchbar-mode true)
+                               (reset! google-q (-> % .-target .-value)))
                  :on-key-down #(case (.-which %)
-                                 13 (if (not-empty @google-q)
+                                 13 (if (and (not-empty @google-q) @searchbar-mode)
                                       (record-event "search-google-event" @google-q identity)
                                       nil)
                                  nil)
+                 :on-blur #(reset! searchbar-mode false)
                  :name "q"}] 
         [:input {:type "submit", :value "Google"
                  :id "google-input-button"
-                 :on-click #(if (not-empty @google-q)
+                 #_:on-click #_(if (and (not-empty @google-q) @searchbar-mode)
                               (record-event "search-google-event" @google-q identity)
                               nil)}]]
        ;;
