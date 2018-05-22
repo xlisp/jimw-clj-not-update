@@ -468,7 +468,10 @@
        (cond
          ;; 数字键
          ((set (range 47 58)) keycode)
-         (prn (str "数字键" (- keycode 48)))
+         (let [key-num (- keycode 48)
+               content (get @search-wolframalpha-en (keyword (str key-num)))]
+           (prn (str "数字键" key-num ", " content))
+           (something/copyToClipboard content))
          ;;
          :else (prn keycode))
        nil)
