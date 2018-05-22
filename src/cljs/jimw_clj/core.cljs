@@ -198,7 +198,8 @@
             [jimw-clj.events :as msg-events]
             [jimw-clj.subs :as subs]
             [jimw-clj.views :as views]
-            [re-frame.core :as re-frame])
+            [re-frame.core :as re-frame]
+            [jimw-clj.something :as something])
   (:import goog.History))
 
 (declare blog-list)
@@ -1038,3 +1039,5 @@
        )
 
 ;; (swap! @blog-list update-in [37581 :todos 228 :content] (fn [x] "0000" ))
+
+;; (something/hello) ;; => "Hey there from example.something JavaScript"
