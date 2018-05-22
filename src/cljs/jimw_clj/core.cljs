@@ -472,6 +472,12 @@
                content (get @search-wolframalpha-en (keyword (str key-num)))]
            (prn (str "数字键" key-num ", " content))
            (something/copyToClipboard content))
+         (= 71 keycode)
+         (let [select-stri (.toString (.getSelection js/window))]
+           (prn (str "谷歌: " select-stri))
+           (set! (.-value (.getElementById js/document "google-input")) select-stri)
+           (.click (.getElementById js/document "google-input-button"))
+           )
          ;;
          :else (prn keycode))
        nil)
@@ -562,6 +568,7 @@
                                  nil)
                  :name "q"}] 
         [:input {:type "submit", :value "Google"
+                 :id "google-input-button"
                  :on-click #(record-event "search-google-event" @google-q identity)}]]
        ;;
        [:div.viz-container
