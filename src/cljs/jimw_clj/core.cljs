@@ -827,7 +827,7 @@
 
 (defn md-render [id name content]
   (let [editing (r/atom false)]
-    [:div.container
+    [:div.container {:id (str "current-blog-id-" id)}
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
