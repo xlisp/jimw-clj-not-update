@@ -3,11 +3,11 @@ CREATE TABLE events (
   event_name TEXT NOT NULL,
   info TEXT,
   event_data TEXT,
-  blog BIGSERIAL, -- REFERENCES blogs (id), -- 支持C-g搜索博客上的选中内容
+  blog BIGINT REFERENCES blogs (id), -- 支持C-g搜索博客上的选中内容
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ALTER TABLE events ADD COLUMN blog BIGSERIAL; --- REFERENCES blogs (id);
+-- ALTER TABLE events ADD COLUMN blog BIGINT REFERENCES blogs (id);
 
 CREATE SEQUENCE events_new_id_seq
     START WITH 1

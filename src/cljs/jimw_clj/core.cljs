@@ -497,7 +497,9 @@
                select-stri (.toString selector)]
            (reset! searchbar-mode false)
            (set! (.-value (.getElementById js/document "google-input")) (str select-stri))
-           (record-event "search-google-event" (str select-stri) identity)
+           (record-event "search-google-event" (str select-stri) identity
+                         (clojure.string/replace (get-selector-current-blog-id selector)
+                                                 "current-blog-id-" ""))
            (.click (.getElementById js/document "google-input-button"))
            )
          ;;

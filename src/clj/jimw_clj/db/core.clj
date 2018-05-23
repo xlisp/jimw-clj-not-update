@@ -678,6 +678,8 @@
           code-list)))
      (if project (first project) nil))))
 
+;; (insert-event {:db @conn :event_name "test" :info "dasdas" :event_data "32132"})
+;; (insert-event {:db @conn :event_name "test" :info "dasdas" :event_data "32132" :blog 60142})
 (defn insert-event [{:keys [db event_name info event_data blog]}]
   (jc1 db
        (-> (h/insert-into :events)
