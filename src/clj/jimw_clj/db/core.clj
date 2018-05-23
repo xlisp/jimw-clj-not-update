@@ -429,10 +429,14 @@
               (h/where [:= :id id]))))
 
 ;; (update-blog {:db conn :id 5000 :name nil :content "dasdsdas"})
-(defn update-blog [{:keys [db id name content]}]
+(defn update-blog [{:keys [db id name content source_type project]}]
   (let [res (jc1 db (->  (h/update :blogs)
                          (h/sset (->> {:name    (when (seq name) name)
                                        :content (when (seq content) content)
+                                       :source_type (when (seq source_type)
+                                                      (honeysql.core/call :cast source_type :SOURCE_TYPE))
+                                       :project (when (seq project)
+                                                  project)
                                        :updated_at (honeysql.core/call :now)}
                                       (remove (fn [x]  (nil? (last x))))
                                       (into {})))
@@ -1618,3 +1622,11 @@
                     "2016-12-20-Chapter20_deep_generative_models.md")]
     (create-blog {:db @conn :name (str "深度学习~>" title)
                   :content (slurp title) :source_type "WEB_ARTICLE"})))
+
+(defn for-update-blog-source
+  [db]
+  (doseq [blog (jconn db (-> (h/select :*) (h/from :blogs)
+                             (h/where [:like :name "%matlab-jimw-code%"])
+                             (h/merge-where [:= :source_type (honeysql.core/call :cast  "BLOG" :SOURCE_TYPE)])))]
+    (with-conn [c db]
+      (update-blog {:db c :id (:id blog) :source_type "SEMANTIC_SEARCH" :project "PRMLT_MATLAB"}))))
