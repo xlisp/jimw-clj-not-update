@@ -465,6 +465,15 @@
 (declare record-event)
 (declare searchbar-mode)
 
+;; (get-selector-current-blog-id (.getSelection js/window)) ;; => "current-blog-id-61016"
+(defn get-selector-current-blog-id [selector]
+  (let [bp-ele (-> selector .-baseNode .-parentElement)]
+    ((fn [n]
+       (loop [cnt n]
+         (if (re-matches #"current-blog-id-(\d+)" (.-id cnt))
+           (.-id cnt)
+           (recur (.-parentElement cnt))))) bp-ele)))
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown

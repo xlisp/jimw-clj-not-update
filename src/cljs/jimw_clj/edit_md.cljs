@@ -39,7 +39,7 @@
           "Save Blog"
           "Edit Blog")]
        [:p]
-       [:div.view
+       [:div.view {:id (str "current-blog-id-" id)}
         [:div {;;:on-double-click
                #_(do (reset! editing true)
                      (js/setTimeout (fn []
