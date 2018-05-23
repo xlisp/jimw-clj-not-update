@@ -502,6 +502,11 @@
                                                  "current-blog-id-" ""))
            (.click (.getElementById js/document "google-input-button"))
            )
+         ;; TODO: 代码语义搜索的search记录
+         ;; 1. 新开一个页面,然后搜索: 可以直接从url里面传入搜索词和project和source_type
+         ;; 2. 可以一个页面控制多个页面: 通过中间的Websocket和pg streaming来实现
+         (= 83 keycode)
+         (prn 1111111)
          ;;
          :else (prn keycode))
        nil)

@@ -398,13 +398,21 @@
                   :origin_content :origin_content}))
       (h/from :todos)))
 
+(def events-subquery
+  (-> (h/select
+       [(honeysql.core/raw "array_agg(\"event_data\" ORDER BY id ASC)") :event_data])
+      (h/from :events)))
+
 ;; (search-blogs {:db conn :q "肌肉记忆"})
 (defn search-blogs [{:keys [db limit offset q source project]}]
   (jconn db
          (-> (h/select :id :name :content :created_at :updated_at
                        [(-> todos-subquery
                             (h/where [:= :blogs.id :todos.blog]))
-                        :todos])
+                        :todos]
+                       [(-> events-subquery
+                            (h/where [:= :blogs.id :events.blog]))
+                        :stags])
              (h/from :blogs)
              (h/limit limit)
              (h/offset offset)
@@ -419,8 +427,7 @@
                                             q-list)))))
              (h/merge-where (when (seq project)
                               [:= :project project]))
-             (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)])
-             )))
+             (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)]))))
 
 (defn get-blog-wctags [{:keys [db id]}]
   (jconn1 db
