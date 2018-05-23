@@ -436,6 +436,7 @@
             (do
               (swap! blog-list assoc (:id li)
                      {:id (:id li) :name (:name li) :content (:content li)
+                      :stags (:stags li)
                       :todos (into
                               (sorted-map-by >)
                               (map (fn [x] (vector (:id x)
@@ -830,11 +831,12 @@
                            (take show-count (:data body)))))
           (js/alert "Unauthorized !")))))
 
-(defn md-render [id name content]
+(defn md-render [id name content stags]
   (let [editing (r/atom false)]
     [:div.container {:id (str "current-blog-id-" id)}
      [:div.row>div.col-sm-12
       [edit/blog-name-item {:id id :name name :save-fn blog-name-save}]
+      [:p (str "搜索标签: " (clojure.string/join " | " stags))]
       [edit-md/blog-content-item {:id id :name content :save-fn blog-content-save}]
       [todos/todo-app blog-list id search-wolframalpha-en focus-bdsug-blog-id]
       [:div
@@ -909,10 +911,9 @@
         (md-render
          (:id (last blog))
          (:name (last blog))
-         (:content (last blog)))])
+         (:content (last blog))
+         (:stags (last blog)))])
      [:h3.please-login "please login"])])
-
-
 
 (defn word-cloud-did-mount [this]
   (get-blog-wctags
