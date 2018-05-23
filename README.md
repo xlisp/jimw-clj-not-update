@@ -1,4 +1,4 @@
-# jimw-clj: 结合机器学习做的带todos的博客, 用机器学习来机器学习 => `元学习`
+# jimw-clj: 基于机器学习的博客, 用机器学习来打败机器学习 => 元学习
 * Power by Clojure/ClojureScript, Reagent
 * 操作演示,就像聊天一样生成Lisp树
 ![](./demo.gif)
