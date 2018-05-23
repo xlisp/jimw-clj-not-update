@@ -524,14 +524,17 @@
                         :else
                         (reset! collapsed? true)))} title]])
 
+;; TODO: record-event改成通用的keys参数编写规范
 (defn record-event
-  [event_name event_data op-fn]
+  [event_name event_data op-fn & blog-id]
   (go (let [response
             (<!
              (http/post (api-root "/record-event")
                         {:headers {"jimw-clj-token" @api-token}
                          :json-params
-                         {:event_name event_name :event_data event_data}}))]
+                         (if blog-id
+                           {:event_name event_name :event_data event_data :blog (first blog-id)}
+                           {:event_name event_name :event_data event_data})}))]
         (let [data (:body response)]
           (op-fn data)))))
 

@@ -678,11 +678,12 @@
           code-list)))
      (if project (first project) nil))))
 
-(defn insert-event [{:keys [db event_name info event_data]}]
+(defn insert-event [{:keys [db event_name info event_data blog]}]
   (jc1 db
        (-> (h/insert-into :events)
            (h/values [{:event_name event_name
                        :info       (when (seq info) info)
+                       :blog       (if blog blog nil)
                        :event_data (when (seq event_data) event_data)}]))))
 
 (defn update-todo-sort

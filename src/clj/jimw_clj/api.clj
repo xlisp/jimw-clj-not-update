@@ -164,10 +164,11 @@
          :blog (Integer/parseInt blog)})}))
 
 (defn record-event
-  [{{:keys [event_name info event_data]} :params}]
+  [{{:keys [event_name info event_data blog]} :params}]
   (ok (db/insert-event {:db @db/conn
                         :event_name event_name
                         :info       info
+                        :blog       (if blog (Integer/parseInt blog) nil)
                         :event_data event_data})))
 
 (defn update-todo-sort
