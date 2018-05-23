@@ -287,6 +287,14 @@
 
 (defonce page-offset (r/atom 0))
 (defonce blog-list (r/atom (sorted-map-by >)))
+
+(defn get-todo-root-id [blog-id]
+  (-> (filter #(= (:parid (last %)) 1)
+              (:todos (@blog-list blog-id)))
+      first
+      last
+      :sort_id))
+
 (def api-token (local-storage (r/atom "") :api-token))
 (def pcm-ip (local-storage (r/atom "0.0.0.0") :pcm-ip))
 
@@ -862,6 +870,9 @@
                          (.appendChild qrcode-div img-ele)
                          )))
          } "QRCode"]
+       [:button.btn.margin-download
+        {:on-click #(something/copyToClipboard (str "{\"todo-root-id\":" (get-todo-root-id id) ",\"blog-id\":" id "}"))}
+        "CpQRurl"]
        ]
       [:br]
       [:div.gvoutput {:id (str "gv-output-" id)}]
