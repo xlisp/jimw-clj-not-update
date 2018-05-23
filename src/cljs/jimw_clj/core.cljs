@@ -871,7 +871,9 @@
                          )))
          } "QRCode"]
        [:button.btn.margin-download
-        {:on-click #(something/copyToClipboard (str "{\"todo-root-id\":" (get-todo-root-id id) ",\"blog-id\":" id "}"))}
+        {:on-click #(do
+                      (something/copyToClipboard (str "{\"todo-root-id\":" (get-todo-root-id id) ",\"blog-id\":" id "}"))
+                      (js/alert "已复制二维码信息"))}
         "CpQRurl"]
        ]
       [:br]
