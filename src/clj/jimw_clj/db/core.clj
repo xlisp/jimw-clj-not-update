@@ -36,7 +36,9 @@
     [jimw-clj.db.crf :as crf]
     [clojurewerkz.neocons.rest :as nr]
     [clojurewerkz.neocons.rest.nodes :as nn]
-    [clojurewerkz.neocons.rest.relationships :as nrl])
+    [clojurewerkz.neocons.rest.relationships :as nrl]
+    [hickory.core :as hickory]
+    [hickory.select :as hs])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -1637,3 +1639,14 @@
                              (h/merge-where [:= :source_type (honeysql.core/call :cast  "BLOG" :SOURCE_TYPE)])))]
     (with-conn [c db]
       (update-blog {:db c :id (:id blog) :source_type "SEMANTIC_SEARCH" :project "PRMLT_MATLAB"}))))
+
+;; (parse-google-pdf-translate-html "test.htm")
+(defn parse-google-pdf-translate-html
+  [file]
+  (->
+   (hs/select
+    (hs/class "notranslate")
+    (->
+     (slurp file)
+     hickory/parse
+     hickory/as-hickory))))

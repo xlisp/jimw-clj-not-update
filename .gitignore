@@ -22,3 +22,5 @@ data/model/segment/CRFSegmentModel.txt.bin
 *.pdf
 *.txt
 resources/public/qrcode/*.png
+test.htm
+

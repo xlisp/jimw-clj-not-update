@@ -64,7 +64,8 @@
                  [steve-incanter/incanter-charts "1.9.3-SNAPSHOT" :exclusions [org.clojure/clojure]]
                  [steve-incanter/incanter-svg "1.9.3-SNAPSHOT"]
                  [tuddman/neocons "3.2.1-SNAPSHOT"]
-                 [rid3 "0.2.1"]]
+                 [rid3 "0.2.1"]
+                 [hickory "0.7.1"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
