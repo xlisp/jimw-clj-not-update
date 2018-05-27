@@ -1117,3 +1117,28 @@
         html "text/html")
        .-body
        .-firstElementChild)))
+
+;;(cljs.reader/read-string "(+ 1 2)")
+#_(prn
+ (cljs.reader/read-string
+  (str
+   "("
+   (clojure.string/replace
+    (.-textContent (last (array-seq (.-children  (. js/document (getElementById "file-file"))))))
+    #"Copy lines\n|Copy permalink\n|View git blame\n|Open new issue\n" "")
+   ")")
+  ))
+
+;; class
+#_(prn
+ (cljs.reader/read-string
+  (str
+   "("
+   (clojure.string/replace
+    (.-textContent (last (array-seq (.-children
+                                     (last (array-seq
+                                            (. js/document (getElementsByClassName "file"))))
+                                     ))))
+    #"Copy lines\n|Copy permalink\n|View git blame\n|Open new issue\n" "")
+   ")")
+  ))
