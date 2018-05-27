@@ -1100,3 +1100,20 @@
 ;; (something/hello) ;; => "Hey there from example.something JavaScript"
 ;; (something/getSelectionEndPosition) ;;  => #js {:x 246.125, :y 458}
 ;; (something/copyToClipboard "aaaaaa") <=> jimw_clj.something.copyToClipboard("aaaaaaadsadsa")
+
+(def google-input-html
+  "<form target=\"_blank\" action=\"http://www.google.com/search\" method=\"get\"><input type=\"text\" id=\"google-input\" name=\"q\"><input type=\"submit\" value=\"Google\" id=\"google-input-button\"></form>")
+
+;; 给任意网页body后面加一个google搜索:
+;; Chrome测试: b=new DOMParser().parseFromString("<form target=\"_blank\" action=\"http://www.google.com/search\" method=\"get\"><input type=\"text\" id=\"google-input\" name=\"q\"><input type=\"submit\" value=\"Google\" id=\"google-input-button\"></form>", 'text/html').body
+;; document.body.appendChild(b.firstElementChild)
+;; (body-append-html-stri google-input-html)
+(defn body-append-html-stri [html]
+  (.appendChild
+   (.-body
+    js/document)
+   (-> (js/DOMParser.)
+       (.parseFromString     
+        html "text/html")
+       .-body
+       .-firstElementChild)))
