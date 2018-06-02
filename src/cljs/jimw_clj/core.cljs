@@ -1142,3 +1142,27 @@
     #"Copy lines\n|Copy permalink\n|View git blame\n|Open new issue\n" "")
    ")")
   ))
+
+(comment
+  
+  (let [selector (.getSelection js/window)
+        select-stri (.toString selector)
+        origin-text (.-textContent (.-baseNode selector))
+        origin-nodename (.-nodeName (.-parentElement (.-baseNode selector)))
+        ;; window.getSelection().baseNode.parentElement.outerHTML => "<p>研究方向为自然语言问答
+        ;; TODO: 直接暴力replaceHTML替换就好了: 或者是hiccup的递归遍历树然后一次变化结束(支持极其复杂的结构,并且不会重复替换出错)
+        origin-html (.-outerHTML (.-parentElement (.-baseNode selector)))
+        ]
+    ;;select-stri
+    ;;(.-nodeName selector)
+    
+    ;;(.-parentElement (.-baseNode selector)))
+    
+    )
+  
+  (defn hello [name]
+    [:p (str "Hello " name "!")])
+  (hello "Klipse") ;;=> [:p "Hello Klipse!"]
+  [hello "Klipse"]
+  ;;=> [#object[jimw_clj$core$hello "function jimw_clj$core$hello(name){ return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"p","p",151049309),[cljs.core.str.cljs$core$IFn$_invoke$arity$1("Hello "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(name),cljs.core.str.cljs$core$IFn$_invoke$arity$1("!")].join('')], null); }"] "Klipse"]
+  )
