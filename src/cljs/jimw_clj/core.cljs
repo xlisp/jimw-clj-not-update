@@ -489,9 +489,17 @@
           (clojure.string/split stri "=")))
        (into {})))))
 
-(when (.-body js/document)  
-  (js/alert (.-search js/location))
-  )
+;; 找不到prn
+#_(when (.-body js/document)  
+    (js/alert (.-search js/location))
+    )
+
+(set!
+ (.-onload js/window)
+ (fn []
+   (prn (str "=======" (.-search js/location)))
+   )
+ )
 
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
@@ -1184,3 +1192,8 @@
   [hello "Klipse"]
   ;;=> [#object[jimw_clj$core$hello "function jimw_clj$core$hello(name){ return new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"p","p",151049309),[cljs.core.str.cljs$core$IFn$_invoke$arity$1("Hello "),cljs.core.str.cljs$core$IFn$_invoke$arity$1(name),cljs.core.str.cljs$core$IFn$_invoke$arity$1("!")].join('')], null); }"] "Klipse"]
   )
+
+;; 无效
+#_(when (.getElementById js/document "google-input")
+    (prn (.-search js/location))
+    )
