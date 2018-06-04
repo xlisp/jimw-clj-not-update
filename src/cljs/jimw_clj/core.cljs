@@ -494,10 +494,22 @@
     (js/alert (.-search js/location))
     )
 
+(declare get-selector-current-blog-id)
+
 (set!
  (.-onload js/window)
  (fn []
    (prn (str "=======" (.-search js/location)))
+   (if (re-matches #"\?google=(.*)" (str (.-search js/location)))
+     (let [q-hash (get-url-params)
+           stri (js/decodeURI (get q-hash "google"))]
+       (reset! searchbar-mode false)
+       (set! (.-value (.getElementById js/document "google-input")) stri)
+       (record-event "search-google-event" stri identity)
+       (.click (.getElementById js/document "google-input-button"))
+       )
+     nil)
+   ;;
    )
  )
 
