@@ -475,6 +475,27 @@
            (.-id cnt)
            (recur (.-parentElement cnt))))) bp-ele)))
 
+
+
+(defn get-url-params []
+  (let [stri (str (.-search js/location))]
+    (if (empty? stri)
+      {}
+      (->>
+       (->
+        stri
+        (clojure.string/replace-first "?" "")
+        (clojure.string/split #"&"))
+       (map
+        (fn [stri]
+          (clojure.string/split stri "=")))
+       (into {})))))
+
+(when (.-body js/document)  
+  (prn  (str "========" (.-search js/location)))
+  
+  )
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown
