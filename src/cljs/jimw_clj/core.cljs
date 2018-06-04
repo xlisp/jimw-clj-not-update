@@ -503,10 +503,11 @@
    (if (re-matches #"\?google=(.*)" (str (.-search js/location)))
      (let [q-hash (get-url-params)
            stri (js/decodeURI (get q-hash "google"))]
-       (reset! searchbar-mode false)
-       (set! (.-value (.getElementById js/document "google-input")) stri)
+       ;;(reset! searchbar-mode false)
+       ;;(set! (.-value (.getElementById js/document "google-input")) stri) ;; 这一行设置无效!
        (record-event "search-google-event" stri identity)
-       (.click (.getElementById js/document "google-input-button"))
+       ;;(.click (.getElementById js/document "google-input-button"))
+       (.open js/window (str "https://www.google.com/search?q=" stri))
        )
      nil)
    ;;
