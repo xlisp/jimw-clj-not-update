@@ -109,10 +109,12 @@
       ;; load getTermMatrix function
       (R/eval (str "source('" get-term-matrix-path "')"))))
 
-#_(lite/defstate neo4j-conn
-  :start
-  (nr/connect "http://neo4j:123456@localhost:7474/db/data/")
-  :stop 123)
+(if (= (get (System/getenv) (name :OS_TYPE)) (name :MACOX))
+  (lite/defstate neo4j-conn
+    :start
+    (nr/connect "http://neo4j:123456@localhost:7474/db/data/"))
+  (lite/defstate neo4j-conn
+    :start "todo: install neo4j in production"))
 
 (lite/defstate conn
   :start
