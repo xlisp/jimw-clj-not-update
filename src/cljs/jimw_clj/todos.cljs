@@ -5,7 +5,8 @@
             [cljs.core.async :refer [<!]]
             [cemerick.url :refer (url url-encode)]
             [clojure.string :as str]
-            [jimw-clj.something :as something]))
+            [jimw-clj.something :as something]
+            cljsjs.clipboard))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -331,15 +332,29 @@
               ;; 一直打印出来: TODOS修改经过上方的颜色
               :on-drag-over #(reset! todo-target id)}
          [:div.view
+          [:button {:class (str "copybutton" id "test")
+                    :style {:display "none"}
+                    :data-clipboard-text (str (:content (get (:todos (get @blog-list blog-id)) id)))}
+           "copy"]
           [:input.toggle-checkbox
            {:type "checkbox"
             :checked done
             :on-change
             (fn []
-              (let [done-stat (if (true? done) false true)]
+              (let [done-stat (if (true? done) false true)
+                    _ (let [clipboard (new js/ClipboardJS (str ".copybutton" id "test"))
+                            _ (.info js/console "todocopy" id)]
+                        (.on clipboard "success" (fn [e]
+                                                   (.info js/console "Action:" (.-action e))
+                                                   (.info js/console "Text:" (.-text e))
+                                                   (.info js/console "Trigger:" (.-trigger e))
+                                                   (.clearSelection e))))
+                    _ (.click (last (array-seq
+                                     (. js/document (getElementsByClassName  (str "copybutton" id "test") )))))
+                    ]
                 (swap! blog-list update-in
                        [blog-id :todos id :done] (fn [x] done-stat))
-                (let [content (:content (get (:todos (get @blog-list blog-id)) id))]
+                #_(let [content (:content (get (:todos (get @blog-list blog-id)) id))]
                   (something/copyToClipboard content))
                 (update-todo
                  sort_id nil blog-id done-stat

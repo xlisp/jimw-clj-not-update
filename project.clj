@@ -65,7 +65,8 @@
                  [steve-incanter/incanter-svg "1.9.3-SNAPSHOT"]
                  [tuddman/neocons "3.2.1-SNAPSHOT"]
                  [rid3 "0.2.1"]
-                 [hickory "0.7.1"]]
+                 [hickory "0.7.1"]
+                 [cljsjs/clipboard "2.0.1-2"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 

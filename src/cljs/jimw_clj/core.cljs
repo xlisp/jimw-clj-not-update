@@ -199,8 +199,28 @@
             [jimw-clj.subs :as subs]
             [jimw-clj.views :as views]
             [re-frame.core :as re-frame]
-            [jimw-clj.something :as something])
+            [jimw-clj.something :as something]
+            cljsjs.clipboard)
   (:import goog.History))
+
+(defn clipboard-button [label target]
+  (let [clipboard-atom (atom nil)]
+    (r/create-class
+     {:display-name "clipboard-button"
+      :component-did-mount
+      #(let [clipboard (new js/Clipboard (r/dom-node %))]
+         (reset! clipboard-atom clipboard)
+         #_(debugf "Clipboard mounted"))
+      :component-will-unmount
+      #(when-not (nil? @clipboard-atom)
+         (.destroy @clipboard-atom)
+         (reset! clipboard-atom nil)
+         #_(debugf "Clipboard unmounted"))
+      :reagent-render
+      (fn []
+        [:button.clipboard
+         {:data-clipboard-target target}
+         label])})))
 
 (declare blog-list)
 
@@ -942,6 +962,12 @@
       [:canvas.wcanvas {:id (str "wordcloud-" id)}]
       [:div {:id (str "qrcode-" id) :style {:width "20%"}}]
       [:hr]]]))
+
+#_(defn home-page []
+  [:div [:h2 "Welcome to clipboard-test"]
+   [:div {:id "copy-this"} "Testing"]
+   [clipboard-button "Copy" "#copy-this"]
+   [:div [:a {:href "/about"} "go to about page"]]])
 
 (defn home-page []
   [:div.container.app-margin
