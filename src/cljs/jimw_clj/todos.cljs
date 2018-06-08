@@ -5,7 +5,8 @@
             [cljs.core.async :refer [<!]]
             [cemerick.url :refer (url url-encode)]
             [clojure.string :as str]
-            [jimw-clj.something :as something]))
+            [jimw-clj.something :as something]
+            cljsjs.clipboard))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -331,6 +332,12 @@
               ;; 一直打印出来: TODOS修改经过上方的颜色
               :on-drag-over #(reset! todo-target id)}
          [:div.view
+          [:input {:id (str "foo" id)
+                   :type "text"
+                   :value (:content (get (:todos (get @blog-list blog-id)) id))
+                   :style {:display "none"}}]
+          [:button {:class (str "copy-button" id)
+                    :data-clipboard-target (str "#foo" id)} "copy"]
           [:input.toggle-checkbox
            {:type "checkbox"
             :checked done
@@ -339,7 +346,7 @@
               (let [done-stat (if (true? done) false true)]
                 (swap! blog-list update-in
                        [blog-id :todos id :done] (fn [x] done-stat))
-                (let [content (:content (get (:todos (get @blog-list blog-id)) id))]
+                #_(let [content (:content (get (:todos (get @blog-list blog-id)) id))]
                   (something/copyToClipboard content))
                 (update-todo
                  sort_id nil blog-id done-stat
