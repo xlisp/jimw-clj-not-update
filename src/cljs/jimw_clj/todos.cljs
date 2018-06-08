@@ -4,7 +4,8 @@
             [cljs-http.client :as http]
             [cljs.core.async :refer [<!]]
             [cemerick.url :refer (url url-encode)]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [jimw-clj.something :as something]))
 
 (defn api-root [url] (str (-> js/window .-location .-origin) url))
 
@@ -338,6 +339,8 @@
               (let [done-stat (if (true? done) false true)]
                 (swap! blog-list update-in
                        [blog-id :todos id :done] (fn [x] done-stat))
+                (let [content (:content (get (:todos (get @blog-list blog-id)) id))]
+                  (something/copyToClipboard content))
                 (update-todo
                  sort_id nil blog-id done-stat
                  #(prn %))))}]

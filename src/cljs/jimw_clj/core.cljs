@@ -239,6 +239,7 @@
              (= kind "update")
              (do (prn (str id "------update" content))
                  (swap! blog-list update-in [blog :todos sort_id :content] (fn [x] content))
+                 (swap! blog-list update-in [blog :todos sort_id :done] (fn [x] done))
                  )             
              (= kind "delete")
              (do (prn
