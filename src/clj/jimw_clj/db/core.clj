@@ -407,10 +407,14 @@
        [(honeysql.core/raw "array_agg(\"event_data\" ORDER BY id ASC)") :event_data])
       (h/from :events)))
 
+;; 训练的三元组数据: (jconn @conn (h/select (sql/call :now))) ;; => ({:now #inst "2018-06-10T08:32:38.901-00:00"})
+;; SELECT extract(epoch from updated_at)  FROM blogs; =>
+;; (jconn @conn (-> (h/select [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]) (h/from :blogs) (h/limit 1)))
 ;; (search-blogs {:db conn :q "肌肉记忆"})
 (defn search-blogs [{:keys [db limit offset q source project]}]
   (jconn db
          (-> (h/select :id :name :content :created_at :updated_at
+                       [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]
                        [(-> todos-subquery
                             (h/where [:= :blogs.id :todos.blog]))
                         :todos]
