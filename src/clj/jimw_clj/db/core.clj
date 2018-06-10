@@ -485,6 +485,8 @@
                          (h/values [{:name name
                                      :content content
                                      :project (if project project "BLOG")
+                                     :created_at (sql/call :now)
+                                     :updated_at (sql/call :now)
                                      :source_type
                                      (if (nil? source_type)
                                        (honeysql.core/call :cast "BLOG" :SOURCE_TYPE)
@@ -1678,3 +1680,13 @@
      (slurp file)
      hickory/parse
      hickory/as-hickory))))
+
+(defn fix-blog-time-bug []
+  (for [{:keys [id]}
+        (jconn @conn
+               (-> (h/select :id)
+                   (h/from :blogs)
+                   (h/merge-where [:= :updated_at nil])))]
+    (with-conn [c @conn]
+      (update-blog-updated-time {:db @conn :blog id}))))
+;;=> 32069
