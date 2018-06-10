@@ -523,28 +523,40 @@
              
              (h/merge-where (when (pos? blog) [:= :blog blog])))))
 
+;; 有todos的更新或者event的更新: 这个博客都会被排序置顶
+(defn update-blog-updated-time [{:keys [db blog]}]
+  (jc1 db (->  (h/update :blogs)
+               (h/sset {:updated_at (honeysql.core/call :now)})
+               (h/where [:= :id blog]))))
+
 ;; (create-todo {:db conn :content "aaaaabbbccc" :parid 3 :blog 2222})
 (defn create-todo [{:keys [db parid blog content]}]
-  (jc1 db
-       (->  (h/insert-into :todos)
-            (h/values [{:content content
-                        :parid   parid
-                        :blog    blog}]))))
+  (let [res (jc1 db
+                 (->  (h/insert-into :todos)
+                      (h/values [{:content content
+                                  :parid   parid
+                                  :blog    blog}])))
+        _ (update-blog-updated-time {:db db :blog blog})]
+    res)
+  )
 
 (defn create-todo-app [{:keys [db parid blog content
                                app_id file islast percent begin mend]}]
-  (jc1 db
-       (->  (h/insert-into :todos)
-            (h/values [{:content content
-                        :parid   parid
-                        :blog    blog
-                        :app_id  app_id  
-                        :file    file    
-                        :islast  islast  
-                        :percent percent 
-                        :begin   begin   
-                        :mend     mend
-                        :origin_content content}]))))
+  (let [res (jc1 db
+                 (->  (h/insert-into :todos)
+                      (h/values [{:content content
+                                  :parid   parid
+                                  :blog    blog
+                                  :app_id  app_id  
+                                  :file    file    
+                                  :islast  islast  
+                                  :percent percent 
+                                  :begin   begin   
+                                  :mend     mend
+                                  :origin_content content}])))
+        _ (update-blog-updated-time {:db db :blog blog})]
+    res)
+  )
 
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done nil})
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done false})
@@ -552,19 +564,22 @@
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done "false"})
 ;; (update-todo {:db conn :id 58 :content "aaaaabbbccctt" :blog 4857 :done "true"})
 (defn update-todo [{:keys [db id parid blog content done]}]
-  (jc1 db
-       (->  (h/update :todos)
-            (h/sset (->> {:parid  parid
-                          :content (when (seq content) content)
-                          :blog (when (pos? blog) blog)
-                          :done (let [ndone (if (string? done) (Boolean/valueOf done) done)]
-                                  (when
-                                      (not (nil? ndone))
-                                    ndone))
-                          :updated_at (honeysql.core/call :now)}
-                         (remove (fn [x]  (nil? (last x))))
-                         (into {})))
-            (h/where [:= :id id]))))
+  (let [res (jc1 db
+                 (->  (h/update :todos)
+                      (h/sset (->> {:parid  parid
+                                    :content (when (seq content) content)
+                                    :blog (when (pos? blog) blog)
+                                    :done (let [ndone (if (string? done) (Boolean/valueOf done) done)]
+                                            (when
+                                                (not (nil? ndone))
+                                              ndone))
+                                    :updated_at (honeysql.core/call :now)}
+                                   (remove (fn [x]  (nil? (last x))))
+                                   (into {})))
+                      (h/where [:= :id id])))
+        _ (update-blog-updated-time {:db db :blog blog})]
+    res)
+  )
 
 ;; (delete-todo {:db conn :id 3})
 (defn delete-todo [{:keys [db id]}]
@@ -696,12 +711,17 @@
 ;; (insert-event {:db @conn :event_name "test" :info "dasdas" :event_data "32132"})
 ;; (insert-event {:db @conn :event_name "test" :info "dasdas" :event_data "32132" :blog 60142})
 (defn insert-event [{:keys [db event_name info event_data blog]}]
-  (jc1 db
-       (-> (h/insert-into :events)
-           (h/values [{:event_name event_name
-                       :info       (when (seq info) info)
-                       :blog       (if blog blog nil)
-                       :event_data (when (seq event_data) event_data)}]))))
+  (let [res (jc1 db
+                 (-> (h/insert-into :events)
+                     (h/values [{:event_name event_name
+                                 :info       (when (seq info) info)
+                                 :blog       (if blog blog nil)
+                                 :event_data (when (seq event_data) event_data)}])))
+        _ (if blog
+            (update-blog-updated-time {:db db :blog blog})
+            nil)]
+    res)
+  )
 
 (defn update-todo-sort
   [{:keys [db origins response target]}]
