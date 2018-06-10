@@ -411,7 +411,7 @@
 ;; SELECT extract(epoch from updated_at)  FROM blogs; =>
 ;; (jconn @conn (-> (h/select [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]) (h/from :blogs) (h/limit 1)))
 ;; (search-blogs {:db conn :q "肌肉记忆"})
-(defn search-blogs [{:keys [db limit offset q source project]}]
+(defn search-blogs [{:keys [db limit offset q source project orderby]}]
   (jconn db
          (-> (h/select :id :name :content :created_at :updated_at
                        [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]
@@ -424,7 +424,9 @@
              (h/from :blogs)
              (h/limit limit)
              (h/offset offset)
-             (h/order-by [:id :desc])
+             (h/order-by (if orderby
+                           [:id :desc]
+                           [:updated_at :desc]))
              (h/merge-where (when (seq q)
                               (let [q-list (clojure.string/split q #" ")]
                                 (apply conj [:and]
