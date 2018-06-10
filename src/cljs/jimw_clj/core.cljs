@@ -306,8 +306,36 @@
    (+ (ss-top) (o-height) 60)
    (s-height)))
 
+;;
+#_(let [results {:A 1 :B 2 :C 2 :D 5 :E 1 :F 1}]
+    (into (sorted-map-by (fn [key1 key2]
+                           (compare (get results key2)
+                                    (get results key1))))
+          results))
+;;=> 尾实体 {:D 5, :B 2, :A 1}
+
+;; H头实体: {:A [11 1] :B [22 8] :C [33 2] :D [44 5] :E [55 7] :F [66 10]}
+;; R符合关系映射: into-sorted-map-by-fn
+#_(let [results {:A [11 1] :B [22 8] :C [33 2] :D [44 5] :E [55 7] :F [66 10]}]
+    (into (sorted-map-by (fn [key1 key2]
+                           (prn (str key1 "-----" key2))
+                           (prn (str (get results key1) "======" (get results key2)))
+                           (compare (last (get results key2))
+                                    (last (get results key1)))))
+          results))
+;; =>T尾实体 {:F [66 10], :B [22 8], :E [55 7], :D [44 5], :C [33 2], :A [11 1]}
+
 (defonce page-offset (r/atom 0))
-(defonce blog-list (r/atom (sorted-map-by >)))
+(defonce blog-list (r/atom
+                    ;;(sorted-map-by >)
+                    (sorted-map-by (fn [key1 key2]
+                                     (let [fblog (:unix_time (get @blog-list key1))
+                                           bblog (:unix_time (get @blog-list key2))]
+                                       (compare bblog fblog)
+                                       )
+                                     )
+                                   )
+                    ))
 
 (defn get-todo-root-id [blog-id]
   (-> (filter #(= (:parid (last %)) 1)
@@ -457,6 +485,7 @@
             (do
               (swap! blog-list assoc (:id li)
                      {:id (:id li) :name (:name li) :content (:content li)
+                      :unix_time (:unix_time li)
                       :stags (:stags li)
                       :todos (into
                               (sorted-map-by >)
