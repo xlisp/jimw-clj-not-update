@@ -332,7 +332,7 @@
                     (sorted-map-by (fn [key1 key2]
                                        (let [fblog (:unix_time (get @blog-list-bak key1))
                                              bblog (:unix_time (get @blog-list-bak key2))]
-                                         (compare bblog fblog)
+                                         (compare fblog bblog)
                                          )
                                        )
                                      )
