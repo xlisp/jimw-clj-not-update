@@ -512,6 +512,7 @@
   (let [blog (jc1 db (->  (h/insert-into :blogs)
                           (h/values [{:name name
                                       :content content
+                                      :updated_at (sql/call :now)
                                       :source_type (honeysql.core/call :cast "WEB_ARTICLE" :SOURCE_TYPE)}])))
         todo (jc1 db
                   (->  (h/insert-into :todos)
