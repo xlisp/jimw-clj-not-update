@@ -332,7 +332,7 @@
                     (sorted-map-by (fn [key1 key2]
                                        (let [fblog (:unix_time (get @blog-list-bak key1))
                                              bblog (:unix_time (get @blog-list-bak key2))]
-                                         (compare fblog bblog)
+                                         (compare bblog fblog)
                                          )
                                        )
                                      )
@@ -673,7 +673,15 @@
         pcm-ip-txt (r/atom "")
         search-fn (fn []
                     (do
-                      (reset! blog-list (sorted-map-by >))
+                      (reset! blog-list
+                              (sorted-map-by (fn [key1 key2]
+                                               (let [fblog (:unix_time (get @blog-list-bak key1))
+                                                     bblog (:unix_time (get @blog-list-bak key2))]
+                                                 (compare bblog fblog)
+                                                 )
+                                               )
+                                             )
+                              #_(sorted-map-by >))
                       (reset! page-offset 0)
                       (reset! search-key @search-str)
                       (get-blog-list
