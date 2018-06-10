@@ -326,17 +326,30 @@
 ;; =>T尾实体 {:F [66 10], :B [22 8], :E [55 7], :D [44 5], :C [33 2], :A [11 1]}
 
 (defonce page-offset (r/atom 0))
+(defonce blog-list-bak (r/atom {}))
 (defonce blog-list (r/atom
                     ;;(sorted-map-by >)
                     (sorted-map-by (fn [key1 key2]
-                                     (let [fblog (:unix_time (get @blog-list key1))
-                                           bblog (:unix_time (get @blog-list key2))]
-                                       (compare bblog fblog)
+                                       (let [fblog (:unix_time (get @blog-list-bak key1))
+                                             bblog (:unix_time (get @blog-list-bak key2))]
+                                         (compare bblog fblog)
+                                         )
                                        )
                                      )
-                                   )
-                    ))
+                    )) ;;=> 1111 ,2222, 3333
 
+#_(let [results @blog-list]  
+    (map #(-> % last :name)
+         (into (sorted-map-by (fn [key1 key2]
+                                (let [fblog (:unix_time (get results key1))
+                                      bblog (:unix_time (get results key2))]
+                                  (compare bblog fblog)
+                                  )
+                                )
+                              )
+               results))
+    ) ;;=> ("33333333333333" "22222222222" "111111111")
+      
 (defn get-todo-root-id [blog-id]
   (-> (filter #(= (:parid (last %)) 1)
               (:todos (@blog-list blog-id)))
@@ -483,6 +496,8 @@
     (->
      (map (fn [li]
             (do
+              (swap! blog-list-bak assoc (:id li)
+                     {:unix_time (:unix_time li)})
               (swap! blog-list assoc (:id li)
                      {:id (:id li) :name (:name li) :content (:content li)
                       :unix_time (:unix_time li)
