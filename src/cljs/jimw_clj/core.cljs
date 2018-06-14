@@ -1289,3 +1289,28 @@
 #_(when (.getElementById js/document "google-input")
     (prn (.-search js/location))
     )
+
+
+(comment
+(let [bp-ele (-> (.getSelection js/window) .-baseNode .-parentElement)]
+  ((fn [n]
+     (loop [cnt n]
+       (if (re-matches #"node(\d+)" (.-id cnt))
+         (.-id cnt)
+         (recur (.-parentElement cnt))))) bp-ele)) ;;=> "node5"
+
+(clojure.string/replace 
+ (.-textContent
+  (first
+   (array-seq
+    (.-children
+     (let [bp-ele (-> (.getSelection js/window) .-baseNode .-parentElement)]
+       ((fn [n]
+          (loop [cnt n]
+            (if (re-matches #"node(\d+)" (.-id cnt))
+              cnt
+              (recur (.-parentElement cnt))))) bp-ele))))))
+ "\n" "")
+;; => "dasdasdas 321312321\n dasdsad"
+
+)
