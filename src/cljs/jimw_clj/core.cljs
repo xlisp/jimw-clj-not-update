@@ -1290,26 +1290,28 @@
     (prn (.-search js/location))
     )
 
-;; (get-viz-select-node-text) ;; => "dasdasdas 321312321 dasdsad"
+;; (-> (last (get-viz-select-node-text)) .-parentElement)
 (defn get-viz-select-node-text []
-  (clojure.string/replace 
-   (.-textContent
-    (first
-     (array-seq
-      (.-children
-       (let [bp-ele (-> (.getSelection js/window) .-baseNode .-parentElement)]
-         ((fn [n]
-            (loop [cnt n]
-              (if (re-matches #"node(\d+)" (.-id cnt))
-                cnt
-                (recur (.-parentElement cnt))))) bp-ele))))))
-   "\n" ""))
+  (let [cnt (let [bp-ele (-> (.getSelection js/window) .-baseNode .-parentElement)]
+              ((fn [n]
+                 (loop [cnt n]
+                   (if (re-matches #"node(\d+)" (.-id cnt))
+                     cnt
+                     (recur (.-parentElement cnt))))) bp-ele))]
+    (list (clojure.string/replace 
+           (.-textContent
+            (first
+             (array-seq
+              (.-children
+               cnt )))) "\n" "")
+          cnt)))
 
+;;(recur-match "adsdasdas 123321 dasd 213dasdas" (last (get-viz-select-node-text)))
 ;; TODO: 根据树的文本去找列表
 (defn recur-match [re-text selector]
-  (let [bp-ele (-> selector .-baseNode .-parentElement)]
+  (let [bp-ele (-> selector .-parentElement)]
     ((fn [n]
        (loop [cnt n]
-         (if (re-matches re-text (.-textContent cnt))
+         (if (re-matches re-text (clojure.string/replace (.-textContent cnt) "\n" ""))
            cnt
            (recur (.-parentElement cnt))))) bp-ele)))
