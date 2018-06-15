@@ -441,7 +441,7 @@
     (when (-> items count pos?)
       [:div
        [:section#main
-        [:ul#todo-list
+        [:ul#todo-list.todo-list-class
          (for [todo
                (filter
                 (fn [item]

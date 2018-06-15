@@ -1315,3 +1315,5 @@
          (if (re-matches re-text (clojure.string/replace (.-textContent cnt) "\n" ""))
            cnt
            (recur (.-parentElement cnt))))) bp-ele)))
+
+;;(get-selector-current-blog-id (.getSelection js/window)) ;;=> "current-blog-id-31018"
