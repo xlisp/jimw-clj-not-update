@@ -1316,4 +1316,14 @@
            cnt
            (recur (.-parentElement cnt))))) bp-ele)))
 
-;;(get-selector-current-blog-id (.getSelection js/window)) ;;=> "current-blog-id-31018"
+;; (get-todos-li-elements)
+(defn get-todos-li-elements []
+  (array-seq
+   (.-children
+    (first
+     (array-seq
+      (.getElementsByClassName
+       (. js/document
+          (getElementById
+           (get-selector-current-blog-id (.getSelection js/window))))
+       "todo-list-class"))))))
