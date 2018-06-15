@@ -1316,7 +1316,7 @@
            cnt
            (recur (.-parentElement cnt))))) bp-ele)))
 
-;; (get-todos-li-elements)
+;; ;;选中任何的地方可以获取todos列表 (get-todos-li-elements)
 (defn get-todos-li-elements []
   (array-seq
    (.-children

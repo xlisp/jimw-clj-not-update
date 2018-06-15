@@ -359,7 +359,7 @@
                 (update-todo
                  sort_id nil blog-id done-stat
                  #(prn %))))}]
-          [:label.todo-front-size {:on-double-click #(reset! editing true)}
+          [:label.todo-front-size {:on-click #(reset! editing true)}
            [:a {:on-click (fn [] (if (nil? file)
                                    (js/alert "pcm file is nil!")
                                    (play-pcm-file (re-find #"\d\d+" file) identity)
