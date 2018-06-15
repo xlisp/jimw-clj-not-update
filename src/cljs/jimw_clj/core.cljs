@@ -1304,3 +1304,12 @@
                 cnt
                 (recur (.-parentElement cnt))))) bp-ele))))))
    "\n" ""))
+
+;; TODO: 根据树的文本去找列表
+(defn recur-match [re-text selector]
+  (let [bp-ele (-> selector .-baseNode .-parentElement)]
+    ((fn [n]
+       (loop [cnt n]
+         (if (re-matches re-text (.-textContent cnt))
+           cnt
+           (recur (.-parentElement cnt))))) bp-ele)))
