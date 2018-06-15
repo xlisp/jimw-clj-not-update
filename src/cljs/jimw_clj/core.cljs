@@ -579,6 +579,8 @@
    )
  )
 
+(declare ctrlkey-todo-node-select-edit)
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown
@@ -612,6 +614,8 @@
          ;; 2. 可以一个页面控制多个页面: 通过中间的Websocket和pg streaming来实现
          (= 83 keycode)
          (prn 1111111)
+         (= 84 keycode) ;; C-t来todos树上跳转编辑列表
+         (ctrlkey-todo-node-select-edit)
          ;;
          :else (prn keycode))
        nil)
