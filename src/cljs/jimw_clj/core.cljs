@@ -1327,3 +1327,25 @@
           (getElementById
            (get-selector-current-blog-id (.getSelection js/window))))
        "todo-list-class"))))))
+
+;; 打印所有的todos的文本信息
+#_(map
+   #(clojure.string/replace
+     (.-textContent %)
+     #"copy(\d+)◔" "")
+   (get-todos-li-elements))
+
+(defn ctrlkey-todo-node-select-edit []
+  (.click
+   (first
+    (array-seq
+     (.getElementsByClassName
+      (first
+       (filter
+        #(=
+          (clojure.string/replace
+           (.-textContent %)
+           #"copy(\d+)◔" "")
+          (first (get-viz-select-node-text)))
+        (get-todos-li-elements)))
+      "todo-front-size")))))
