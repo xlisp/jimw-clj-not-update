@@ -614,7 +614,11 @@
          ;; 2. 可以一个页面控制多个页面: 通过中间的Websocket和pg streaming来实现
          (= 83 keycode) ;; C-s键位
          (prn 1111111)
-         (= 84 keycode) ;; C-t键位 来todos树上跳转编辑列表
+         (= 84 keycode) ;; C-t键位: 直接加入C-g的搜索标签,避免搜索跳转
+         (record-event "search-google-event" (str (-> js/window .getSelection .toString)) identity
+                       (clojure.string/replace (get-selector-current-blog-id (.getSelection js/window))
+                                               "current-blog-id-" ""))
+         (= 86 keycode) ;; C-v键位 来todos树上跳转编辑列表
          (ctrlkey-todo-node-select-edit)
          ;;
          :else (prn keycode))
