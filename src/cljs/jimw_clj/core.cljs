@@ -593,13 +593,13 @@
      ;; Ctrl的组合键
      (if (and ctrlkey (not= keycode 17))
        (cond
-         ;; 数字键
+         ;; Ctrl+数字键: 可以用于CLJS输入法
          ((set (range 47 58)) keycode)
          (let [key-num (- keycode 48)
                content (get @search-wolframalpha-en (keyword (str key-num)))]
            (prn (str "数字键" key-num ", " content))
            (something/copyToClipboard content))
-         (= 71 keycode)
+         (= 71 keycode) ;; C-g键位
          (let [selector (.getSelection js/window)
                select-stri (.toString selector)]
            (reset! searchbar-mode false)
@@ -612,9 +612,9 @@
          ;; TODO: 代码语义搜索的search记录
          ;; 1. 新开一个页面,然后搜索: 可以直接从url里面传入搜索词和project和source_type
          ;; 2. 可以一个页面控制多个页面: 通过中间的Websocket和pg streaming来实现
-         (= 83 keycode)
+         (= 83 keycode) ;; C-s键位
          (prn 1111111)
-         (= 84 keycode) ;; C-t来todos树上跳转编辑列表
+         (= 84 keycode) ;; C-t键位 来todos树上跳转编辑列表
          (ctrlkey-todo-node-select-edit)
          ;;
          :else (prn keycode))
