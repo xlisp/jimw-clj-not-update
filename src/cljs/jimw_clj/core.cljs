@@ -1353,3 +1353,13 @@
           (first (get-viz-select-node-text)))
         (get-todos-li-elements)))
       "todo-front-size")))))
+
+;; 获取选中锚点的信息
+;; (get-selector-stri-and-anchor-stri) ;; => ["caRn" "ppcaRnd"]
+(defn get-selector-stri-and-anchor-stri
+  []
+  (let [selector (.getSelection js/window)
+        select-stri (.toString selector)]
+    [select-stri
+     (.-textContent (.-anchorNode selector))
+     (.-anchorOffset selector)]))
