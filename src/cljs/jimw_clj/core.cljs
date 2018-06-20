@@ -1343,7 +1343,7 @@
      #"copy(\d+)◔" "")
    (get-todos-li-elements))
 
-(defn ctrlkey-todo-node-select-edit []
+(defn ctrlkey-todo-node-select-edit-old []
   (.click
    (first
     (array-seq
@@ -1357,6 +1357,27 @@
           (first (get-viz-select-node-text)))
         (get-todos-li-elements)))
       "todo-front-size")))))
+
+(defn ctrlkey-todo-node-select-edit []
+  (let [node-name (first (get-viz-select-node-text))
+        _ (.info js/console "node-name: " node-name)
+        todos-list (get-todos-li-elements)
+        _ (.info js/console "todos-list: " todos-list)
+        filter-res (filter
+                    #(=
+                      (clojure.string/replace
+                       (.-textContent %)
+                       #"copy(\d+)◔" "")
+                      node-name)
+                    todos-list)
+        _ (.info js/console "filter-res: " filter-res)]
+    (.click
+     (first
+      (array-seq
+       (.getElementsByClassName
+        (first
+         filter-res)
+        "todo-front-size"))))))
 
 ;; 获取选中锚点的信息
 ;; (get-selector-stri-and-anchor-stri) ;; => ["caRn" "ppcaRnd"]
