@@ -1393,12 +1393,22 @@
 
 ;; 获取选中锚点的信息
 ;; (get-selector-stri-and-anchor-stri) ;; => ["caRn" "ppcaRnd"]
-(defn get-selector-stri-and-anchor-stri
+(defn get-selector-stri-and-anchor-stri-0
   []
   (let [selector (.getSelection js/window)
         select-stri (.toString selector)]
     [select-stri
      (.-textContent (.-anchorNode selector))
+     (.-anchorOffset selector)]))
+
+(defn get-selector-stri-and-anchor-stri
+  []
+  (let [selector (.getSelection js/window)
+        select-stri (.toString selector)]
+    [select-stri
+     (set! (.-innerText
+            (.-parentElement
+             (.-anchorNode selector))) select-stri)
      (.-anchorOffset selector)]))
 
 ;; 双黐手的求微分的思想: 先不要管html的结构的问题,而暴力替换(易), 用λ求近似解, 快速失败 => 过早的完美主义是万恶之源！！!
