@@ -581,6 +581,18 @@
 
 (declare ctrlkey-todo-node-select-edit)
 
+(declare get-selector-stri-and-anchor-stri)
+
+(set!
+ js/window.onmouseup
+ (fn [e]
+   (if (empty? (.toString (.getSelection js/window)))
+     nil
+     (prn (get-selector-stri-and-anchor-stri))
+     )
+   )
+ )
+
 ;; TODOS: Emacs 的键位设计用在CLJS身上
 (set!
  js/window.onkeydown
@@ -1388,3 +1400,6 @@
     [select-stri
      (.-textContent (.-anchorNode selector))
      (.-anchorOffset selector)]))
+
+;; 双黐手的求微分的思想: 先不要管html的结构的问题,而暴力替换(易), 用λ求近似解, 快速失败 => 过早的完美主义是万恶之源！！!
+
