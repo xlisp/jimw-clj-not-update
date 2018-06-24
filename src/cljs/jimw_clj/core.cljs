@@ -1413,3 +1413,9 @@
 
 ;; 双黐手的求微分的思想: 先不要管html的结构的问题,而暴力替换(易), 用λ求近似解, 快速失败 => 过早的完美主义是万恶之源！！!
 
+(defn set-color []
+  (let [tr (.getRangeAt (.getSelection js/window) 0)
+        span (.createElement js/document "span")]
+    (do
+      (set! (-> span .-style .-cssText) "color:#ff0000")
+      (.surroundContents tr span))))
