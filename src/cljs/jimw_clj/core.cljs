@@ -582,13 +582,15 @@
 (declare ctrlkey-todo-node-select-edit)
 
 (declare get-selector-stri-and-anchor-stri)
+(declare set-color)
 
 (set!
  js/window.onmouseup
  (fn [e]
    (if (empty? (.toString (.getSelection js/window)))
      nil
-     (prn (get-selector-stri-and-anchor-stri))
+     #_(prn (get-selector-stri-and-anchor-stri))
+     (set-color)
      )
    )
  )
