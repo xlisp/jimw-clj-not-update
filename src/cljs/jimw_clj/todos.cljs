@@ -309,7 +309,7 @@
             _ (reset! parid-val parid)]
         [:li {:class (str (if done "completed ")
                           (if @editing "editing"))
-              :draggable true
+              :draggable false
               :on-drag-start #(do (prn (str "开始拖动" sort_id))
                                   (reset! todo-begin sort_id))
               :on-drag-end (fn []
