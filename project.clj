@@ -66,7 +66,8 @@
                  [tuddman/neocons "3.2.1-SNAPSHOT"]
                  [rid3 "0.2.1"]
                  [hickory "0.7.1"]
-                 [cljsjs/clipboard "2.0.1-2"]]
+                 [cljsjs/clipboard "2.0.1-2"]
+                 [com.github.javaparser/javaparser-symbol-solver-core "3.6.11"]]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
