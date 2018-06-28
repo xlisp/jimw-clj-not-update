@@ -55,7 +55,9 @@
            [com.huaban.analysis.jieba JiebaSegmenter$SegMode]
            [net.glxn.qrgen.javase QRCode]
            [com.lsj.trans LANG]
-           [com.lsj.trans.factory TFactory TranslatorFactory]))
+           [com.lsj.trans.factory TFactory TranslatorFactory]
+           [com.github.javaparser JavaParser ParseResult ParserConfiguration]
+           [com.github.javaparser.ast.stmt Statement]))
 
 ;; (zh->en "高斯分布")  => "Gaussian distribution"
 (defn zh->en
@@ -1690,4 +1692,9 @@
                    (h/merge-where [:= :updated_at nil])))]
     (with-conn [c @conn]
       (update-blog-updated-time {:db @conn :blog id}))))
-;;=> 32069
+
+(comment
+  (let [unit (JavaParser/parse "class A { }")]
+    (.getClassByName unit "A")
+    )
+  )
