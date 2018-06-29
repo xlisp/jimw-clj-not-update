@@ -5,7 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Welcome to jimw-clj</title>
   </head>
-  <body>
+  <body onbeforeunload="return myFunction()">
     <div id="navbar"></div>
     <div id="searchbar"></div>
     <div id="msg" style="display:none;"></div>
@@ -26,6 +26,9 @@
     <script type="text/javascript">
         var context = "{{servlet-context}}";
         var csrfToken = "{{csrf-token}}";
+        function myFunction() {
+           return "自定义内容";
+        }
     </script>
     {% script "/js/app.js" %}
   </body>

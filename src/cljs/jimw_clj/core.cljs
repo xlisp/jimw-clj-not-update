@@ -528,6 +528,21 @@
                        (reset! is-end true))))
     nil))
 
+;; 无效的两个函数
+(set!
+ js/window.onbeforeunload
+ #(do
+    (js/alert 312321321)
+    )
+ )
+
+(set!
+ js/window.onunload
+ #(do
+    (js/alert 32132111111111)
+    )
+ )
+
 (declare record-event)
 (declare searchbar-mode)
 
