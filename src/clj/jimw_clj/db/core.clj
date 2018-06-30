@@ -410,10 +410,12 @@
        [(honeysql.core/raw "array_agg(\"event_data\" ORDER BY id ASC)") :event_data])
       (h/from :events)))
 
+(declare map-set-color)
+
 ;; 训练的三元组数据: (jconn @conn (h/select (sql/call :now))) ;; => ({:now #inst "2018-06-10T08:32:38.901-00:00"})
 ;; SELECT extract(epoch from updated_at)  FROM blogs; =>
 ;; (jconn @conn (-> (h/select [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]) (h/from :blogs) (h/limit 1)))
-;; (search-blogs {:db conn :q "肌肉记忆"})
+;;(search-blogs {:db @conn :q "" :source "WEB_ARTICLE"})
 (defn search-blogs [{:keys [db limit offset q source project orderby]}]
   (let [res (jconn db
                    (-> (h/select :id :name :content :created_at :updated_at
@@ -442,7 +444,16 @@
                                         [:= :project project]))
                        (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)])))]
     (if (= source "WEB_ARTICLE")
-      res
+      (map
+       (fn [blog]
+         (let [split-ids (sort-by first
+                                  (distinct (map (fn [it] [(:begin it) (:mend it)] )
+                                                 (:todos blog))))
+               content (:content blog)]
+           (assoc blog :content (map-set-color {:content content
+                                                :split-ids split-ids}))
+           )
+         ) res)
       res)
     )
   )
