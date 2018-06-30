@@ -456,6 +456,7 @@
                                        (nil? (last x))))
                                     (map (fn [it] [(:begin it) (:mend it)] )
                                          (:todos blog)))))
+               _ (info "WEB_ARTICLE: " (:name blog) "," (count (:content blog)) "=====" split-ids)
                content (:content blog)]
            (assoc blog :content (map-set-color {:content content
                                                 :split-ids split-ids}))
