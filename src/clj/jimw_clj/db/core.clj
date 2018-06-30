@@ -448,9 +448,14 @@
        (fn [blog]
          (let [split-ids (sort-by first
                                   (distinct
-                                   (remove (fn [x] (= x [nil nil]))
-                                           (map (fn [it] [(:begin it) (:mend it)] )
-                                                (:todos blog)))))
+                                   (remove ;;(fn [x] (= x [nil nil]))
+                                    (fn [x]
+                                      (or
+                                       (= x [nil nil])
+                                       (nil? (first x))
+                                       (nil? (last x))))
+                                    (map (fn [it] [(:begin it) (:mend it)] )
+                                         (:todos blog)))))
                content (:content blog)]
            (assoc blog :content (map-set-color {:content content
                                                 :split-ids split-ids}))
@@ -1732,11 +1737,5 @@
                            (set-color (subs content begin mend)))
                 ))
         ) split-ids))
-    )
-  )
-
-(comment
-  (let [unit (JavaParser/parse "class A { }")]
-    (.getClassByName unit "A")
     )
   )
