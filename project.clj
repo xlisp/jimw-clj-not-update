@@ -13,7 +13,7 @@
                  [luminus-migrations "0.3.3"]
                  [luminus-nrepl "0.1.4"]
                  [luminus/ring-ttl-session "0.3.2"]
-                 ;;[markdown-clj "0.9.99"]
+                 [markdown-clj "0.9.99"]
                  [metosin/muuntaja "0.2.1"]
                  [metosin/ring-http-response "0.8.2"]
                  [mount "0.1.11"]
