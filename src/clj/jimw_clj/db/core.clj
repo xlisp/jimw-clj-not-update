@@ -447,8 +447,10 @@
       (map
        (fn [blog]
          (let [split-ids (sort-by first
-                                  (distinct (map (fn [it] [(:begin it) (:mend it)] )
-                                                 (:todos blog))))
+                                  (distinct
+                                   (remove (fn [x] (= x [nil nil]))
+                                           (map (fn [it] [(:begin it) (:mend it)] )
+                                                (:todos blog)))))
                content (:content blog)]
            (assoc blog :content (map-set-color {:content content
                                                 :split-ids split-ids}))
@@ -1738,4 +1740,3 @@
     (.getClassByName unit "A")
     )
   )
-
