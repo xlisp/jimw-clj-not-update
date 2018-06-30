@@ -38,7 +38,8 @@
     [clojurewerkz.neocons.rest.nodes :as nn]
     [clojurewerkz.neocons.rest.relationships :as nrl]
     [hickory.core :as hickory]
-    [hickory.select :as hs])
+    [hickory.select :as hs]
+    [markdown.core :refer [md-to-html-string]])
   (:import org.postgresql.util.PGobject
            java.sql.Array
            clojure.lang.IPersistentMap
@@ -414,32 +415,37 @@
 ;; (jconn @conn (-> (h/select [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]) (h/from :blogs) (h/limit 1)))
 ;; (search-blogs {:db conn :q "肌肉记忆"})
 (defn search-blogs [{:keys [db limit offset q source project orderby]}]
-  (jconn db
-         (-> (h/select :id :name :content :created_at :updated_at
-                       [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]
-                       [(-> todos-subquery
-                            (h/where [:= :blogs.id :todos.blog]))
-                        :todos]
-                       [(-> events-subquery
-                            (h/where [:= :blogs.id :events.blog]))
-                        :stags])
-             (h/from :blogs)
-             (h/limit limit)
-             (h/offset offset)
-             (h/order-by (if orderby
-                           [:id :desc]
-                           [:updated_at :desc]))
-             (h/merge-where (when (seq q)
-                              (let [q-list (clojure.string/split q #" ")]
-                                (apply conj [:and]
-                                       (map #(vector
-                                              :or
-                                              [:like :name (str "%" % "%")]
-                                              [:like :content (str "%" % "%")])
-                                            q-list)))))
-             (h/merge-where (when (seq project)
-                              [:= :project project]))
-             (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)]))))
+  (let [res (jconn db
+                   (-> (h/select :id :name :content :created_at :updated_at
+                                 [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]
+                                 [(-> todos-subquery
+                                      (h/where [:= :blogs.id :todos.blog]))
+                                  :todos]
+                                 [(-> events-subquery
+                                      (h/where [:= :blogs.id :events.blog]))
+                                  :stags])
+                       (h/from :blogs)
+                       (h/limit limit)
+                       (h/offset offset)
+                       (h/order-by (if orderby
+                                     [:id :desc]
+                                     [:updated_at :desc]))
+                       (h/merge-where (when (seq q)
+                                        (let [q-list (clojure.string/split q #" ")]
+                                          (apply conj [:and]
+                                                 (map #(vector
+                                                        :or
+                                                        [:like :name (str "%" % "%")]
+                                                        [:like :content (str "%" % "%")])
+                                                      q-list)))))
+                       (h/merge-where (when (seq project)
+                                        [:= :project project]))
+                       (h/merge-where [:= :source_type (honeysql.core/call :cast source :SOURCE_TYPE)])))]
+    (if (= source "WEB_ARTICLE")
+      res
+      res)
+    )
+  )
 
 (defn get-blog-wctags [{:keys [db id]}]
   (jconn1 db
@@ -1693,8 +1699,32 @@
     (with-conn [c @conn]
       (update-blog-updated-time {:db @conn :blog id}))))
 
+(defn map-set-color
+  [{:keys [content split-ids]}]
+  (let [set-color (fn [x] (str "<span style='color: rgb(255, 0, 0);'>" x "</span>"))]
+    (str/join
+     ""
+     (map-indexed
+      (fn [idx item]
+        (let [begin (first item)
+              mend (last item)]
+          (cond (= idx 0)
+                (str (subs content 0 begin)
+                     (set-color (subs content begin mend)))
+                (= idx (- (count split-ids) 1))
+                (str (subs content (last (nth split-ids (- idx 1))) begin)
+                     (set-color (subs content begin mend))
+                     (subs content mend (count content)))
+                :else (str (subs content (last (nth split-ids (- idx 1))) begin)
+                           (set-color (subs content begin mend)))
+                ))
+        ) split-ids))
+    )
+  )
+
 (comment
   (let [unit (JavaParser/parse "class A { }")]
     (.getClassByName unit "A")
     )
   )
+
