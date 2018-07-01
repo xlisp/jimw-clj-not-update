@@ -101,4 +101,28 @@ function markFunc(node, text, color) {
     });
 };
 
+
+// //////////////// makeSelection
+// <div id="test">To be, or not to be: that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune,</div>
+// <button id="forward">Forward</button>
+// <button id="backward">Backward</button>
+
+//var textDiv = $("#test");
+//var fBtn = $("#forward");
+//var bBtn = $("#backward");
+
+//fBtn.on("click", function() { makeSelection(10, 20); });
+//bBtn.on("click", function() { makeSelection(10, 1); });
+
+function makeSelection(a, b) {
+    var textNode = textDiv[0].firstChild; // must get text node
+    var selection = document.getSelection();
+    selection.removeAllRanges();
+    var range = document.createRange();
+    // alert(textNode);
+    range.setStart(textNode, a);
+    range.setEnd(textNode, b);
+    selection.addRange(range);    
+}
+
 console.log("This is printed at load time from example.something JavaScript");
