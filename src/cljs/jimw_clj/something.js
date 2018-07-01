@@ -34,7 +34,7 @@ jimw_clj.something.highlight = function (highlightID, color, selectionRange) {
     if (window.getSelection && window.getSelection().toString()) {
         var node = jimw_clj.something.getSelectionParentElement(selectionRange);
         if (node != null) {
-	    var text = getSelectionText();
+	    var text = jimw_clj.something.getSelectionText();
 	    console.log("Selected text: " + text);
 	    jimw_clj.something.markFunc(node, text, color, selectionRange);
         } else {
