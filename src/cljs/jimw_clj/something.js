@@ -71,7 +71,9 @@ jimw_clj.something.getSelectionParentElement = function (selectionRange) {
 };
 
 jimw_clj.something.markFunc = function (node, text, color, selectionRange) {
+    console.log("https://markjs.io/....");
     var instance = new Mark(node);
+    console.log("Mark instance :" + instance);
     instance.mark(text, {
         "element": "span",
 	"className": color,
