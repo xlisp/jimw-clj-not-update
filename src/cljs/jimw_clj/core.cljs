@@ -606,7 +606,8 @@
    (if (empty? (.toString (.getSelection js/window)))
      nil
      #_(prn (get-selector-stri-and-anchor-stri))
-     (set-color)
+     ;; (set-color) ;; OLD: 只能支持单个element的上色
+     (something/highlight "" "red" (.getRangeAt (.getSelection js/window) 0))
      )
    )
  )
