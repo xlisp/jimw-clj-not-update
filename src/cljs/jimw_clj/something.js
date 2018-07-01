@@ -28,15 +28,15 @@ jimw_clj.something.copyToClipboard = function (s) {
 //};
 
 //$('#button').click(onClick);
-var selectionRange;
+//var selectionRange;
 
-function jimw_clj.something.highlight(highlightID, color) {
+jimw_clj.something.highlight = function (highlightID, color, selectionRange) {
     if (window.getSelection && window.getSelection().toString()) {
-        var node = getSelectionParentElement();
+        var node = jimw_clj.something.getSelectionParentElement(selectionRange);
         if (node != null) {
 	    var text = getSelectionText();
 	    console.log("Selected text: " + text);
-	    markFunc(node, text, /*HIGHLIGHT_CLASS + " " + */color);
+	    jimw_clj.something.markFunc(node, text, color, selectionRange);
         } else {
             console.log("Parent nde is null for some reason");
         }
@@ -45,20 +45,20 @@ function jimw_clj.something.highlight(highlightID, color) {
     }
 }
 
-function getSelectionText() {
+jimw_clj.something.getSelectionText = function () {
     if (window.getSelection) {
         var sel = window.getSelection();
         return sel.toString();
     }
 };
 
-function getSelectionParentElement() {
+jimw_clj.something.getSelectionParentElement = function (selectionRange) {
     var parentEl = null,
         sel;
     if (window.getSelection) {
         sel = window.getSelection();
         if (sel.rangeCount) {
-            selectionRange = sel.getRangeAt(0);
+            // selectionRange = sel.getRangeAt(0); 111111 
             parentEl = selectionRange.commonAncestorContainer;
             if (parentEl.nodeType != 1) {
                 parentEl = parentEl.parentNode;
@@ -70,7 +70,7 @@ function getSelectionParentElement() {
     return parentEl;
 };
 
-function markFunc(node, text, color) {
+jimw_clj.something.markFunc = function (node, text, color, selectionRange) {
     var instance = new Mark(node);
     instance.mark(text, {
         "element": "span",

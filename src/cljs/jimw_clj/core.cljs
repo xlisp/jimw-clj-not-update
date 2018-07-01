@@ -1436,3 +1436,6 @@
     (do
       (set! (-> span .-style .-cssText) "color:#ff0000")
       (.surroundContents tr span))))
+
+;; (something/highlight "" "red" (.getRangeAt (.getSelection js/window) 0))
+
