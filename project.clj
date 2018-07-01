@@ -148,13 +148,16 @@
                  :pretty-print false
                  :closure-warnings
                  {:externs-validation :off :non-standard-jsdoc :off}
-                 :externs ["react/externs/react.js" "resources/public/js/autosize.ext.js" "resources/public/js/viz.ext.js" "resources/public/js/wordcloud.ext.js"]
+                 :externs ["react/externs/react.js" "resources/public/js/autosize.ext.js" "resources/public/js/viz.ext.js" "resources/public/js/wordcloud.ext.js" "resources/public/js/mark.ext.js"]
                  :foreign-libs [{:file "resources/public/js/autosize.min.js"
                                  :provides ["myexterns.autosize"]}
                                 {:file "resources/public/js/viz-lite.js"
                                  :provides ["myexterns.viz"]}
                                 {:file "resources/public/js/wordcloud2.js"
-                                 :provides ["myexterns.wordcloud"]}]}}}}
+                                 :provides ["myexterns.wordcloud"]}
+                                {:file "resources/public/js/mark.min.js"
+                                 :provides ["myexterns.markjs"]}
+                                ]}}}}
              
              
              :aot :all
@@ -194,8 +197,12 @@
                                      {:file "resources/public/js/viz-lite.js"
                                       :provides ["myexterns.viz"]}
                                      {:file "resources/public/js/wordcloud2.js"
-                                      :provides ["myexterns.wordcloud"]}]
-                      :externs ["resources/public/js/autosize.ext.js"]
+                                      :provides ["myexterns.wordcloud"]}
+                                     {:file "resources/public/js/mark.min.js"
+                                      :provides ["myexterns.markjs"]}
+                                     ]
+                      :externs ["resources/public/js/autosize.ext.js"
+                                "resources/public/js/mark.ext.js"]
                       :pretty-print true}}}}
                   
                   

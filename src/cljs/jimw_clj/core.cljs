@@ -194,6 +194,7 @@
             [alandipert.storage-atom :refer [local-storage]]
             [myexterns.viz]
             [myexterns.wordcloud]
+            [myexterns.markjs]
             [re-frame.core :as re-frame]
             [jimw-clj.events :as msg-events]
             [jimw-clj.subs :as subs]
