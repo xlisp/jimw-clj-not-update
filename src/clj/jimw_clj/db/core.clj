@@ -1768,7 +1768,7 @@
 
 (defn map-set-color-v2
   [{:keys [content mark-list]}]
-  (let [set-color (fn [x aria-label] (str "<span style='color: rgb(255, 0, 0);' class='c-badge c-badge--brand c-tooltip c-tooltip--right' aria-label='" aria-label "' >" x "</span>"))
+  (let [set-color (fn [x aria-label] (str "<span style='color: rgb(255, 0, 0);' class='c-badge c-badge--brand c-tooltip c-tooltip--top' aria-label='" aria-label "' >" x "</span>"))
         split-ids (sort-by first (distinct (map #(-> % first last) mark-list)))]
     (str/join
      ""
