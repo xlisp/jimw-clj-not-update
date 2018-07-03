@@ -410,12 +410,12 @@
        [(honeysql.core/raw "array_agg(\"event_data\" ORDER BY id ASC)") :event_data])
       (h/from :events)))
 
-(declare map-set-color)
+(declare map-set-color-v2)
 
 ;; 训练的三元组数据: (jconn @conn (h/select (sql/call :now))) ;; => ({:now #inst "2018-06-10T08:32:38.901-00:00"})
 ;; SELECT extract(epoch from updated_at)  FROM blogs; =>
 ;; (jconn @conn (-> (h/select [(honeysql.core/raw "extract(epoch from updated_at)") :unix_time]) (h/from :blogs) (h/limit 1)))
-;;(search-blogs {:db @conn :q "" :source "WEB_ARTICLE"})
+;; (prn (search-blogs {:db @conn :q "渗透到移动开发测试每个环节" :source "WEB_ARTICLE"}))
 (defn search-blogs [{:keys [db limit offset q source project orderby]}]
   (let [res (jconn db
                    (-> (h/select :id :name :content :created_at :updated_at
@@ -446,20 +446,19 @@
     (if (= source "WEB_ARTICLE")
       (map
        (fn [blog]
-         (let [split-ids (sort-by first
-                                  (distinct
-                                   (remove ;;(fn [x] (= x [nil nil]))
-                                    (fn [x]
-                                      (or
-                                       (= x [nil nil])
-                                       (nil? (first x))
-                                       (nil? (last x))))
-                                    (map (fn [it] [(:begin it) (:mend it)] )
-                                         (:todos blog)))))
-               _ (info "WEB_ARTICLE: " (:name blog) "," (count (:content blog)) "=====" split-ids)
+         (let [mark-list (remove (fn [item]
+                                   (let [x (second item)]
+                                     (or
+                                      (= x [nil nil])
+                                      (nil? (first x))
+                                      (nil? (last x))))
+                                   )
+                                 (map (fn [it] {:ids [(:begin it) (:mend it)] :mark (:content it)} )
+                                      (:todos blog)))
+               _ (info "WEB_ARTICLE: " (:name blog) "," (count (:content blog)) "=====" mark-list)
                content (:content blog)]
-           (assoc blog :content (map-set-color {:content content
-                                                :split-ids split-ids}))
+           (assoc blog :content (map-set-color-v2 {:content content
+                                                   :mark-list mark-list}))
            )
          ) res)
       res)
@@ -1743,5 +1742,56 @@
             )
           )
         ) split-ids))
+    )
+  )
+
+#_(get 
+   (map-aria-labels
+    (list
+     {:ids [40 55] :mark "321sa231ads"}
+     {:ids [66 88] :mark "321sa231321"}
+     {:ids [20 30] :mark "dsadasd"}
+     {:ids [20 30] :mark "dsadasd1111"}
+     {:ids [20 30] :mark "dsadasd2222"}  
+     {:ids [66 88] :mark "dsadsadasdsa"}
+     {:ids [120 139] :mark "321sa231dasa"}
+     {:ids [150 180] :mark "321sa231ads"})) [20 30])
+;; => "dsadasd # dsadasd1111 # dsadasd2222"
+(defn map-aria-labels [hash]  
+  (into (sorted-map-by (fn [key1 key2]
+                         (compare (first key1)
+                                  (first key2) )))  
+        (map
+         (fn [item]
+           [(last (first item)) (str/join " # " (map :mark  (last item)) )])
+         (group-by first hash))))
+
+(defn map-set-color-v2
+  [{:keys [content mark-list]}]
+  (let [set-color (fn [x aria-label] (str "<span style='color: rgb(255, 0, 0);' class='c-badge c-badge--brand c-tooltip c-tooltip--right' aria-label='" aria-label "' >" x "</span>"))
+        split-ids (sort-by first (distinct (map #(-> % first last) mark-list)))]
+    (str/join
+     ""
+     (map-indexed
+      (fn [idx item]
+        (let [aria-label (last item)
+              begin (first (first item))
+              mend (last (first item))]
+          (try
+            (cond (= idx 0)
+                  (str (subs content 0 begin)
+                       (set-color (subs content begin mend) aria-label))
+                  (= idx (- (count mark-list) 1))
+                  (str (subs content (last (nth split-ids (- idx 1))) begin)
+                       (set-color (subs content begin mend) aria-label)
+                       (subs content mend (count content)))
+                  :else (str (subs content (last (nth split-ids (- idx 1))) begin)
+                             (set-color (subs content begin mend) aria-label ))
+                  )
+            (catch Exception e
+              (str "[" begin "@@@" mend "]"))
+            )
+          )
+        ) (map-aria-labels mark-list)))
     )
   )
