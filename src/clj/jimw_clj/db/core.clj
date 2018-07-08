@@ -58,16 +58,37 @@
            [com.lsj.trans LANG]
            [com.lsj.trans.factory TFactory TranslatorFactory]
            [com.github.javaparser JavaParser ParseResult ParserConfiguration]
-           [com.github.javaparser.ast.stmt Statement]))
+           [com.github.javaparser.ast.stmt Statement]
+           [com.github.javaparser.printer YamlPrinter]
+           [java.nio.file Path Paths]))
 
 ;;千人: 只能看API文档了: C-f文档
 ;;kaka: 看单元测试: ag
 ;;语义搜索: 前两者都没有的hack情况
-#_(let [res (JavaParser/parse "class A { }")]
+#_(let [res (JavaParser/parse
+           (Paths/get (java.net.URI/create "file:////Users/stevechan/CljPro/jimw-clj/MethodAnalyzeVisitor.java")))
+      #_(JavaParser/parse "Abc.java")
+      printer (YamlPrinter. true)]
   ;;(.getResult res)
   ;;(.getAllContainedComments res)
   ;;(.getStorage res)
+  ;;(.save res "aaa")
+  ;;(prn res)
+  ;;(println res)
+  ;;(println (.output printer res))
+  (println (.output printer res))
   )
+
+;;=> (JavaParser/parse "class A { }")
+;; ---
+;; root(Type=CompilationUnit): 
+;;     types: 
+;;         - type(Type=ClassOrInterfaceDeclaration): 
+;;             isInterface: "false"
+;;             name(Type=SimpleName): 
+;;                 identifier: "A"
+;; ...
+;; 
 
 ;; (zh->en "高斯分布")  => "Gaussian distribution"
 (defn zh->en
