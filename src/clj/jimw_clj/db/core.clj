@@ -60,6 +60,15 @@
            [com.github.javaparser JavaParser ParseResult ParserConfiguration]
            [com.github.javaparser.ast.stmt Statement]))
 
+;;千人: 只能看API文档了: C-f文档
+;;kaka: 看单元测试: ag
+;;语义搜索: 前两者都没有的hack情况
+#_(let [res (JavaParser/parse "class A { }")]
+  ;;(.getResult res)
+  ;;(.getAllContainedComments res)
+  ;;(.getStorage res)
+  )
+
 ;; (zh->en "高斯分布")  => "Gaussian distribution"
 (defn zh->en
   [stri]
