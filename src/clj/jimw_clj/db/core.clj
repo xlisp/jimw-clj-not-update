@@ -59,16 +59,19 @@
            [com.lsj.trans.factory TFactory TranslatorFactory]
            [com.github.javaparser JavaParser ParseResult ParserConfiguration]
            [com.github.javaparser.ast.stmt Statement]
-           [com.github.javaparser.printer YamlPrinter]
+           [com.github.javaparser.printer YamlPrinter PrettyPrinter JsonPrinter]
            [java.nio.file Path Paths]))
 
 ;;千人: 只能看API文档了: C-f文档
 ;;kaka: 看单元测试: ag
 ;;语义搜索: 前两者都没有的hack情况
-#_(let [res (JavaParser/parse
+(let [res (JavaParser/parse
            (Paths/get (java.net.URI/create "file:////Users/stevechan/CljPro/jimw-clj/MethodAnalyzeVisitor.java")))
       #_(JavaParser/parse "Abc.java")
-      printer (YamlPrinter. true)]
+      ;;printer (YamlPrinter. true)
+      ;;printer (PrettyPrinter.)
+      printer (JsonPrinter. true)
+      ]
   ;;(.getResult res)
   ;;(.getAllContainedComments res)
   ;;(.getStorage res)
@@ -76,6 +79,7 @@
   ;;(prn res)
   ;;(println res)
   ;;(println (.output printer res))
+  ;;(println (.print printer res))
   (println (.output printer res))
   )
 
