@@ -540,17 +540,21 @@
     res))
 
 ;; (create-blog {:db @conn :name "测试" :content "aaaaabbbccc" :source_type "REVERSE_ENGINEERING"})
-(defn create-blog [{:keys [db name content source_type project]}]
+(defn create-blog [{:keys [db name content source_type project language_type]}]
   (let [res (jc1 db (->  (h/insert-into :blogs)
                          (h/values [{:name name
                                      :content content
                                      :project (if project project "BLOG")
                                      :created_at (sql/call :now)
                                      :updated_at (sql/call :now)
+                                     :language_type
+                                     (if (nil? language_type)
+                                       (honeysql.core/call :cast "NOTCODE" :LANGUAGE_TYPE)
+                                       (honeysql.core/call :cast language_type :LANGUAGE_TYPE))
                                      :source_type
                                      (if (nil? source_type)
                                        (honeysql.core/call :cast "BLOG" :SOURCE_TYPE)
-                                       (honeysql.core/call :cast (clojure.core/name source_type) :SOURCE_TYPE))}])))]
+                                       (honeysql.core/call :cast source_type :SOURCE_TYPE))}])))]
     res))
 
 #_(jc1 @conn (->  (h/insert-into :blogs)
@@ -1829,3 +1833,8 @@
         ) (map-aria-labels mark-list)))
     )
   )
+
+#_(java/import-project-methods-to-blog
+   {:db @conn :create-blog create-blog :project "clojure" :stype "SEMANTIC_SEARCH" :ltype "JAVA"})
+
+;; (java/import-project-methods-to-blog {:db @conn :create-blog create-blog :project "clojure" :stype "SEMANTIC_SEARCH" :ltype "JAVA"})
