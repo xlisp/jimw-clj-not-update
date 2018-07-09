@@ -65,7 +65,7 @@
 ;;千人: 只能看API文档了: C-f文档
 ;;kaka: 看单元测试: ag
 ;;语义搜索: 前两者都没有的hack情况
-(let [res (JavaParser/parse
+#_(let [res (JavaParser/parse
            (Paths/get (java.net.URI/create "file:////Users/stevechan/CljPro/jimw-clj/MethodAnalyzeVisitor.java")))
       #_(JavaParser/parse "Abc.java")
       ;;printer (YamlPrinter. true)
