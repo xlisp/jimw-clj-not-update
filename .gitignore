@@ -25,4 +25,5 @@ data/model/segment/CRFSegmentModel.txt.bin
 resources/public/qrcode/*.png
 test.htm
 resources/public/css/blaze-website.css
+resources/public/img/*
 
