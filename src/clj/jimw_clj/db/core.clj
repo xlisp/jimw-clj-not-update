@@ -57,10 +57,11 @@
            [net.glxn.qrgen.javase QRCode]
            [com.lsj.trans LANG]
            [com.lsj.trans.factory TFactory TranslatorFactory]
-           [com.github.javaparser JavaParser ParseResult ParserConfiguration]
-           [com.github.javaparser.ast.stmt Statement]
-           [com.github.javaparser.printer YamlPrinter PrettyPrinter JsonPrinter]
-           [java.nio.file Path Paths]))
+           ;;[com.github.javaparser JavaParser ParseResult ParserConfiguration]
+           ;;[com.github.javaparser.ast.stmt Statement]
+           ;;[com.github.javaparser.printer YamlPrinter PrettyPrinter JsonPrinter]
+           ;;[java.nio.file Path Paths]
+           ))
 
 ;;千人: 只能看API文档了: C-f文档
 ;;kaka: 看单元测试: ag

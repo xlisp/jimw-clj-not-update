@@ -67,8 +67,9 @@
                  [rid3 "0.2.1"]
                  [hickory "0.7.1"]
                  [cljsjs/clipboard "2.0.1-2"]
-                 [com.github.javaparser/javaparser-symbol-solver-core "3.6.11"]
-                 [com.github.javaparser/javaparser-core "3.6.12"]]
+                 ;;[com.github.javaparser/javaparser-symbol-solver-core "3.6.11"]
+                 ;;[com.github.javaparser/javaparser-core "3.6.12"]
+                 ]
 
   :repositories {"jitpack.io" "https://jitpack.io"}
 
