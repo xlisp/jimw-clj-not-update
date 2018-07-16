@@ -48,9 +48,10 @@
 
 (defn record-error
   [{{:keys [info mac]} :params}]
-  (ok (db/add-record-error {:db @db/conn
-                            :info info
-                            :mac mac} {})))
+  (ok (db/add-record-error
+       {:db @db/conn}
+       {:info info
+        :mac mac} {})))
 
 (defn login
   [{:keys [params]}]
