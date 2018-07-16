@@ -46,6 +46,12 @@
   (when (and text digest)
     (hashers/check text digest)))
 
+(defn record-error
+  [{{:keys [info mac]} :params}]
+  (ok (db/add-record-error {:db @db/conn
+                            :info info
+                            :mac mac} {})))
+
 (defn login
   [{:keys [params]}]
   (try
@@ -271,6 +277,7 @@
 
 (defroutes api-routes
   (POST "/login" [] login)
+  (POST "/record-error" [] record-error)
   (POST "/add-s-exp-history" [] add-s-exp-history)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))

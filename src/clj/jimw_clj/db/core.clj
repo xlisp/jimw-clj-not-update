@@ -1839,3 +1839,10 @@
    {:db @conn :create-blog create-blog :project "clojure" :stype "SEMANTIC_SEARCH" :ltype "JAVA"})
 
 ;; (java/import-project-methods-to-blog {:db @conn :create-blog create-blog :project "clojure" :stype "SEMANTIC_SEARCH" :ltype "JAVA"})
+
+(defn add-record-error
+  [{:keys [db]} {:keys [info mac]} _]
+  (jc1 db (-> (h/insert-into :record-error)
+              (h/values [{:info info
+                          :mac mac
+                          :created_at (sql/call :now)}]))))
