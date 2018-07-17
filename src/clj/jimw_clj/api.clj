@@ -276,10 +276,17 @@
                        :out_put out_put
                        :buffer_name buffer_name} {})))
 
+(defn add-robot-blog
+  [{{:keys [who_share url]} :params}]
+  (ok (db/add-robot-blog
+       {:db @db/conn} {:who_share who_share
+                       :url url} {})))
+
 (defroutes api-routes
   (POST "/login" [] login)
   (POST "/record-error" [] record-error)
   (POST "/add-s-exp-history" [] add-s-exp-history)
+  (POST "/add-robot-blog" [] add-robot-blog)
   (GET  "/chsk" req (sente-handler req))
   (GET "/test-api" [] (check-api-token test-api))
   (POST "/qrcode-generate" [] (check-api-token generate-qrcode))

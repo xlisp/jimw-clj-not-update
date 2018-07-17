@@ -1846,3 +1846,22 @@
               (h/values [{:info info
                           :mac mac
                           :created_at (sql/call :now)}]))))
+
+(defn update-robot-blog
+  [{:keys [db]} {:keys [who_share url is_catch id]} _]
+  (jc1 db (-> (h/update :robot-blog)
+              (h/sset (->> {:who_share who_share
+                            :url url
+                            :is_catch is_catch
+                            :updated_at (sql/call :now)}
+                           (filter
+                            #(not (nil? (last %))))
+                           (into {})))
+              (h/where [:= :id id]))))
+
+(defn add-robot-blog
+  [{:keys [db]} {:keys [who_share url]} _]
+  (jc1 db (-> (h/insert-into :robot-blog)
+              (h/values [{:who_share who_share
+                          :url url
+                          :created_at (sql/call :now)}]))))
