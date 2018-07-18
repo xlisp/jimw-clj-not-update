@@ -1,3 +1,5 @@
+# 停止更新！！！
+
 # jimw-clj: 基于机器学习的博客, 用机器学习来打败机器学习 => 元学习
 * Power by Clojure/ClojureScript, Reagent
 * 操作演示,就像聊天一样生成Lisp树
